@@ -4,7 +4,7 @@ metadata:
   name: {{ .Values.aws.providerConfigName }}
 spec:
   credentials:
-    source: {{ .Values.aws.authentication.method }}
+    source: {{ .Values.aws.authentication.method | camelcase }}
     {{- if eq .Values.aws.authentication.method "Secret" }}
     secretRef:
       namespace: {{ include "crossplane-providers.secretNamespace" . }}
