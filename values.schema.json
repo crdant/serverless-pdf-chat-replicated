@@ -1,0 +1,146 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "aws": {
+      "type": "object",
+      "properties": {
+        "providers": {
+          "type": "object",
+          "properties": {
+            "iam": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "description": "Version of the IAM provider"
+                },
+                "controllerConfig": {
+                  "type": "object",
+                  "description": "Controller configuration for the IAM provider"
+                }
+              }
+            },
+            "s3": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "description": "Version of the S3 provider"
+                },
+                "controllerConfig": {
+                  "type": "object",
+                  "description": "Controller configuration for the S3 provider"
+                }
+              }
+            },
+            "dynamodb": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "description": "Version of the DynamoDB provider"
+                },
+                "controllerConfig": {
+                  "type": "object",
+                  "description": "Controller configuration for the DynamoDB provider"
+                }
+              }
+            },
+            "lambda": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "description": "Version of the Lambda provider"
+                },
+                "controllerConfig": {
+                  "type": "object",
+                  "description": "Controller configuration for the Lambda provider"
+                }
+              }
+            },
+            "sqs": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "description": "Version of the SQS provider"
+                },
+                "controllerConfig": {
+                  "type": "object",
+                  "description": "Controller configuration for the SQS provider"
+                }
+              }
+            },
+            "apigateway": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "description": "Version of the API Gateway provider"
+                },
+                "controllerConfig": {
+                  "type": "object",
+                  "description": "Controller configuration for the API Gateway provider"
+                }
+              }
+            },
+            "cognito": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "description": "Version of the Cognito provider"
+                },
+                "controllerConfig": {
+                  "type": "object",
+                  "description": "Controller configuration for the Cognito provider"
+                }
+              }
+            },
+            "bedrock": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "description": "Version of the Bedrock provider"
+                },
+                "controllerConfig": {
+                  "type": "object",
+                  "description": "Controller configuration for the Bedrock provider"
+                }
+              }
+            },
+            "cloudfront": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "description": "Version of the CloudFront provider"
+                },
+                "controllerConfig": {
+                  "type": "object",
+                  "description": "Controller configuration for the CloudFront provider"
+                }
+              }
+            },
+            "secretsmanager": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "description": "Version of the Secrets Manager provider"
+                },
+                "controllerConfig": {
+                  "type": "object",
+                  "description": "Controller configuration for the Secrets Manager provider"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
