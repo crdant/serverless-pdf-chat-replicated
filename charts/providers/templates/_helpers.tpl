@@ -49,3 +49,24 @@ Selector labels
 app.kubernetes.io/name: {{ include "crossplane-providers.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Get the credentials secret name
+*/}}
+{{- define "crossplane-providers.secretName" -}}
+{{- .Values.aws.authentication.secret.name }}
+{{- end }}
+
+{{/*
+Get the credentials secret namespace
+*/}}
+{{- define "crossplane-providers.secretNamespace" -}}
+{{- .Values.aws.authentication.secret.namespace }}
+{{- end }}
+
+{{/*
+Get the credentials secret key
+*/}}
+{{- define "crossplane-providers.secretKey" -}}
+{{- .Values.aws.authentication.secret.keys.accessKeyId }}
+{{- end }}
