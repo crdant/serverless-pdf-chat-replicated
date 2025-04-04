@@ -2,10 +2,14 @@ apiVersion: aws.upbound.io/v1beta1
 kind: ProviderConfig
 metadata:
   name: {{ .Values.aws.providerConfigName }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   credentials:
-    source: {{ .Values.aws.authentication.method | camelcase }}
-    {{- if eq .Values.aws.authentication.method "Secret" }}
+    source: {{ .Values.aws.authentication.method | title }}
+    {{- if eq .Values.aws.authentication.method "secret" }}
     secretRef:
       namespace: {{ include "crossplane-providers.secretNamespace" . }}
       name: {{ include "crossplane-providers.secretName" . }}
