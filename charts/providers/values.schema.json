@@ -65,7 +65,7 @@
                 "version": {
                   "type": "string",
                   "description": "Version of the IAM provider",
-                  "default": "v0.41.0"
+                  "default": "v1.21.1"
                 },
                 "controllerConfig": {
                   "type": "object",
@@ -143,17 +143,17 @@
                 }
               }
             },
-            "cognito": {
+            "cognitoidp": {
               "type": "object",
               "properties": {
                 "version": {
                   "type": "string",
-                  "description": "Version of the Cognito provider",
-                  "default": "v0.41.0"
+                  "description": "Version of the Cognito IDP provider",
+                  "default": "v1.21.1"
                 },
                 "controllerConfig": {
                   "type": "object",
-                  "description": "Controller configuration for the Cognito provider"
+                  "description": "Controller configuration for the Cognito IDP provider"
                 }
               }
             },

@@ -22,32 +22,32 @@ aws:
   # AWS provider configurations
   providers:
     iam:
-      version: "v0.41.0"
+      version: "v1.21.1"
       controllerConfig: {}
     s3:
-      version: "v0.41.0"
+      version: "v1.21.1"
       controllerConfig: {}
     dynamodb:
-      version: "v0.41.0"
+      version: "v1.21.1"
       controllerConfig: {}
     lambda:
-      version: "v0.41.0"
+      version: "v1.21.1"
       controllerConfig: {}
     sqs:
-      version: "v0.41.0"
+      version: "v1.21.1"
       controllerConfig: {}
     apigateway:
-      version: "v0.41.0"
+      version: "v1.21.1"
       controllerConfig: {}
-    cognito:
-      version: "v0.41.0"
+    cognitoidp:
+      version: "v1.21.1"
       controllerConfig: {}
     bedrock:
-      version: "v0.41.0"
+      version: "v1.21.1"
       controllerConfig: {}
     cloudfront:
-      version: "v0.41.0"
+      version: "v1.21.1"
       controllerConfig: {}
     secretsmanager:
-      version: "v0.41.0"
+      version: "v1.21.1"
       controllerConfig: {}
