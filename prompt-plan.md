@@ -412,7 +412,12 @@ Create a provider configuration template (providerconfig.yaml) that will use AWS
 
 Also, create a _helpers.tpl with common template functions like defining standard labels and metadata.
 
-Assume that the AWS credentials secret already exists in the cluster, but provide instructions on how to create it if needed.
+Provide values that allow us to either work with a pre-existing secret in the
+clsuter for the AWS credentials (using an `existingSecret` value dictionary
+with name, namespace, and key) or to create the credentials secret from the
+chart if values for the AWS access key id and aws secret key are provided.
+Update the README to explain this, including what the structure of the
+exsiting secret contents should be.
 ```
 
 ### Prompt 2: Core Infrastructure Resources Templates
