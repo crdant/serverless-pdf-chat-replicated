@@ -1,0 +1,84 @@
+---
+apiVersion: kots.io/v1beta1
+kind: Config
+metadata:
+  name: serverless-pdf-chat
+spec:
+  groups:
+    - name: cloud-resources
+      title: Cloud Provider
+      description: |
+      items:
+        - name: cloud
+          title: Cloud
+          help_text: >
+            Select the cloud provider to use
+          type: radio
+          required: true
+          default: aws
+          items:
+            - name: aws
+              title: AWS
+        - name: aws_region
+          title: AWS Region
+          help_text: >
+            Select the AWS region to use
+          type: dropdown
+          required: true
+          default: us-east-1
+          items:
+            - name: us-east-1
+              title: US East (N. Virginia)
+            - name: us-east-2
+              title: US East (Ohio)
+            - name: us-west-1
+              title: US West (N. California)
+            - name: us-west-2
+              title: US West (Oregon)
+            - name: af-south-1
+              title: Africa (Cape Town)
+            - name: ap-east-1
+              title: Asia Pacific (Hong Kong)
+            - name: ap-south-1
+              title: Asia Pacific (Mumbai)
+            - name: ap-northeast-3
+              title: Asia Pacific (Osaka)
+            - name: ap-northeast-2
+              title: Asia Pacific (Seoul)
+            - name: ap-southeast-1
+              title: Asia Pacific (Singapore)
+            - name: ap-southeast-2
+              title: Asia Pacific (Sydney)
+            - name: ap-northeast-1
+              title: Asia Pacific (Tokyo)
+            - name: ca-central-1
+              title: Canada (Central)
+            - name: eu-central-1
+              title: Europe (Frankfurt)
+            - name: eu-west-1
+              title: Europe (Ireland)
+            - name: eu-west-2
+              title: Europe (London)
+            - name: eu-south-1
+              title: Europe (Milan)
+            - name: eu-west-3
+              title: Europe (Paris)
+            - name: eu-north-1
+              title: Europe (Stockholm)
+            - name: me-south-1
+              title: Middle East (Bahrain)
+            - name: sa-east-1
+              title: South America (São Paulo)
+        - name: aws_access_key_id
+          title: AWS Access Key ID
+          type: password
+          help_text: >
+            The AWS access key ID to use for authentication
+          required: true
+        - name: aws_secret_access_key
+          title: AWS Secret Access Key
+          type: password
+          help_text: >
+            The AWS secret access key to use for authentication
+          required: true
+

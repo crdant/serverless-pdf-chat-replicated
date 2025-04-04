@@ -1,0 +1,53 @@
+# build outputs
+build
+
+# Replicated
+replicated/*.tgz
+
+# Kubernetes
+*.kubeconfig
+kubeconfig*
+.kube/
+
+# Helm
+.helm/
+
+# Helm dependencies
+**/charts/*.tgz
+
+# Helm lock files
+Chart.lock
+
+# Compiled chart
+*.tgz
+
+# Local values overrides
+values.local.yaml
+
+# Secrets
+*.pem
+*.key
+.env
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+*~
+
+# secrets and work files
+secrets/*
+work/*
+
+.aider*
+!.aider.conf.yml

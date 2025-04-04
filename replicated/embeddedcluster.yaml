@@ -1,0 +1,23 @@
+apiVersion: embeddedcluster.replicated.com/v1beta1
+kind: Config
+metadata:
+  name: serverless-pdf-chat
+spec:
+  version: 2.3.0+k8s-1.30
+  unsupportedOverrides:
+    k0s: |
+      config:
+        spec:
+          network:
+            calico:
+              wireguard: true
+  extensions:
+    helm:
+      repositories:
+      - name: crossplane-stable 
+        url: https://charts.crossplane.io/stable
+      charts:
+      - name: crossplane
+        chartname: crossplane-stable/crossplane
+        namespace: crossplane-system
+        version: 1.19.0

@@ -1,0 +1,16 @@
+apiVersion: kots.io/v1beta1
+kind: LintConfig
+metadata:
+  name: serverless-pdf-chat
+spec:
+  rules:
+  - name: hardcoded-namespace
+    level: "off"
+  - name: volumes-host-paths
+    level: "off"
+  - name: troubleshoot-spec
+    level: "off"
+  - name: preflight-spec
+    level: "off"
+  - name: container-resources
+    level: "off"
