@@ -1,6 +1,6 @@
 aws:
   # AWS region where resources will be provisioned
-  region: "us-east-1"
+  region: "us-west-2"
   # Name of the provider configuration
   providerConfigName: "default"
   # Authentication settings for AWS
