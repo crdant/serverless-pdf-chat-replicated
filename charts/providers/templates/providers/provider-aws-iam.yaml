@@ -1,7 +1,7 @@
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: upbound-provider-aws-iam
+  name: {{ include "crossplane-providers.fullname" . }}-aws-iam
   labels:
     {{- include "crossplane-providers.labels" . | nindent 4 }}
 spec:
