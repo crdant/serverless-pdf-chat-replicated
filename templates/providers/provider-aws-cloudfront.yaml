@@ -1,0 +1,12 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: upbound-provider-aws-cloudfront
+  labels:
+    {{- include "crossplane-providers.labels" . | nindent 4 }}
+spec:
+  package: xpkg.upbound.io/upbound/provider-aws-cloudfront:{{ .Values.aws.providers.cloudfront.version }}
+  {{- if .Values.aws.providers.cloudfront.controllerConfig }}
+  controllerConfigRef:
+    name: {{ .Values.aws.providers.cloudfront.controllerConfig.name }}
+  {{- end }}
