@@ -1,4 +1,4 @@
-# Plan for Converting Serverless PDF Chat to Helm Charts with Crossplane
+# Revised Plan for Serverless PDF Chat as Helm Charts with Crossplane
 
 ## Overview Analysis
 
@@ -14,26 +14,28 @@ The serverless-pdf-chat application is a PDF document chatbot application runnin
 6. **Queue**: SQS for asynchronous embedding processing
 7. **AI Services**: Amazon Bedrock for LLM and embedding models
 
-The goal is to convert this architecture into Kubernetes using Helm charts, where:
-- The application itself will run in containers on Kubernetes
-- AWS services will be managed via Crossplane and Upbound providers
+The goal is to maintain the serverless architecture while converting the infrastructure management into Helm charts using Crossplane:
+- The React frontend will be containerized and run on Kubernetes
+- The Lambda functions will remain as serverless AWS Lambda functions
+- All AWS services (including Lambda) will be managed via Crossplane and Upbound providers
 - All infrastructure configuration will be packaged as Helm charts
 
 ## Important Assumptions
 1. A Kubernetes cluster with Crossplane already installed is available
 2. Each provider from the AWS provider family will be defined in its own template
 
-## High-Level Architecture for Kubernetes Migration
+## High-Level Architecture
 
 1. **Helm Chart Structure**:
    - `crossplane-providers` - Chart for Crossplane providers and configuration
-   - `serverless-pdf-chat` - Chart for application and AWS resources
+   - `serverless-pdf-chat` - Chart for the frontend and AWS resources (including Lambda)
 
 2. **Kubernetes Components**:
    - Frontend web application (deployment, service, ingress)
-   - Backend services for each Lambda function (deployments, services)
 
 3. **Crossplane-Managed AWS Resources**:
+   - Lambda functions
+   - API Gateway
    - S3 buckets
    - DynamoDB tables
    - SQS queues
@@ -42,8 +44,7 @@ The goal is to convert this architecture into Kubernetes using Helm charts, wher
    - Bedrock model access
 
 4. **Application Container Images**:
-   - Frontend container
-   - Backend service containers for each Lambda function
+   - Frontend container only
 
 ## Detailed Implementation Plan
 
@@ -61,20 +62,33 @@ The goal is to convert this architecture into Kubernetes using Helm charts, wher
 4. Convert Cognito resources to Crossplane XRs
 5. Configure IAM roles and permissions
 
-### Step 3: Containerize Application Components
+### Step 3: Lambda Functions as Crossplane Resources
 
-1. Create Docker images for frontend
-2. Create Docker images for Lambda functions
-3. Configure Kubernetes deployments and services
+1. Define Lambda functions using Crossplane
+2. Configure function code and dependencies
+3. Set up event sources and triggers
+4. Configure IAM roles and permissions
 
-### Step 4: Application Helm Chart
+### Step 4: API Gateway as Crossplane Resources
+
+1. Define API Gateway using Crossplane
+2. Configure routes and integrations with Lambda
+3. Set up authentication and authorization
+
+### Step 5: Containerize Frontend
+
+1. Create Docker image for frontend
+2. Configure Kubernetes deployment
+3. Set up service and ingress
+
+### Step 6: Application Helm Chart
 
 1. Define application configuration
-2. Create templates for all Kubernetes resources
+2. Create templates for all resources
 3. Define dependencies between resources
 4. Create deployment values file
 
-### Step 5: Testing and Deployment
+### Step 7: Testing and Deployment
 
 1. Test charts with local Kubernetes
 2. Deploy to a production Kubernetes environment
@@ -104,27 +118,34 @@ Breaking this down into smaller, iterative steps:
 2. Configure IAM roles and policies
 3. Test authentication flow
 
-### Phase 4: Containerize Frontend
+### Phase 4: Serverless Lambda Functions
+
+1. Create Lambda function resources with Crossplane
+2. Configure function code and dependencies
+3. Set up event triggers
+4. Test Lambda function deployment
+
+### Phase 5: API Gateway Configuration
+
+1. Create API Gateway resources with Crossplane
+2. Configure routes and integrations
+3. Set up authentication
+4. Test API endpoints
+
+### Phase 6: Containerize Frontend
 
 1. Create Docker image for React frontend
 2. Create Kubernetes deployment for frontend
 3. Configure service and ingress
 4. Test frontend deployment
 
-### Phase 5: Containerize Backend Services
+### Phase 7: Integration and Testing
 
-1. Create Docker images for each Lambda function
-2. Create Kubernetes deployments for backend services
-3. Configure service discovery
-4. Test backend service deployments
+1. Connect frontend to API Gateway
+2. Test end-to-end functionality
+3. Optimize configuration
 
-### Phase 6: Integration and Configuration
-
-1. Connect frontend to backend services
-2. Configure environment variables
-3. Test end-to-end functionality
-
-### Phase 7: Helm Chart Packaging and Documentation
+### Phase 8: Helm Chart Packaging and Documentation
 
 1. Package Helm charts
 2. Document chart usage
@@ -141,7 +162,7 @@ Let's break these phases down into smaller, more manageable steps:
    - Define basic Chart.yaml and values.yaml
 
 2. **Create individual AWS provider templates**
-   - Create separate template for each AWS provider (S3, DynamoDB, SQS, etc.)
+   - Create separate template for each AWS provider (S3, DynamoDB, SQS, Lambda, API Gateway, etc.)
    - Configure provider package sources
    - Define version and controller configuration for each
 
@@ -186,7 +207,7 @@ Let's break these phases down into smaller, more manageable steps:
    - Add configuration values for Cognito
 
 10. **Configure IAM resources**
-    - Create templates for IAM roles
+    - Create templates for Lambda execution roles
     - Define IAM policies for service access
     - Configure trust relationships
     - Add configuration values for IAM
@@ -196,125 +217,129 @@ Let's break these phases down into smaller, more manageable steps:
     - Create test user in Cognito
     - Validate authentication process
 
-### Phase 4: Application Resources Chart
+### Phase 4: Lambda Function Resources
 
-12. **Create application chart structure**
+12. **Create Lambda function templates**
+    - Create templates for each Lambda function
+    - Configure function runtime and handler
+    - Define memory and timeout settings
+    - Add configuration values for Lambda functions
+
+13. **Configure Lambda code and dependencies**
+    - Create templates for function code source
+    - Define packaging specifications
+    - Configure environment variables
+    - Add configuration values for function code
+
+14. **Configure Lambda event sources**
+    - Create templates for event sources (API Gateway, S3, etc.)
+    - Define event mappings
+    - Add configuration values for event sources
+
+15. **Test Lambda function deployment**
+    - Deploy Lambda resources
+    - Verify function creation in AWS
+    - Test function invocation
+
+### Phase 5: API Gateway Resources
+
+16. **Create API Gateway template**
+    - Create template for REST API
+    - Define API properties
+    - Add configuration values for API Gateway
+
+17. **Configure API routes and methods**
+    - Create templates for API resources and methods
+    - Define integrations with Lambda functions
+    - Configure request/response mappings
+    - Add configuration values for routes
+
+18. **Set up API authentication**
+    - Configure Cognito authorizer
+    - Define authorization scopes
+    - Add configuration values for authentication
+
+19. **Test API Gateway deployment**
+    - Deploy API Gateway resources
+    - Verify API creation in AWS
+    - Test API endpoints
+
+### Phase 6: Application Chart Structure
+
+20. **Create application chart structure**
     - Create `serverless-pdf-chat` chart with proper structure
     - Define Chart.yaml and values.yaml
     - Define dependencies on provider chart
 
-13. **Create templates for AWS resources**
+21. **Create templates for AWS resources**
     - Create composite templates referencing infrastructure
     - Define resource compositions
     - Add configuration values for AWS resources
 
-14. **Create Kubernetes resource templates**
+22. **Create Kubernetes resource templates**
     - Define namespace and service account templates
     - Create ConfigMap and Secret templates
     - Define common labels and annotations
 
-### Phase 5: Containerize Frontend
+### Phase 7: Frontend Containerization
 
-15. **Create frontend Dockerfile**
+23. **Create frontend Dockerfile**
     - Create Dockerfile for React application
     - Configure build process
     - Optimize for production
 
-16. **Create frontend deployment template**
+24. **Create frontend deployment template**
     - Define Deployment resource for frontend
     - Configure container settings
     - Define resource requirements
     - Add health checks
 
-17. **Create frontend service and ingress**
+25. **Create frontend service and ingress**
     - Define Service resource for frontend
     - Create Ingress resource
     - Configure TLS (if needed)
     - Add configuration values
 
-18. **Test frontend deployment**
+26. **Configure frontend environment**
+    - Create ConfigMap for frontend configuration
+    - Define environment variables for API access
+    - Configure authentication settings
+
+27. **Test frontend deployment**
     - Build and push frontend image
     - Deploy frontend resources
     - Validate frontend accessibility
 
-### Phase 6: Containerize Backend Services
-
-19. **Create base backend Dockerfile**
-    - Create common Dockerfile for Python services
-    - Configure Python dependencies
-    - Optimize for production
-
-20. **Create document processing services**
-    - Create Docker images for document upload and processing
-    - Create deployment templates
-    - Configure environment variables
-    - Define resource requirements
-
-21. **Create conversation services**
-    - Create Docker images for conversation management
-    - Create deployment templates
-    - Configure environment variables
-    - Define resource requirements
-
-22. **Create response generation service**
-    - Create Docker image for Bedrock integration
-    - Create deployment template
-    - Configure environment variables
-    - Define resource requirements
-
-23. **Test backend services**
-    - Build and push backend images
-    - Deploy backend resources
-    - Validate service functionality
-
-### Phase 7: API Gateway Replacement
-
-24. **Create API service**
-    - Create Docker image for API Gateway replacement
-    - Configure routing rules
-    - Create deployment template
-    - Define service and ingress
-
-25. **Configure authentication middleware**
-    - Implement Cognito authentication
-    - Configure JWT validation
-    - Create deployment resources
-
-26. **Test API functionality**
-    - Deploy API resources
-    - Validate routing and authentication
-    - Test API endpoints
-
 ### Phase 8: Integration and Testing
 
-27. **Configure environment connections**
-    - Update frontend configuration to use Kubernetes services
-    - Create service discovery mechanisms
-    - Configure backend service communication
+28. **Configure frontend-to-API integration**
+    - Update frontend configuration to use API Gateway
+    - Configure authentication flow
+    - Test connectivity
 
-28. **End-to-end testing**
+29. **End-to-end testing**
     - Test document upload flow
     - Test chat conversation flow
     - Validate PDF processing and embedding
 
-29. **Performance and scalability testing**
-    - Test under load
-    - Configure horizontal scaling
-    - Optimize resource usage
+30. **Performance and scalability testing**
+    - Test Lambda function performance
+    - Validate auto-scaling
+    - Optimize resource configuration
 
 ### Phase 9: Packaging and Documentation
 
-30. **Package Helm charts**
+31. **Package Helm charts**
     - Create chart archives
     - Configure chart repository
     - Manage chart versions
 
-31. **Create documentation**
+32. **Create documentation**
     - Document chart usage
     - Create installation guide
     - Document configuration options
 
-32. **Create deployment pipeline**
+33. **Create deployment pipeline**
     - Configure CI/CD for chart deployment
     - Create automated testing
     - Configure release process
@@ -339,6 +364,8 @@ Let's start by creating a Helm chart called 'crossplane-providers' with the foll
       - provider-aws-s3.yaml
       - provider-aws-dynamodb.yaml
       - provider-aws-sqs.yaml
+      - provider-aws-lambda.yaml
+      - provider-aws-apigateway.yaml
       - provider-aws-cognito.yaml
       - provider-aws-iam.yaml
       - provider-aws-bedrock.yaml
@@ -361,6 +388,12 @@ For values.yaml, define:
       - version: "v0.41.0"
       - controllerConfig: {}
     - sqs:
+      - version: "v0.41.0"
+      - controllerConfig: {}
+    - lambda:
+      - version: "v0.41.0"
+      - controllerConfig: {}
+    - apigateway:
       - version: "v0.41.0"
       - controllerConfig: {}
     - cognito:
@@ -482,8 +515,8 @@ Update the values.yaml file to include:
       - generateSecret: false
   - iam:
     - roles:
-      - s3Role:
-        - name: "s3-access-role"
+      - lambdaRole:
+        - name: "lambda-execution-role"
         - assumeRolePolicyDocument: |
             {
               "Version": "2012-10-17",
@@ -491,18 +524,27 @@ Update the values.yaml file to include:
                 {
                   "Effect": "Allow",
                   "Principal": {
-                    "Service": "ec2.amazonaws.com"
+                    "Service": "lambda.amazonaws.com"
                   },
                   "Action": "sts:AssumeRole"
                 }
               ]
             }
         - policies:
-          - name: "s3-access-policy"
+          - name: "lambda-execution-policy"
             document: |
               {
                 "Version": "2012-10-17",
                 "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Action": [
+                      "logs:CreateLogGroup",
+                      "logs:CreateLogStream",
+                      "logs:PutLogEvents"
+                    ],
+                    "Resource": "arn:aws:logs:*:*:*"
+                  },
                   {
                     "Effect": "Allow",
                     "Action": [
@@ -514,106 +556,280 @@ Update the values.yaml file to include:
                       "arn:aws:s3:::${documentBucketName}",
                       "arn:aws:s3:::${documentBucketName}/*"
                     ]
+                  },
+                  {
+                    "Effect": "Allow",
+                    "Action": [
+                      "dynamodb:GetItem",
+                      "dynamodb:PutItem",
+                      "dynamodb:UpdateItem",
+                      "dynamodb:DeleteItem",
+                      "dynamodb:Query",
+                      "dynamodb:Scan"
+                    ],
+                    "Resource": [
+                      "${documentTableArn}",
+                      "${memoryTableArn}"
+                    ]
+                  },
+                  {
+                    "Effect": "Allow",
+                    "Action": [
+                      "sqs:SendMessage",
+                      "sqs:ReceiveMessage",
+                      "sqs:DeleteMessage",
+                      "sqs:GetQueueAttributes"
+                    ],
+                    "Resource": "${embeddingQueueArn}"
+                  },
+                  {
+                    "Effect": "Allow",
+                    "Action": [
+                      "bedrock:InvokeModel"
+                    ],
+                    "Resource": "*"
                   }
                 ]
               }
-      - dynamoDBRole:
-        - name: "dynamodb-access-role"
-        - assumeRolePolicyDocument: |
-            # Trust policy JSON
-        - policies:
-          - name: "dynamodb-access-policy"
-            document: |
-              # Policy JSON
-      - bedrockRole:
-        - name: "bedrock-access-role"
-        - assumeRolePolicyDocument: |
-            # Trust policy JSON
-        - policies:
-          - name: "bedrock-access-policy"
-            document: |
-              # Policy JSON
-      - sqsRole:
-        - name: "sqs-access-role"
-        - assumeRolePolicyDocument: |
-            # Trust policy JSON
-        - policies:
-          - name: "sqs-access-policy"
-            document: |
-              # Policy JSON
 
 Create the following templates:
 1. cognito.yaml - Define a Cognito User Pool using Crossplane's AWS provider, with appropriate configuration for email verification, user attributes, and password policy. Also include a User Pool Client.
-2. iam.yaml - Define IAM roles and policies using Crossplane's AWS provider, including permissions for accessing S3, DynamoDB, SQS, and Bedrock.
+2. iam.yaml - Define IAM roles and policies using Crossplane's AWS provider, including permissions for Lambda execution and access to S3, DynamoDB, SQS, and Bedrock.
 
 Ensure all resources have proper naming based on the values file configuration and include appropriate metadata and labels. Make sure to include trust relationships in the IAM roles and reference other resources where necessary. Each resource should reference the appropriate provider configuration.
 
 Include support for dynamic references to other AWS resources (like the S3 bucket ARN in the IAM policy) using Helm templating.
 ```
 
-### Prompt 4: Application Kubernetes Resources
+### Prompt 4: Lambda Function Resources
 
 ```
-Now, let's set up the Kubernetes resources for our serverless-pdf-chat application.
+Now, let's create templates for the Lambda functions that will handle the serverless-pdf-chat application's business logic.
 
 Add the following templates to the serverless-pdf-chat chart:
-- templates/
-  - namespace.yaml
-  - serviceaccount.yaml
-  - configmap.yaml
-  - secret.yaml
+- templates/aws/lambda/
+  - upload-trigger.yaml
+  - generate-presigned-url.yaml
+  - generate-embeddings.yaml
+  - get-document.yaml
+  - get-all-documents.yaml
+  - delete-document.yaml
+  - add-conversation.yaml
+  - generate-response.yaml
 
 Update the values.yaml file to include:
-- kubernetes:
-  - namespace: "pdf-chat"
-  - serviceAccount:
-    - create: true
-    - name: "pdf-chat"
-    - annotations: {}
-  - podSecurityContext:
-    - fsGroup: 1000
-  - securityContext:
-    - capabilities:
-      - drop: ["ALL"]
-    - readOnlyRootFilesystem: true
-    - runAsNonRoot: true
-    - runAsUser: 1000
-- application:
-  - config:
-    - region: "us-east-1"
-    - embeddingModelId: "amazon.titan-embed-text-v2:0"
-    - modelId: "anthropic.claude-3-sonnet-20240229-v1:0"
-  - secrets:
-    - createAWSSecrets: true  # Whether to create secrets for AWS resource names
+- aws:
+  - lambda:
+    - runtime: "python3.11"
+    - handler: "lambda_function.lambda_handler"
+    - timeout: 30
+    - memorySize: 256
+    - environment:
+      - DOCUMENT_BUCKET: "{{ .Values.aws.s3.documentBucketName }}"
+      - DOCUMENT_TABLE: "{{ .Values.aws.dynamodb.documentTable.name }}"
+      - MEMORY_TABLE: "{{ .Values.aws.dynamodb.memoryTable.name }}"
+      - EMBEDDING_QUEUE: "{{ .Values.aws.sqs.embeddingQueue.name }}"
+      - EMBEDDING_MODEL_ID: "{{ .Values.application.config.embeddingModelId }}"
+      - MODEL_ID: "{{ .Values.application.config.modelId }}"
+      - REGION: "{{ .Values.application.config.region }}"
+    - functions:
+      - uploadTrigger:
+          name: "upload-trigger"
+          description: "Handles S3 uploads and triggers document processing"
+          timeout: 30
+          memorySize: 256
+          codePath: "./lambda/upload_trigger"
+          environment:
+            - ADDITIONAL_ENV_VAR: "value"
+      - generatePresignedUrl:
+          name: "generate-presigned-url"
+          description: "Generates presigned URLs for document uploads"
+          timeout: 10
+          memorySize: 128
+          codePath: "./lambda/generate_presigned_url"
+      - generateEmbeddings:
+          name: "generate-embeddings"
+          description: "Processes documents and generates embeddings"
+          timeout: 180
+          memorySize: 1024
+          codePath: "./lambda/generate_embeddings"
+      - getDocument:
+          name: "get-document"
+          description: "Retrieves document information"
+          timeout: 10
+          memorySize: 128
+          codePath: "./lambda/get_document"
+      - getAllDocuments:
+          name: "get-all-documents"
+          description: "Retrieves all user documents"
+          timeout: 10
+          memorySize: 128
+          codePath: "./lambda/get_all_documents"
+      - deleteDocument:
+          name: "delete-document"
+          description: "Deletes a document and its embeddings"
+          timeout: 30
+          memorySize: 256
+          codePath: "./lambda/delete_document"
+      - addConversation:
+          name: "add-conversation"
+          description: "Adds a new conversation to memory"
+          timeout: 10
+          memorySize: 128
+          codePath: "./lambda/add_conversation"
+      - generateResponse:
+          name: "generate-response"
+          description: "Generates a response using the LLM"
+          timeout: 60
+          memorySize: 512
+          codePath: "./lambda/generate_response"
+
+Create templates for each Lambda function, defining:
+1. Function resource - Using Crossplane's AWS Lambda provider
+2. Function code configuration - Either using S3 or ZIP file inline
+3. Environment variables - Including references to other resources
+4. IAM role configuration - Using the Lambda execution role
+5. Timeout and memory settings - Based on function requirements
+
+Ensure all resources have proper naming based on the values file configuration and include appropriate metadata and labels. Each resource should reference the appropriate provider configuration.
+
+Include support for dynamic references to other AWS resources using Helm templating.
+
+Note that the actual Lambda function code is not generated in this prompt - assume it's available in the paths specified in the values file.
+```
+
+### Prompt 5: API Gateway Resources
+
+```
+Now, let's create templates for the API Gateway that will serve as the frontend for our Lambda functions.
+
+Add the following templates to the serverless-pdf-chat chart:
+- templates/aws/
+  - apigateway.yaml
+  - apigateway-routes.yaml
+  - apigateway-authorizer.yaml
+
+Update the values.yaml file to include:
+- aws:
+  - apiGateway:
+    - name: "pdf-chat-api"
+    - description: "API for PDF Chat application"
+    - endpointConfiguration: "REGIONAL"
+    - corsEnabled: true
+    - corsOrigins: ["*"]
+    - stageName: "v1"
+    - authorizer:
+      - name: "cognito-authorizer"
+      - type: "COGNITO_USER_POOLS"
+      - identitySource: "method.request.header.Authorization"
+      - providerARNs:
+        - "{{ .Values.aws.cognito.userPool.arn }}"
+    - routes:
+      - generatePresignedUrl:
+        - path: "/generate_presigned_url"
+        - method: "GET"
+        - function: "{{ .Values.aws.lambda.functions.generatePresignedUrl.name }}"
+        - authorizationType: "COGNITO_USER_POOLS"
+      - getDocument:
+        - path: "/doc/{documentid}/{conversationid}"
+        - method: "GET"
+        - function: "{{ .Values.aws.lambda.functions.getDocument.name }}"
+        - authorizationType: "COGNITO_USER_POOLS"
+        - requestParameters:
+          - "method.request.path.documentid": true
+          - "method.request.path.conversationid": true
+      - getAllDocuments:
+        - path: "/doc"
+        - method: "GET"
+        - function: "{{ .Values.aws.lambda.functions.getAllDocuments.name }}"
+        - authorizationType: "COGNITO_USER_POOLS"
+      - addConversation:
+        - path: "/doc/{documentid}"
+        - method: "POST"
+        - function: "{{ .Values.aws.lambda.functions.addConversation.name }}"
+        - authorizationType: "COGNITO_USER_POOLS"
+        - requestParameters:
+          - "method.request.path.documentid": true
+      - generateResponse:
+        - path: "/{documentid}/{conversationid}"
+        - method: "POST"
+        - function: "{{ .Values.aws.lambda.functions.generateResponse.name }}"
+        - authorizationType: "COGNITO_USER_POOLS"
+        - requestParameters:
+          - "method.request.path.documentid": true
+          - "method.request.path.conversationid": true
+      - deleteDocument:
+        - path: "/doc/{documentid}"
+        - method: "DELETE"
+        - function: "{{ .Values.aws.lambda.functions.deleteDocument.name }}"
+        - authorizationType: "COGNITO_USER_POOLS"
+        - requestParameters:
+          - "method.request.path.documentid": true
+    - domains:
+      - name: "api.pdf-chat.example.com"
+        - certificateArn: ""
+        - basePath: ""
 
 Create the following templates:
-1. namespace.yaml - Define a Kubernetes namespace for the application.
-2. serviceaccount.yaml - Define a Kubernetes service account for the application.
-3. configmap.yaml - Define a ConfigMap containing application configuration, including AWS region, API endpoint, and other non-sensitive settings.
-4. secret.yaml - Define a Secret containing sensitive configuration, such as references to AWS resources.
+1. apigateway.yaml - Define the API Gateway REST API using Crossplane's AWS API Gateway provider, with proper CORS configuration.
+2. apigateway-routes.yaml - Define the routes and method resources, with integrations to the Lambda functions.
+3. apigateway-authorizer.yaml - Define the Cognito authorizer for authentication.
 
-Update the _helpers.tpl to include functions for:
-- Generating common labels across all resources
-- Forming full resource names with prefixes
-- Creating standard metadata blocks
-- Adding standard selectors
+Ensure all resources have proper naming based on the values file configuration and include appropriate metadata and labels. Each resource should reference the appropriate provider configuration.
 
-Ensure all resources have proper naming and include appropriate metadata and labels. Make sure to use the values from the values.yaml file for configuration.
+Include support for dynamic references to other AWS resources (like Lambda function ARNs) using Helm templating.
 
-Add conditional logic to create different resources based on configuration options (like whether to create a service account or not).
+Configure proper response and request templates for the Lambda integrations.
 
-Include support for annotations on resources, especially for integration with other Kubernetes components or service meshes.
+Add support for custom domain mapping if specified.
 ```
 
-### Prompt 5: Frontend Containerization and Deployment
+### Prompt 6: Event Triggers and Lambda Permissions
 
 ```
-Let's create a Dockerfile and Kubernetes deployment resources for the frontend of our serverless-pdf-chat application.
+Now, let's create templates for event triggers and permissions for our Lambda functions. This includes S3 event notifications and necessary permissions for API Gateway to invoke Lambda.
+
+Add the following templates to the serverless-pdf-chat chart:
+- templates/aws/
+  - s3-notifications.yaml
+  - lambda-permissions.yaml
+
+Update the values.yaml file to include:
+- aws:
+  - s3Notifications:
+    - uploadTrigger:
+      - events: ["s3:ObjectCreated:*"]
+      - filterPrefix: "uploads/"
+      - filterSuffix: ".pdf"
+      - function: "{{ .Values.aws.lambda.functions.uploadTrigger.name }}"
+  - lambdaPermissions:
+    - apiGateway:
+      - sourceArn: "{{ .Values.aws.apiGateway.arn }}/*/GET/generate_presigned_url"
+      - function: "{{ .Values.aws.lambda.functions.generatePresignedUrl.name }}"
+    - s3:
+      - sourceArn: "arn:aws:s3:::{{ .Values.aws.s3.documentBucketName }}"
+      - function: "{{ .Values.aws.lambda.functions.uploadTrigger.name }}"
+
+Create the following templates:
+1. s3-notifications.yaml - Define S3 bucket notifications for triggering Lambda functions when objects are created, using Crossplane's AWS S3 provider.
+2. lambda-permissions.yaml - Define permissions for services like API Gateway and S3 to invoke Lambda functions, using Crossplane's AWS Lambda provider.
+
+Ensure all resources have proper naming based on the values file configuration and include appropriate metadata and labels. Each resource should reference the appropriate provider configuration.
+
+Include support for dynamic references to other AWS resources (like S3 bucket ARNs and Lambda function ARNs) using Helm templating.
+
+Configure proper source ARNs for the permissions to restrict who can invoke the Lambda functions.
+```
+
+### Prompt 7: Frontend Containerization
+
+```
+Now, let's create a Dockerfile and Kubernetes deployment resources for the frontend of our serverless-pdf-chat application.
 
 First, create a Dockerfile for the React frontend:
 - Use Node 18 as the base image for building
 - Install dependencies
-- Build the frontend
+- Build the frontend with proper environment variable configuration
 - Use a multi-stage build approach
 - In the final stage, use Nginx as the base image to serve static files
 - Configure Nginx properly for a single-page application
@@ -669,16 +885,18 @@ Update the values.yaml file to include:
         hosts:
           - "pdf-chat.example.com"
   - config:
-    - apiEndpoint: "https://api.pdf-chat.example.com"
+    - apiEndpoint: "https://{{ .Values.aws.apiGateway.domains.name }}/{{ .Values.aws.apiGateway.stageName }}"
     - region: "{{ .Values.application.config.region }}"
+    - userPoolId: "{{ .Values.aws.cognito.userPool.id }}"
+    - userPoolClientId: "{{ .Values.aws.cognito.userPoolClient.id }}"
 
 Create the following templates:
-1. deployment.yaml - Define a Deployment for the frontend, including resource limits, probes, security context, and environment variables. Include autoscaling configuration.
+1. deployment.yaml - Define a Deployment for the frontend, including resource limits, probes, security context, and environment variables.
 2. service.yaml - Define a Service for the frontend, exposing the appropriate port.
 3. ingress.yaml - Define an Ingress for the frontend, with TLS configuration if enabled.
 4. configmap.yaml - Define a ConfigMap for frontend-specific configuration.
 
-Ensure the frontend container has the necessary environment variables to connect to the AWS resources and API Gateway. Use ConfigMap and Secret resources for configuration.
+Ensure the frontend container has the necessary environment variables to connect to the AWS API Gateway and authenticate with Cognito. Use ConfigMap and Secret resources for configuration.
 
 Include appropriate health checks (readiness and liveness probes) for the frontend container.
 
@@ -687,283 +905,27 @@ Add support for horizontal pod autoscaling based on the configuration.
 Configure a proper init container if needed for any setup tasks.
 ```
 
-### Prompt 6: Backend Services Containerization
+### Prompt 8: Application Resources and References
 
 ```
-Now, let's create Dockerfiles and Kubernetes deployment resources for the backend services that will replace the Lambda functions in our serverless-pdf-chat application.
-
-First, create a base Dockerfile for Python services:
-- Use Python 3.11 as the base image
-- Install common dependencies from requirements.txt
-- Configure environment
-- Follow best practices for container security and optimization
-
-Then, create specific Dockerfiles for each service:
-1. Document Upload Service (replaces upload_trigger, generate_presigned_url)
-2. Document Processing Service (replaces generate_embeddings)
-3. Document Management Service (replaces get_document, get_all_documents, delete_document)
-4. Conversation Service (replaces add_conversation)
-5. Response Generation Service (replaces generate_response)
+Now, let's create templates for application resources and references to help manage the interconnected AWS resources.
 
 Add the following templates to the serverless-pdf-chat chart:
-- templates/backend/
-  - document-upload/
-    - deployment.yaml
-    - service.yaml
-    - configmap.yaml
-  - document-processing/
-    - deployment.yaml
-    - service.yaml
-    - configmap.yaml
-  - document-management/
-    - deployment.yaml
-    - service.yaml
-    - configmap.yaml
-  - conversation/
-    - deployment.yaml
-    - service.yaml
-    - configmap.yaml
-  - response-generation/
-    - deployment.yaml
-    - service.yaml
-    - configmap.yaml
-
-Update the values.yaml file to include configuration for each backend service:
-- backend:
-  - common:
-    - image:
-      - pullPolicy: "IfNotPresent"
-    - resources:
-      - limits:
-        - cpu: "500m"
-        - memory: "512Mi"
-      - requests:
-        - cpu: "100m"
-        - memory: "256Mi"
-    - podSecurityContext: {}
-    - securityContext: {}
-    - nodeSelector: {}
-    - tolerations: []
-    - affinity: {}
-  - documentUpload:
-    - enabled: true
-    - image:
-      - repository: "your-registry/pdf-chat-document-upload"
-      - tag: "latest"
-    - replicaCount: 2
-    - autoscaling:
-      - enabled: true
-      - minReplicas: 2
-      - maxReplicas: 5
-      - targetCPUUtilizationPercentage: 70
-    - config:
-      - port: 8080
-      - timeoutSeconds: 30
-  - documentProcessing:
-    - enabled: true
-    - image:
-      - repository: "your-registry/pdf-chat-document-processing"
-      - tag: "latest"
-    - replicaCount: 2
-    - autoscaling:
-      - enabled: true
-      - minReplicas: 2
-      - maxReplicas: 5
-      - targetCPUUtilizationPercentage: 70
-    - config:
-      - port: 8080
-      - timeoutSeconds: 180
-      - memoryLimit: "1Gi"
-  # ... similar configuration for other services
-
-Create deployment templates for each service, including:
-- Resource limits and requests
-- Health checks (readiness and liveness probes)
-- Security context settings
-- Environment variables
-- Volume mounts (if needed)
-- Autoscaling configuration
-
-Create service templates for each service, defining appropriate ports and selectors.
-
-Create configmap templates for service-specific configuration.
-
-Ensure each service has the necessary environment variables to connect to the AWS resources managed by Crossplane. Use references to the outputs of the AWS resources.
-
-Include proper error handling and graceful shutdown in the container configurations.
-
-Support horizontal pod autoscaling for each service based on the configuration.
-```
-
-### Prompt 7: API Gateway Service
-
-```
-Let's create a Kubernetes-native API Gateway service to replace the AWS API Gateway used in the original serverless-pdf-chat application.
-
-First, create a Dockerfile for an API Gateway service:
-- Use a lightweight base image like Node.js
-- Install Express or another API framework
-- Configure routing and middleware
-- Set up authentication integration with Cognito
-- Optimize for performance and security
-
-Add the following templates to the serverless-pdf-chat chart:
-- templates/api/
-  - deployment.yaml
-  - service.yaml
-  - ingress.yaml
-  - configmap.yaml
-  - hpa.yaml
+- templates/
+  - namespace.yaml
+  - serviceaccount.yaml
+  - aws-references.yaml
+  - frontend-secrets.yaml
 
 Update the values.yaml file to include:
-- api:
-  - enabled: true
-  - image:
-    - repository: "your-registry/pdf-chat-api"
-    - tag: "latest"
-    - pullPolicy: "IfNotPresent"
-  - replicaCount: 2
-  - resources:
-    - limits:
-      - cpu: "300m"
-      - memory: "384Mi"
-    - requests:
-      - cpu: "100m"
-      - memory: "128Mi"
-  - autoscaling:
-    - enabled: true
-    - minReplicas: 2
-    - maxReplicas: 10
-    - targetCPUUtilizationPercentage: 70
-  - podSecurityContext: {}
-  - securityContext: {}
-  - nodeSelector: {}
-  - tolerations: []
-  - affinity: {}
-  - podAnnotations: {}
-  - service:
-    - type: "ClusterIP"
-    - port: 80
+- kubernetes:
+  - namespace: "pdf-chat"
+  - serviceAccount:
+    - create: true
+    - name: "pdf-chat"
     - annotations: {}
-  - ingress:
-    - enabled: true
-    - className: "nginx"
-    - annotations:
-      - "nginx.ingress.kubernetes.io/rewrite-target": "/$2"
-    - hosts:
-      - host: "api.pdf-chat.example.com"
-        paths:
-          - path: "/api(/|$)(.*)"
-            pathType: "Prefix"
-    - tls:
-      - secretName: "pdf-chat-api-tls"
-        hosts:
-          - "api.pdf-chat.example.com"
+- application:
   - config:
-    - port: 8080
-    - logLevel: "info"
-    - timeout: 30000
-    - corsEnabled: true
-    - corsOrigins:
-      - "*"
-  - routes:
-    - path: "/generate_presigned_url"
-      service: "document-upload"
-      port: 8080
-      method: "GET"
-    - path: "/doc/:documentid/:conversationid"
-      service: "document-management"
-      port: 8080
-      method: "GET"
-    - path: "/doc"
-      service: "document-management"
-      port: 8080
-      method: "GET"
-    - path: "/doc/:documentid"
-      service: "conversation"
-      port: 8080
-      method: "POST"
-    - path: "/:documentid/:conversationid"
-      service: "response-generation"
-      port: 8080
-      method: "POST"
-    - path: "/doc/:documentid"
-      service: "document-management"
-      port: 8080
-      method: "DELETE"
-  - auth:
-    - enabled: true
-    - cognito:
-      - userPoolId: "{{ .Values.aws.cognito.userPool.id }}"
-      - userPoolClientId: "{{ .Values.aws.cognito.userPoolClient.id }}"
-      - region: "{{ .Values.application.config.region }}"
-    - excludedPaths: []
-
-Create the following templates:
-1. deployment.yaml - Define a Deployment for the API Gateway, including resource limits, probes, security context, and environment variables.
-2. service.yaml - Define a Service for the API Gateway, exposing the appropriate port.
-3. ingress.yaml - Define an Ingress for the API Gateway, with TLS configuration if enabled.
-4. configmap.yaml - Define a ConfigMap containing API Gateway configuration, including routes and authentication settings.
-5. hpa.yaml - Define a HorizontalPodAutoscaler for the API Gateway.
-
-Ensure the API Gateway service has the necessary environment variables to connect to backend services and authenticate requests. Use ConfigMap and Secret resources for configuration.
-
-Include support for proper CORS configuration.
-
-Configure the API Gateway to validate JWT tokens from Cognito for authentication.
-
-Set up proper health checks and monitoring endpoints.
-
-Include rate limiting capabilities to protect backend services.
-```
-
-### Prompt 8: Integration and Configuration
-
-```
-Now, let's integrate all the components of our serverless-pdf-chat application and ensure they can communicate with each other properly.
-
-Update the frontend configuration to point to the new API Gateway service. Add the following environment variables to the frontend deployment:
-- REACT_APP_API_ENDPOINT: "{{ .Values.frontend.config.apiEndpoint }}"
-- REACT_APP_REGION: "{{ .Values.application.config.region }}"
-- REACT_APP_USER_POOL_ID: "{{ .Values.aws.cognito.userPool.id }}"
-- REACT_APP_USER_POOL_CLIENT_ID: "{{ .Values.aws.cognito.userPoolClient.id }}"
-
-Create a new ConfigMap template specifically for environment variables and service connections:
-- templates/connections-configmap.yaml
-
-Update the values.yaml file to include connection information for all services:
-- connections:
-  - frontend:
-    - apiEndpoint: "https://api.pdf-chat.example.com"
-  - documentUpload:
-    - s3BucketRef: 
-      name: "{{ .Release.Name }}-document-bucket"
-      namespace: "{{ .Release.Namespace }}"
-    - documentTableRef:
-      name: "{{ .Release.Name }}-document-table"
-      namespace: "{{ .Release.Namespace }}"
-    - memoryTableRef:
-      name: "{{ .Release.Name }}-memory-table"
-      namespace: "{{ .Release.Namespace }}"
-    - embeddingQueueRef:
-      name: "{{ .Release.Name }}-embedding-queue"
-      namespace: "{{ .Release.Namespace }}"
-  - documentProcessing:
-    - s3BucketRef: 
-      name: "{{ .Release.Name }}-document-bucket"
-      namespace: "{{ .Release.Namespace }}"
-    - documentTableRef:
-      name: "{{ .Release.Name }}-document-table"
-      namespace: "{{ .Release.Namespace }}"
-    - embeddingModelId: "{{ .Values.application.config.embeddingModelId }}"
-  - documentManagement:
-    - s3BucketRef: 
-      name: "{{ .Release.Name }}-document-bucket"
-      namespace: "{{ .Release.Namespace }}"
-    - documentTableRef:
-      name: "{{ .Release.Name }}-document-table"
-      namespace: "{{ .Release.Namespace }}"
-    - memoryTableRef:
-      name: "{{ .Release.Name }}-memory-table"
-      namespace: "{{ .Release.Namespace }}"
-  - conversation
+    - region: "us-east-1"
+    - embeddingModelId: "amazon.titan-embed-text-v2:0"
+    - modelId: "anthropic.claude-3-sonnet-20240229

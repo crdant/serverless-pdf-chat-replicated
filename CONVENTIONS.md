@@ -1,5 +1,12 @@
 # ✨ Serverless PDF Chat Crossplane Helm Project – Coding Conventions
 
+## ✅ Tracking Progress
+
+- Maintain `todo.md` and update it **whenever a change is made**. be sure to
+  commit the changes.
+  - ✅ Mark completed tasks.
+  - ➕ Add new resources or ideas as subtasks.
+
 ## 📁 File & Directory Naming
 
 - Use lowercase and hyphen-separated directory names.
@@ -87,8 +94,5 @@
 ## 🧾 Documentation
 
 - Maintain `README.md` with installation instructions.
-- Maintain `todo.md` and update it **whenever a change is made**.
-  - ✅ Mark completed tasks.
-  - ➕ Add new resources or ideas as subtasks.
 
 ---

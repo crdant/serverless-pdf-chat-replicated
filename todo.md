@@ -1,626 +1,316 @@
-# TODO Checklist: Converting Serverless PDF Chat to Helm/Crossplane
+# Serverless PDF Chat - Helm/Crossplane Migration Todo List
 
-## Phase 1: Crossplane Provider Chart
+## Project Overview
 
-### Initial Setup
-- [ ] Create project repository structure
-- [ ] Create crossplane-providers chart directory
-- [ ] Create Chart.yaml
-  - [ ] Add name, description, and version
-  - [ ] Add maintainer information
-- [ ] Create initial values.yaml 
-  - [ ] Define AWS region
-  - [ ] Define provider config name
-  - [ ] Define authentication parameters
-  - [ ] Define provider versions for each AWS service
-- [ ] Create templates directory
-  - [ ] Create _helpers.tpl for common functions/labels
+This is a detailed task list for migrating the PDF Chat application to Kubernetes using Helm and Crossplane, while preserving the original serverless Lambda architecture. 
 
-### AWS Provider Templates (Individual)
-- [ ] Create provider templates directory
-- [ ] Create provider-aws-s3.yaml
-  - [ ] Define Provider resource
-  - [ ] Configure provider version
-  - [ ] Set controller configuration
-- [ ] Create provider-aws-dynamodb.yaml
-  - [ ] Define Provider resource
-  - [ ] Configure provider version
-  - [ ] Set controller configuration
-- [ ] Create provider-aws-sqs.yaml
-  - [ ] Define Provider resource
-  - [ ] Configure provider version
-  - [ ] Set controller configuration
-- [ ] Create provider-aws-cognito.yaml
-  - [ ] Define Provider resource
-  - [ ] Configure provider version
-  - [ ] Set controller configuration
-- [ ] Create provider-aws-iam.yaml
-  - [ ] Define Provider resource
-  - [ ] Configure provider version
-  - [ ] Set controller configuration
-- [ ] Create provider-aws-bedrock.yaml
-  - [ ] Define Provider resource
-  - [ ] Configure provider version
-  - [ ] Set controller configuration
+Instead of containerizing the Lambda functions, we'll use Crossplane to manage the AWS Lambda resources directly, and only containerize the frontend for deployment to Kubernetes.
 
-### Provider Configuration
-- [ ] Create providerconfig.yaml template
-  - [ ] Define ProviderConfig for AWS
-  - [ ] Configure authentication method
-  - [ ] Set default region
-  - [ ] Add support for multiple AWS regions
-- [ ] Create documentation for AWS credentials setup
-- [ ] Create NOTES.txt with post-installation instructions
-  - [ ] Include verification steps
-  - [ ] Include troubleshooting tips
+## Phase 1: Crossplane Provider Chart Setup
 
-### Initial Testing
-- [ ] Create test script for provider installation
-- [ ] Verify provider installation
-- [ ] Verify provider status is 'Healthy'
-- [ ] Test basic provider configuration
+- [ ] **Create Crossplane providers chart structure**
+  - [ ] Create `crossplane-providers/` directory
+  - [ ] Create basic `Chart.yaml` with name, description, and version
+  - [ ] Create initial `values.yaml` file with AWS region and authentication settings
+  - [ ] Create `templates/` directory
+
+- [ ] **Set up common chart functions**
+  - [ ] Create `_helpers.tpl`
+  - [ ] Add functions for common labels
+  - [ ] Add functions for metadata generation
+  - [ ] Add functions for name formatting
+
+- [ ] **Create AWS provider templates**
+  - [ ] Create template for S3 provider (`provider-aws-s3.yaml`)
+  - [ ] Create template for DynamoDB provider (`provider-aws-dynamodb.yaml`)
+  - [ ] Create template for SQS provider (`provider-aws-sqs.yaml`)
+  - [ ] Create template for Lambda provider (`provider-aws-lambda.yaml`)
+  - [ ] Create template for API Gateway provider (`provider-aws-apigateway.yaml`)
+  - [ ] Create template for Cognito provider (`provider-aws-cognito.yaml`)
+  - [ ] Create template for IAM provider (`provider-aws-iam.yaml`)
+  - [ ] Create template for Bedrock provider (`provider-aws-bedrock.yaml`)
+  
+- [ ] **Configure AWS provider authentication**
+  - [ ] Create provider configuration template (`providerconfig.yaml`)
+  - [ ] Set up AWS credential secret reference
+  - [ ] Add documentation for creating the AWS secret
+
+- [ ] **Test providers chart**
+  - [ ] Verify chart syntax with `helm lint`
+  - [ ] Create test installation
+  - [ ] Validate provider status with `kubectl get providers`
+  - [ ] Troubleshoot any provider installation issues
 
 ## Phase 2: Core Infrastructure Resources
 
-### Application Chart Setup
-- [ ] Create serverless-pdf-chat chart directory
-- [ ] Create Chart.yaml
-  - [ ] Add name, description, and version
-  - [ ] Add dependency on crossplane-providers chart
-- [ ] Create basic values.yaml
-  - [ ] Define global configuration section
-  - [ ] Add name prefix settings
-  - [ ] Add environment settings
-- [ ] Create _helpers.tpl for common functions
+- [ ] **Create primary application chart structure**
+  - [ ] Create `serverless-pdf-chat/` directory
+  - [ ] Create `Chart.yaml` with dependency on providers chart
+  - [ ] Create initial `values.yaml` with application settings
+  - [ ] Create `templates/` directory
+  - [ ] Add common helper functions in `_helpers.tpl`
 
-### S3 Storage
-- [ ] Extend values.yaml with S3 configuration
-  - [ ] Add bucket name options
-  - [ ] Configure CORS settings
-  - [ ] Configure public access blocking
-  - [ ] Configure bucket policy settings
-- [ ] Create s3.yaml template
-  - [ ] Define Bucket resource
-  - [ ] Configure bucket properties
+- [ ] **Implement S3 bucket resource**
+  - [ ] Create `templates/aws/s3.yaml`
+  - [ ] Configure bucket with proper naming
   - [ ] Set up CORS configuration
-  - [ ] Configure bucket policies
-  - [ ] Add public access block settings
-  - [ ] Enforce HTTPS-only access
+  - [ ] Configure public access blocking
+  - [ ] Enable HTTPS enforcement
+  - [ ] Add metadata and references
 
-### DynamoDB Tables
-- [ ] Extend values.yaml with DynamoDB configuration
-  - [ ] Define document table settings
-  - [ ] Define memory table settings
-  - [ ] Configure billing mode
-- [ ] Create dynamodb.yaml template
-  - [ ] Define DocumentTable resource
-  - [ ] Define MemoryTable resource
-  - [ ] Configure key schemas
-  - [ ] Set billing mode
-  - [ ] Add capacity settings
-  - [ ] Configure attribute definitions
+- [ ] **Implement DynamoDB tables**
+  - [ ] Create `templates/aws/dynamodb.yaml`
+  - [ ] Define document table with proper key schema
+  - [ ] Define memory table with session ID key
+  - [ ] Configure billing mode (pay-per-request)
+  - [ ] Add metadata and references
 
-### SQS Queue
-- [ ] Extend values.yaml with SQS configuration
-  - [ ] Define embedding queue settings
-  - [ ] Configure visibility timeout
+- [ ] **Implement SQS queue**
+  - [ ] Create `templates/aws/sqs.yaml`
+  - [ ] Configure embedding queue with proper timeout
   - [ ] Set message retention period
-- [ ] Create sqs.yaml template
-  - [ ] Define EmbeddingQueue resource
-  - [ ] Configure queue properties
-  - [ ] Set visibility timeout
-  - [ ] Set message retention period
-  - [ ] Configure queue policy (if needed)
+  - [ ] Add metadata and references
 
-### Test Infrastructure Resources
-- [ ] Create test script for infrastructure resources
-- [ ] Install chart with infrastructure values
-- [ ] Verify S3 bucket creation
-- [ ] Verify DynamoDB tables creation
-- [ ] Verify SQS queue creation
-- [ ] Test resource properties
+- [ ] **Test infrastructure resources**
+  - [ ] Deploy chart with infrastructure resources only
+  - [ ] Verify resource creation in AWS console
+  - [ ] Validate resource properties and configuration
+  - [ ] Test permissions and access
 
 ## Phase 3: Authentication and Security Resources
 
-### Cognito User Pool
-- [ ] Extend values.yaml with Cognito configuration
-  - [ ] Configure user pool settings
-  - [ ] Configure user pool client settings
-  - [ ] Set auto-verified attributes
-- [ ] Create cognito.yaml template
-  - [ ] Define UserPool resource
-  - [ ] Configure pool properties
-  - [ ] Define UserPoolClient
-  - [ ] Configure client settings
-  - [ ] Set password policy
+- [ ] **Implement Cognito resources**
+  - [ ] Create `templates/aws/cognito.yaml`
+  - [ ] Define user pool with proper attributes
+  - [ ] Configure password policy
+  - [ ] Set up email verification
+  - [ ] Create user pool client
+  - [ ] Add metadata and references
 
-### IAM Resources
-- [ ] Extend values.yaml with IAM configuration
-  - [ ] Define IAM role settings for S3 access
-  - [ ] Define IAM role settings for DynamoDB access
-  - [ ] Define IAM role settings for SQS access
-  - [ ] Define IAM role settings for Bedrock access
-- [ ] Create iam.yaml template
-  - [ ] Define IAM roles for services
-  - [ ] Define IAM policies
-  - [ ] Configure trust relationships
-  - [ ] Set up service permissions
-  - [ ] Create Helm template for dynamic ARN references
+- [ ] **Implement IAM resources**
+  - [ ] Create `templates/aws/iam.yaml`
+  - [ ] Define Lambda execution role
+  - [ ] Configure trust relationship for Lambda
+  - [ ] Create policies for S3 access
+  - [ ] Create policies for DynamoDB access
+  - [ ] Create policies for SQS access
+  - [ ] Create policies for Bedrock access
+  - [ ] Add metadata and references
 
-### Test Auth Resources
-- [ ] Create test script for auth resources
-- [ ] Install chart with auth values
-- [ ] Verify Cognito user pool creation
-- [ ] Verify IAM role and policy creation
-- [ ] Test creating a test user
-- [ ] Verify role permissions
+- [ ] **Test authentication setup**
+  - [ ] Deploy chart with auth resources
+  - [ ] Create test user in Cognito
+  - [ ] Verify IAM role permissions
+  - [ ] Test authentication flow
 
-## Phase 4: Application Kubernetes Resources
+## Phase 4: Lambda Function Resources
 
-### Namespace Setup
-- [ ] Extend values.yaml with namespace configuration
-- [ ] Create namespace.yaml template
-  - [ ] Define namespace properties
-  - [ ] Add labels and annotations
-  - [ ] Include resource quotas (if needed)
+- [ ] **Define Lambda function templates**
+  - [ ] Create `templates/aws/lambda/` directory
+  - [ ] Create template for upload trigger (`upload-trigger.yaml`)
+  - [ ] Create template for presigned URL generation (`generate-presigned-url.yaml`)
+  - [ ] Create template for embedding generation (`generate-embeddings.yaml`)
+  - [ ] Create template for document retrieval (`get-document.yaml`)
+  - [ ] Create template for document listing (`get-all-documents.yaml`)
+  - [ ] Create template for document deletion (`delete-document.yaml`)
+  - [ ] Create template for conversation management (`add-conversation.yaml`)
+  - [ ] Create template for response generation (`generate-response.yaml`)
 
-### Service Account Setup
-- [ ] Extend values.yaml with service account configuration
-- [ ] Create serviceaccount.yaml template
-  - [ ] Define service account properties
-  - [ ] Add annotations for AWS IAM integration (if needed)
-  - [ ] Configure resource limits
+- [ ] **Configure Lambda function code**
+  - [ ] Set up code packaging format (ZIP)
+  - [ ] Define code source location
+  - [ ] Configure Python runtime settings
+  - [ ] Set memory and timeout per function
+  - [ ] Configure environment variables
 
-### Application Configuration
-- [ ] Extend values.yaml with application configuration
-  - [ ] Add AWS region settings
-  - [ ] Configure LLM model IDs
-  - [ ] Add embedding model settings
-- [ ] Create configmap.yaml template
-  - [ ] Add application settings
-  - [ ] Add AWS service references
-  - [ ] Configure environment-specific settings
+- [ ] **Configure Lambda permissions and roles**
+  - [ ] Assign IAM execution role to functions
+  - [ ] Configure resource-based policies
+  - [ ] Set up cross-service permissions
 
-### Secrets Management
-- [ ] Extend values.yaml with secrets configuration
-- [ ] Create secret.yaml template
-  - [ ] Add sensitive configuration
-  - [ ] Reference AWS resource outputs
-  - [ ] Configure credential references
+- [ ] **Test Lambda functions**
+  - [ ] Deploy chart with Lambda resources
+  - [ ] Verify function creation in AWS console
+  - [ ] Test function invocation
+  - [ ] Validate environment variable configuration
 
-### Test Configuration
-- [ ] Create test script for configuration
-- [ ] Install chart with configuration values
-- [ ] Verify namespace creation
-- [ ] Verify service account creation
-- [ ] Verify ConfigMap creation
-- [ ] Verify Secret creation
+## Phase 5: API Gateway Configuration
 
-## Phase 5: Frontend Containerization and Deployment
+- [ ] **Create API Gateway resources**
+  - [ ] Create `templates/aws/apigateway.yaml`
+  - [ ] Define REST API with proper name and configuration
+  - [ ] Configure CORS settings
+  - [ ] Set up deployment stage
+  - [ ] Add metadata and references
 
-### Frontend Container
-- [ ] Create Dockerfile for frontend
+- [ ] **Define API routes and methods**
+  - [ ] Create `templates/aws/apigateway-routes.yaml`
+  - [ ] Configure route for generating presigned URLs
+  - [ ] Configure route for document retrieval
+  - [ ] Configure route for document listing
+  - [ ] Configure route for conversation creation
+  - [ ] Configure route for response generation
+  - [ ] Configure route for document deletion
+  - [ ] Set up Lambda integrations for each route
+
+- [ ] **Set up API authentication**
+  - [ ] Create `templates/aws/apigateway-authorizer.yaml`
+  - [ ] Configure Cognito authorizer
+  - [ ] Set up authorization scopes
+  - [ ] Define protected routes
+
+- [ ] **Configure custom domain (optional)**
+  - [ ] Set up domain name in API Gateway
+  - [ ] Configure base path mapping
+  - [ ] Set up TLS certificate
+
+- [ ] **Test API Gateway**
+  - [ ] Deploy chart with API Gateway resources
+  - [ ] Verify endpoint creation
+  - [ ] Test API endpoints with authentication
+  - [ ] Validate CORS functionality
+
+## Phase 6: Event Triggers Configuration
+
+- [ ] **Configure S3 event notifications**
+  - [ ] Create `templates/aws/s3-notifications.yaml`
+  - [ ] Set up trigger for PDF uploads
+  - [ ] Configure event types and filters
+  - [ ] Link to Lambda function
+
+- [ ] **Set up Lambda permissions**
+  - [ ] Create `templates/aws/lambda-permissions.yaml`
+  - [ ] Configure permissions for API Gateway invocation
+  - [ ] Configure permissions for S3 event triggers
+  - [ ] Set up proper source ARNs
+
+- [ ] **Test event triggers**
+  - [ ] Deploy chart with trigger resources
+  - [ ] Verify notification configuration
+  - [ ] Test end-to-end flow with file upload
+  - [ ] Validate event-driven processing
+
+## Phase 7: Frontend Containerization
+
+- [ ] **Create frontend Dockerfile**
   - [ ] Set up Node.js build environment
-  - [ ] Install dependencies
-  - [ ] Build frontend assets
-  - [ ] Configure Nginx for serving
-  - [ ] Implement multi-stage build
-  - [ ] Optimize for production
-- [ ] Document build process
-- [ ] Build and push frontend image
+  - [ ] Configure dependency installation
+  - [ ] Set up build process with environment variables
+  - [ ] Create multi-stage build with Nginx
+  - [ ] Configure Nginx for SPA routing
 
-### Frontend Deployment
-- [ ] Extend values.yaml with frontend deployment configuration
-  - [ ] Configure image settings
-  - [ ] Set resource limits
-  - [ ] Configure replica count
-  - [ ] Add autoscaling settings
-  - [ ] Set security context
-- [ ] Create frontend/deployment.yaml
-  - [ ] Define Deployment resource
-  - [ ] Configure container settings
-  - [ ] Set resource limits
-  - [ ] Add health checks
-  - [ ] Mount configuration
-  - [ ] Set up security context
-  - [ ] Configure node selection (if needed)
+- [ ] **Create Kubernetes resources for frontend**
+  - [ ] Create `templates/frontend/deployment.yaml`
+  - [ ] Create `templates/frontend/service.yaml`
+  - [ ] Create `templates/frontend/ingress.yaml`
+  - [ ] Create `templates/frontend/configmap.yaml`
 
-### Frontend Service and Ingress
-- [ ] Extend values.yaml with frontend service configuration
-- [ ] Create frontend/service.yaml
-  - [ ] Define Service resource
-  - [ ] Configure port settings
-  - [ ] Set selector labels
-- [ ] Create frontend/ingress.yaml
-  - [ ] Define Ingress resource
-  - [ ] Configure routing
-  - [ ] Set up TLS
-  - [ ] Add annotations for ingress controller
-- [ ] Create frontend/configmap.yaml for frontend-specific settings
+- [ ] **Configure frontend environment**
+  - [ ] Set up API endpoint reference
+  - [ ] Configure Cognito client details
+  - [ ] Set up regional settings
+  - [ ] Create environment variables
 
-### Frontend Autoscaling
-- [ ] Extend values.yaml with autoscaling configuration
-- [ ] Create frontend/hpa.yaml (if needed)
-  - [ ] Configure min/max replicas
-  - [ ] Set target metrics
-  - [ ] Configure scaling behavior
+- [ ] **Set up frontend health and scaling**
+  - [ ] Configure readiness probe
+  - [ ] Configure liveness probe
+  - [ ] Set up resource limits and requests
+  - [ ] Configure horizontal scaling (optional)
 
-### Test Frontend Deployment
-- [ ] Create test script for frontend deployment
-- [ ] Install chart with frontend values
-- [ ] Verify frontend deployment
-- [ ] Test frontend service
-- [ ] Test frontend ingress
-- [ ] Verify frontend functionality
-- [ ] Test autoscaling (if configured)
+- [ ] **Build and push frontend image**
+  - [ ] Create CI pipeline for image building
+  - [ ] Push image to container registry
+  - [ ] Update image reference in values file
 
-## Phase 6: Backend Services - Document Management
+- [ ] **Test frontend deployment**
+  - [ ] Deploy frontend-only resources
+  - [ ] Verify container startup
+  - [ ] Check service connectivity
+  - [ ] Test ingress and TLS
 
-### Common Backend Configuration
-- [ ] Create base Dockerfile for Python services
-  - [ ] Set up Python environment
-  - [ ] Configure common dependencies
-  - [ ] Set up application structure
-  - [ ] Optimize for security and performance
-- [ ] Document build process for backend services
-- [ ] Create common backend deployment templates (if applicable)
+## Phase 8: Supporting Kubernetes Resources
 
-### Document Upload Service
-- [ ] Create Dockerfile for document upload service
-  - [ ] Inherit from base Dockerfile
-  - [ ] Add service-specific dependencies
-  - [ ] Configure service code
-- [ ] Build and push image
-- [ ] Extend values.yaml with service configuration
-- [ ] Create backend/document-upload/deployment.yaml
-  - [ ] Configure container settings
-  - [ ] Set resource limits
-  - [ ] Add health checks
-  - [ ] Mount configuration
-- [ ] Create backend/document-upload/service.yaml
-- [ ] Create backend/document-upload/configmap.yaml
-- [ ] Create backend/document-upload/hpa.yaml (if needed)
+- [ ] **Create namespace resources**
+  - [ ] Create `templates/namespace.yaml`
+  - [ ] Configure namespace metadata and labels
 
-### Document Processing Service
-- [ ] Create Dockerfile for document processing service
-  - [ ] Inherit from base Dockerfile
-  - [ ] Add service-specific dependencies
-  - [ ] Configure service code
-- [ ] Build and push image
-- [ ] Extend values.yaml with service configuration
-- [ ] Create backend/document-processing/deployment.yaml
-  - [ ] Configure container settings
-  - [ ] Set resource limits
-  - [ ] Add health checks
-  - [ ] Mount configuration
-- [ ] Create backend/document-processing/service.yaml
-- [ ] Create backend/document-processing/configmap.yaml
-- [ ] Create backend/document-processing/hpa.yaml (if needed)
+- [ ] **Set up service account**
+  - [ ] Create `templates/serviceaccount.yaml`
+  - [ ] Configure proper annotations and permissions
 
-### Document Management Service
-- [ ] Create Dockerfile for document management service
-  - [ ] Inherit from base Dockerfile
-  - [ ] Add service-specific dependencies
-  - [ ] Configure service code
-- [ ] Build and push image
-- [ ] Extend values.yaml with service configuration
-- [ ] Create backend/document-management/deployment.yaml
-  - [ ] Configure container settings
-  - [ ] Set resource limits
-  - [ ] Add health checks
-  - [ ] Mount configuration
-- [ ] Create backend/document-management/service.yaml
-- [ ] Create backend/document-management/configmap.yaml
-- [ ] Create backend/document-management/hpa.yaml (if needed)
+- [ ] **Create configuration resources**
+  - [ ] Create `templates/aws-references.yaml` for AWS resource references
+  - [ ] Create `templates/frontend-secrets.yaml` for sensitive data
 
-### Test Document Management Services
-- [ ] Create test script for document services
-- [ ] Install chart with document service values
-- [ ] Verify service deployments
-- [ ] Test document upload
-- [ ] Test document processing
-- [ ] Test document retrieval
-- [ ] Test service autoscaling (if configured)
+- [ ] **Test Kubernetes resources**
+  - [ ] Deploy supporting resources
+  - [ ] Verify proper creation and configuration
+  - [ ] Check namespace isolation
+  - [ ] Validate permissions
 
-## Phase 7: Backend Services - Conversation Management
+## Phase 9: Integration and End-to-End Testing
 
-### Conversation Service
-- [ ] Create Dockerfile for conversation service
-  - [ ] Inherit from base Dockerfile
-  - [ ] Add service-specific dependencies
-  - [ ] Configure service code
-- [ ] Build and push image
-- [ ] Extend values.yaml with service configuration
-- [ ] Create backend/conversation/deployment.yaml
-  - [ ] Configure container settings
-  - [ ] Set resource limits
-  - [ ] Add health checks
-  - [ ] Mount configuration
-- [ ] Create backend/conversation/service.yaml
-- [ ] Create backend/conversation/configmap.yaml
-- [ ] Create backend/conversation/hpa.yaml (if needed)
+- [ ] **Configure frontend-to-API integration**
+  - [ ] Update frontend to use API Gateway endpoint
+  - [ ] Configure authentication flow
+  - [ ] Test API connectivity from frontend
 
-### Response Generation Service
-- [ ] Create Dockerfile for response generation service
-  - [ ] Inherit from base Dockerfile
-  - [ ] Add service-specific dependencies
-  - [ ] Configure service code
-  - [ ] Optimize for Bedrock integration
-- [ ] Build and push image
-- [ ] Extend values.yaml with service configuration
-- [ ] Create backend/response-generation/deployment.yaml
-  - [ ] Configure container settings
-  - [ ] Set resource limits
-  - [ ] Add health checks
-  - [ ] Mount configuration
-- [ ] Create backend/response-generation/service.yaml
-- [ ] Create backend/response-generation/configmap.yaml
-- [ ] Create backend/response-generation/hpa.yaml (if needed)
+- [ ] **Test complete document workflow**
+  - [ ] Test document upload functionality
+  - [ ] Verify embedding generation
+  - [ ] Test document retrieval
+  - [ ] Validate conversation creation
 
-### Test Conversation Services
-- [ ] Create test script for conversation services
-- [ ] Install chart with conversation service values
-- [ ] Verify service deployments
-- [ ] Test conversation creation
-- [ ] Test response generation
-- [ ] Test service autoscaling (if configured)
+- [ ] **Test conversation workflow**
+  - [ ] Test question submission
+  - [ ] Verify response generation
+  - [ ] Test conversation memory
+  - [ ] Validate context understanding
 
-## Phase 8: API Gateway Service
+- [ ] **Performance testing**
+  - [ ] Test Lambda function performance
+  - [ ] Measure response times
+  - [ ] Validate frontend responsiveness
+  - [ ] Test under load conditions
 
-### API Gateway Service
-- [ ] Create Dockerfile for API Gateway service
-  - [ ] Set up Node.js environment
-  - [ ] Configure Express or similar framework
-  - [ ] Set up routing mechanisms
-  - [ ] Configure authentication middleware
-  - [ ] Optimize for performance
-- [ ] Build and push image
-- [ ] Extend values.yaml with API configuration
-  - [ ] Configure image settings
-  - [ ] Set resource limits
-  - [ ] Define routes
-  - [ ] Configure authentication settings
-  - [ ] Set up CORS configuration
-- [ ] Create api/deployment.yaml
-  - [ ] Configure container settings
-  - [ ] Set resource limits
-  - [ ] Add health checks
-  - [ ] Mount configuration
-- [ ] Create api/service.yaml
-- [ ] Create api/ingress.yaml
-  - [ ] Configure routing rules
-  - [ ] Set up TLS
-  - [ ] Add annotations for ingress controller
-- [ ] Create api/configmap.yaml
-  - [ ] Define route configurations
-  - [ ] Configure timeouts
-  - [ ] Set up logging
-- [ ] Create api/hpa.yaml
-  - [ ] Configure min/max replicas
-  - [ ] Set target metrics
+- [ ] **Security testing**
+  - [ ] Verify authentication requirements
+  - [ ] Test authorization controls
+  - [ ] Check for exposed credentials
+  - [ ] Validate TLS configuration
 
-### Auth Integration
-- [ ] Extend values.yaml with auth configuration
-- [ ] Configure Cognito JWT validation in API Gateway
-  - [ ] Set up token validation
-  - [ ] Configure user claims extraction
-  - [ ] Set up role mapping
-- [ ] Configure path-based authorization rules
-- [ ] Set up authentication bypass for specific paths (if needed)
+## Phase 10: Packaging and Documentation
 
-### Test API Gateway
-- [ ] Create test script for API Gateway
-- [ ] Install chart with API values
-- [ ] Verify API deployment
-- [ ] Test API routing
-- [ ] Test authentication flow
-- [ ] Test API endpoints
-- [ ] Verify CORS configuration
-- [ ] Test rate limiting (if configured)
-- [ ] Test API autoscaling (if configured)
+- [ ] **Package Helm charts**
+  - [ ] Create chart archives
+  - [ ] Generate chart dependencies
+  - [ ] Update version information
+  - [ ] Create chart repository (optional)
 
-## Phase 9: Integration and Environment Connections
+- [ ] **Create documentation**
+  - [ ] Document chart values and configuration options
+  - [ ] Create installation guide
+  - [ ] Document AWS requirements and permissions
+  - [ ] Create troubleshooting guide
 
-### Service Discovery and Connections
-- [ ] Extend values.yaml with connection configuration
-- [ ] Create connections-configmap.yaml
-  - [ ] Define service endpoints
-  - [ ] Configure AWS resource references
-  - [ ] Set up authentication parameters
-- [ ] Update frontend configuration to use API Gateway
-- [ ] Configure backend service communication via Kubernetes service discovery
-- [ ] Set up proper environment variable references across services
+- [ ] **Set up CI/CD pipeline**
+  - [ ] Configure chart validation
+  - [ ] Set up automated deployment
+  - [ ] Create rollback procedures
+  - [ ] Document pipeline usage
 
-### Environment Variable Configuration
-- [ ] Update deployment templates to include environment variables
-  - [ ] Frontend environment variables
-  - [ ] Backend service environment variables
-  - [ ] API Gateway environment variables
-- [ ] Configure secret references for sensitive data
-- [ ] Set up ConfigMap references for non-sensitive data
-- [ ] Document environment variable requirements
+- [ ] **Finalize project**
+  - [ ] Clean up temporary resources
+  - [ ] Perform final validation
+  - [ ] Update any remaining documentation
+  - [ ] Create final release
 
-### Test Service Connections
-- [ ] Create test script for service connections
-- [ ] Verify proper configuration loading
-- [ ] Test service-to-service communication
-- [ ] Validate AWS resource references
-- [ ] Test secret and ConfigMap mounting
+## Reference Resources
 
-## Phase 10: End-to-End Testing
-
-### Integration Testing
-- [ ] Create test script for end-to-end testing
-- [ ] Test document upload flow
-  - [ ] Upload a PDF
-  - [ ] Verify metadata extraction
-  - [ ] Confirm embedding generation
-- [ ] Test document management flow
-  - [ ] List documents
-  - [ ] View document details
-  - [ ] Delete documents
-- [ ] Test conversation flow
-  - [ ] Create conversations
-  - [ ] Add messages
-  - [ ] Validate responses
-- [ ] Validate PDF processing and embedding
-
-### Performance Testing
-- [ ] Create test script for performance testing
-- [ ] Test application under load
-  - [ ] Simulate multiple users
-  - [ ] Test concurrent document uploads
-  - [ ] Test simultaneous conversations
-- [ ] Verify horizontal scaling
-  - [ ] Test autoscaling triggers
-  - [ ] Validate scaling behavior
-- [ ] Optimize resource usage
-  - [ ] Tune resource limits
-  - [ ] Adjust scaling parameters
-- [ ] Document performance characteristics
-
-## Phase 11: Packaging and Documentation
-
-### Chart Packaging
-- [ ] Update Chart.yaml files with final metadata
-- [ ] Create values.schema.json for validation
-- [ ] Package charts with helm package
-- [ ] Set up chart repository (if needed)
-- [ ] Document chart versioning strategy
-
-### Documentation
-- [ ] Create detailed README.md for each chart
-  - [ ] Document chart purpose
-  - [ ] List prerequisites
-  - [ ] Include installation instructions
-  - [ ] Document configuration options
-  - [ ] Provide usage examples
-- [ ] Create NOTES.txt templates
-  - [ ] Include post-installation instructions
-  - [ ] Add verification steps
-  - [ ] Provide troubleshooting tips
-- [ ] Document chart dependencies and relationships
-- [ ] Create installation guide
-  - [ ] Document step-by-step installation
-  - [ ] Include custom configuration examples
-  - [ ] Provide cluster preparation steps
-- [ ] Create upgrade guide
-- [ ] Document backup and restore procedures
-
-### Deployment Scripts
-- [ ] Create deployment scripts
-  - [ ] Installation script
-  - [ ] Upgrade script
-  - [ ] Rollback script
-  - [ ] Uninstall script
-- [ ] Document script usage
-- [ ] Create CI/CD pipeline configuration
-  - [ ] Chart linting
-  - [ ] Chart testing
-  - [ ] Chart publishing
-
-## Phase 12: CI/CD and Additional Testing
-
-### CI/CD Pipeline
-- [ ] Create GitHub Actions workflow
-  - [ ] Configure chart linting
-  - [ ] Set up automated testing
-  - [ ] Configure deployment stages
-- [ ] Set up chart validation
-- [ ] Configure integration testing in pipeline
-- [ ] Set up release automation
-
-### Additional Testing
-- [ ] Create unit tests for Helm templates
-  - [ ] Test provider templates
-  - [ ] Test AWS resource templates
-  - [ ] Test Kubernetes resource templates
-- [ ] Set up integration tests
-  - [ ] Test across different environments
-  - [ ] Validate upgrades
-  - [ ] Test multi-chart installations
-- [ ] Create end-to-end tests
-- [ ] Document testing procedures
-
-### Finalization
-- [ ] Review resource security
-  - [ ] Check IAM permissions
-  - [ ] Validate network policies
-  - [ ] Review pod security
-- [ ] Optimize chart values
-  - [ ] Set appropriate defaults
-  - [ ] Add validation
-  - [ ] Document advanced options
-- [ ] Ensure all dependencies are documented
-- [ ] Perform final end-to-end testing
-- [ ] Prepare release notes
-
-## Phase 13: Production Readiness
-
-### Monitoring and Logging
-- [ ] Configure Prometheus metrics
-  - [ ] Add service metrics
-  - [ ] Configure custom metrics
-  - [ ] Set up alerting rules
-- [ ] Set up centralized logging
-  - [ ] Configure log formats
-  - [ ] Set up log shipping
-  - [ ] Create log retention policy
-- [ ] Create Grafana dashboards
-  - [ ] System dashboards
-  - [ ] Application dashboards
-  - [ ] AWS resource dashboards
-- [ ] Configure alerts
-  - [ ] System alerts
-  - [ ] Application alerts
-  - [ ] Business metric alerts
-
-### Backup and Disaster Recovery
-- [ ] Configure backups for DynamoDB
-  - [ ] Set up automatic backups
-  - [ ] Configure retention policy
-- [ ] Set up S3 bucket versioning
-  - [ ] Configure lifecycle policies
-  - [ ] Set up cross-region replication (if needed)
-- [ ] Document recovery procedures
-  - [ ] Create step-by-step recovery guide
-  - [ ] Define RTO and RPO targets
-- [ ] Test disaster recovery
-  - [ ] Validate backup restoration
-  - [ ] Test failover procedures
-  - [ ] Document recovery times
-
-### Security Review
-- [ ] Review IAM permissions
-  - [ ] Validate least privilege
-  - [ ] Check for overly permissive policies
-- [ ] Validate network security
-  - [ ] Review ingress/egress rules
-  - [ ] Check TLS configuration
-  - [ ] Validate authentication flows
-- [ ] Check for sensitive data exposure
-  - [ ] Review logs for sensitive data
-  - [ ] Check ConfigMaps and Secrets
-  - [ ] Validate encryption settings
-- [ ] Perform security scanning
-  - [ ] Scan container images
-  - [ ] Check Helm charts for vulnerabilities
-  - [ ] Validate Kubernetes resources
-
-### Final Documentation
-- [ ] Create operations guide
-  - [ ] Document routine operations
-  - [ ] Include troubleshooting steps
-  - [ ] Add maintenance procedures
-- [ ] Document scaling procedures
-  - [ ] Vertical scaling instructions
-  - [ ] Horizontal scaling guidelines
-  - [ ] Cloud resource scaling
-- [ ] Create maintenance playbook
-  - [ ] Update procedures
-  - [ ] Backup procedures
-  - [ ] Recovery procedures
-- [ ] Finalize all documentation
-  - [ ] Review for completeness
-  - [ ] Validate accuracy
-  - [ ] Update with latest changes
+- Crossplane AWS Provider Documentation
+- AWS Lambda Documentation
+- Helm Best Practices
+- Kubernetes Documentation
+- AWS API Gateway Documentation
+- AWS Cognito Documentation
+- Frontend React Documentation
