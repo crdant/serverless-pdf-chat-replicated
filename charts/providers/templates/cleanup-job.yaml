@@ -20,6 +20,9 @@ spec:
         - /bin/sh
         - -c
         - |
+          # Delete provider config
+          kubectl delete providerconfig.aws.upbound.io {{ .Values.aws.providerConfigName }} --ignore-not-found
+          
           # Delete family provider
           kubectl delete provider.pkg.crossplane.io upbound-provider-family-aws --ignore-not-found
           
@@ -44,6 +47,9 @@ metadata:
     "helm.sh/hook-weight": "-1"
     "helm.sh/hook-delete-policy": hook-succeeded,hook-failed
 rules:
+- apiGroups: ["aws.upbound.io"]
+  resources: ["providerconfigs"]
+  verbs: ["get", "list", "delete"]
 - apiGroups: ["pkg.crossplane.io"]
   resources: ["providers"]
   verbs: ["get", "list", "delete"]
