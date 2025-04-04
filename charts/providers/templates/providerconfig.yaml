@@ -1,0 +1,14 @@
+apiVersion: aws.upbound.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: {{ .Values.aws.providerConfigName }}
+spec:
+  credentials:
+    source: {{ .Values.aws.authentication.method }}
+    {{- if eq .Values.aws.authentication.method "Secret" }}
+    secretRef:
+      namespace: {{ .Values.aws.authentication.secret.namespace }}
+      name: {{ .Values.aws.authentication.secret.name }}
+      key: creds
+    {{- end }}
+  region: {{ .Values.aws.region }}

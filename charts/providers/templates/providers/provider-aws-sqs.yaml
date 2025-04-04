@@ -1,0 +1,12 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: upbound-provider-aws-sqs
+  labels:
+    {{- include "crossplane-providers.labels" . | nindent 4 }}
+spec:
+  package: xpkg.upbound.io/upbound/provider-aws-sqs:{{ .Values.aws.providers.sqs.version }}
+  {{- if .Values.aws.providers.sqs.controllerConfig }}
+  controllerConfigRef:
+    name: {{ .Values.aws.providers.sqs.controllerConfig.name }}
+  {{- end }}

@@ -1,0 +1,12 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: upbound-provider-aws-lambda
+  labels:
+    {{- include "crossplane-providers.labels" . | nindent 4 }}
+spec:
+  package: xpkg.upbound.io/upbound/provider-aws-lambda:{{ .Values.aws.providers.lambda.version }}
+  {{- if .Values.aws.providers.lambda.controllerConfig }}
+  controllerConfigRef:
+    name: {{ .Values.aws.providers.lambda.controllerConfig.name }}
+  {{- end }}
