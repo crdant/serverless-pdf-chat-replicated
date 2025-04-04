@@ -5,6 +5,57 @@
     "aws": {
       "type": "object",
       "properties": {
+        "region": {
+          "type": "string",
+          "description": "AWS region where resources will be provisioned",
+          "default": "us-west-2"
+        },
+        "providerConfigName": {
+          "type": "string",
+          "description": "Name of the provider configuration",
+          "default": "default"
+        },
+        "authentication": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string",
+              "description": "Method to authenticate with AWS (secret, irsa, or ec2)",
+              "enum": ["secret", "irsa", "ec2"],
+              "default": "secret"
+            },
+            "secret": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the secret containing AWS credentials",
+                  "default": "aws-credentials"
+                },
+                "namespace": {
+                  "type": "string",
+                  "description": "Namespace where the secret is located",
+                  "default": "crossplane-system"
+                },
+                "keys": {
+                  "type": "object",
+                  "properties": {
+                    "accessKeyId": {
+                      "type": "string",
+                      "description": "Key for AWS access key ID",
+                      "default": "aws_access_key_id"
+                    },
+                    "secretAccessKey": {
+                      "type": "string",
+                      "description": "Key for AWS secret access key",
+                      "default": "aws_secret_access_key"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "providers": {
           "type": "object",
           "properties": {
@@ -13,7 +64,8 @@
               "properties": {
                 "version": {
                   "type": "string",
-                  "description": "Version of the IAM provider"
+                  "description": "Version of the IAM provider",
+                  "default": "v0.41.0"
                 },
                 "controllerConfig": {
                   "type": "object",
@@ -26,7 +78,8 @@
               "properties": {
                 "version": {
                   "type": "string",
-                  "description": "Version of the S3 provider"
+                  "description": "Version of the S3 provider",
+                  "default": "v0.41.0"
                 },
                 "controllerConfig": {
                   "type": "object",
@@ -39,7 +92,8 @@
               "properties": {
                 "version": {
                   "type": "string",
-                  "description": "Version of the DynamoDB provider"
+                  "description": "Version of the DynamoDB provider",
+                  "default": "v0.41.0"
                 },
                 "controllerConfig": {
                   "type": "object",
@@ -52,7 +106,8 @@
               "properties": {
                 "version": {
                   "type": "string",
-                  "description": "Version of the Lambda provider"
+                  "description": "Version of the Lambda provider",
+                  "default": "v0.41.0"
                 },
                 "controllerConfig": {
                   "type": "object",
@@ -65,7 +120,8 @@
               "properties": {
                 "version": {
                   "type": "string",
-                  "description": "Version of the SQS provider"
+                  "description": "Version of the SQS provider",
+                  "default": "v0.41.0"
                 },
                 "controllerConfig": {
                   "type": "object",
@@ -78,7 +134,8 @@
               "properties": {
                 "version": {
                   "type": "string",
-                  "description": "Version of the API Gateway provider"
+                  "description": "Version of the API Gateway provider",
+                  "default": "v0.41.0"
                 },
                 "controllerConfig": {
                   "type": "object",
@@ -91,7 +148,8 @@
               "properties": {
                 "version": {
                   "type": "string",
-                  "description": "Version of the Cognito provider"
+                  "description": "Version of the Cognito provider",
+                  "default": "v0.41.0"
                 },
                 "controllerConfig": {
                   "type": "object",
@@ -104,7 +162,8 @@
               "properties": {
                 "version": {
                   "type": "string",
-                  "description": "Version of the Bedrock provider"
+                  "description": "Version of the Bedrock provider",
+                  "default": "v0.41.0"
                 },
                 "controllerConfig": {
                   "type": "object",
@@ -117,7 +176,8 @@
               "properties": {
                 "version": {
                   "type": "string",
-                  "description": "Version of the CloudFront provider"
+                  "description": "Version of the CloudFront provider",
+                  "default": "v0.41.0"
                 },
                 "controllerConfig": {
                   "type": "object",
@@ -130,7 +190,8 @@
               "properties": {
                 "version": {
                   "type": "string",
-                  "description": "Version of the Secrets Manager provider"
+                  "description": "Version of the Secrets Manager provider",
+                  "default": "v0.41.0"
                 },
                 "controllerConfig": {
                   "type": "object",
