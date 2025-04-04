@@ -7,8 +7,8 @@ spec:
     source: {{ .Values.aws.authentication.method }}
     {{- if eq .Values.aws.authentication.method "Secret" }}
     secretRef:
-      namespace: {{ .Values.aws.authentication.secret.namespace }}
-      name: {{ .Values.aws.authentication.secret.name }}
-      key: creds
+      namespace: {{ include "crossplane-providers.secretNamespace" . }}
+      name: {{ include "crossplane-providers.secretName" . }}
+      key: {{ include "crossplane-providers.secretKey" . }}
     {{- end }}
   region: {{ .Values.aws.region }}

@@ -68,5 +68,5 @@ Get the credentials secret namespace
 Get the credentials secret key
 */}}
 {{- define "crossplane-providers.secretKey" -}}
-{{- .Values.aws.authentication.secret.keys.accessKeyId }}
+{{- "creds" }}
 {{- end }}
