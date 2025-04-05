@@ -1,11 +1,11 @@
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: {{ include "crossplane-providers.fullname" . }}-aws-lambda
+  name: {{ include "providers.fullname" . }}-aws-lambda
   labels:
-    {{- include "crossplane-providers.labels" . | nindent 4 }}
+    {{- include "providers.labels" . | nindent 4 }}
 spec:
-  package: {{ include "crossplane-providers.packageUrl" (dict "Values" .Values "providerName" "lambda") }}
+  package: {{ include "providers.packageUrl" (dict "Values" .Values "providerName" "lambda") }}
   {{- if .Values.aws.providers.lambda.controllerConfig }}
   controllerConfigRef:
     name: {{ .Values.aws.providers.lambda.controllerConfig.name }}

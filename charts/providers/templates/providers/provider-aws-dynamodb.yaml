@@ -1,11 +1,11 @@
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: {{ include "crossplane-providers.fullname" . }}-aws-dynamodb
+  name: {{ include "providers.fullname" . }}-aws-dynamodb
   labels:
-    {{- include "crossplane-providers.labels" . | nindent 4 }}
+    {{- include "providers.labels" . | nindent 4 }}
 spec:
-  package: {{ include "crossplane-providers.packageUrl" (dict "Values" .Values "providerName" "dynamodb") }}
+  package: {{ include "providers.packageUrl" (dict "Values" .Values "providerName" "dynamodb") }}
   {{- if .Values.aws.providers.dynamodb.controllerConfig }}
   controllerConfigRef:
     name: {{ .Values.aws.providers.dynamodb.controllerConfig.name }}
