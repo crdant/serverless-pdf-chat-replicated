@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "crossplane-providers.labels" . | nindent 4 }}
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-apigateway:{{ .Values.aws.providers.apigateway.version }}
+  package: {{ include "crossplane-providers.packageUrl" (dict "Values" .Values "providerName" "apigateway") }}
   {{- if .Values.aws.providers.apigateway.controllerConfig }}
   controllerConfigRef:
     name: {{ .Values.aws.providers.apigateway.controllerConfig.name }}

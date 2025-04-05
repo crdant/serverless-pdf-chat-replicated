@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "crossplane-providers.labels" . | nindent 4 }}
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-lambda:{{ .Values.aws.providers.lambda.version }}
+  package: {{ include "crossplane-providers.packageUrl" (dict "Values" .Values "providerName" "lambda") }}
   {{- if .Values.aws.providers.lambda.controllerConfig }}
   controllerConfigRef:
     name: {{ .Values.aws.providers.lambda.controllerConfig.name }}

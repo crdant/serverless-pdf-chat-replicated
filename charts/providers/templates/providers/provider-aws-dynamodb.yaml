@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "crossplane-providers.labels" . | nindent 4 }}
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-dynamodb:{{ .Values.aws.providers.dynamodb.version }}
+  package: {{ include "crossplane-providers.packageUrl" (dict "Values" .Values "providerName" "dynamodb") }}
   {{- if .Values.aws.providers.dynamodb.controllerConfig }}
   controllerConfigRef:
     name: {{ .Values.aws.providers.dynamodb.controllerConfig.name }}

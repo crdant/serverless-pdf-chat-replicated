@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "crossplane-providers.labels" . | nindent 4 }}
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-sqs:{{ .Values.aws.providers.sqs.version }}
+  package: {{ include "crossplane-providers.packageUrl" (dict "Values" .Values "providerName" "sqs") }}
   {{- if .Values.aws.providers.sqs.controllerConfig }}
   controllerConfigRef:
     name: {{ .Values.aws.providers.sqs.controllerConfig.name }}

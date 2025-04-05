@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "crossplane-providers.labels" . | nindent 4 }}
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-iam:{{ .Values.aws.providers.iam.version }}
+  package: {{ include "crossplane-providers.packageUrl" (dict "Values" .Values "providerName" "iam") }}
   {{- if .Values.aws.providers.iam.controllerConfig }}
   controllerConfigRef:
     name: {{ .Values.aws.providers.iam.controllerConfig.name }}
