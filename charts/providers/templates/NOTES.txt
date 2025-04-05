@@ -11,7 +11,9 @@ in the "{{ include "providers.secretNamespace" . }}" namespace.
 INSTALLED PROVIDERS:
 -------------------
 {{- range $key, $value := .Values.aws.providers }}
+{{- if and (ne $key "registry") ($value.version) }}
 - AWS {{ $key }} (version: {{ $value.version }})
+{{- end }}
 {{- end }}
 
 NEXT STEPS:
