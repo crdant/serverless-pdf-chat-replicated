@@ -94,7 +94,7 @@
                 "version": {
                   "type": "string",
                   "description": "Version of the S3 provider",
-                  "default": "v0.41.0"
+                  "default": "v1.21.1"
                 },
                 "controllerConfig": {
                   "type": "object",
@@ -113,7 +113,7 @@
                 "version": {
                   "type": "string",
                   "description": "Version of the DynamoDB provider",
-                  "default": "v0.41.0"
+                  "default": "v1.21.1"
                 },
                 "controllerConfig": {
                   "type": "object",
@@ -132,7 +132,7 @@
                 "version": {
                   "type": "string",
                   "description": "Version of the Lambda provider",
-                  "default": "v0.41.0"
+                  "default": "v1.21.1"
                 },
                 "controllerConfig": {
                   "type": "object",
@@ -151,7 +151,7 @@
                 "version": {
                   "type": "string",
                   "description": "Version of the SQS provider",
-                  "default": "v0.41.0"
+                  "default": "v1.21.1"
                 },
                 "controllerConfig": {
                   "type": "object",
@@ -170,7 +170,7 @@
                 "version": {
                   "type": "string",
                   "description": "Version of the API Gateway provider",
-                  "default": "v0.41.0"
+                  "default": "v1.21.1"
                 },
                 "controllerConfig": {
                   "type": "object",
@@ -208,7 +208,7 @@
                 "version": {
                   "type": "string",
                   "description": "Version of the Bedrock provider",
-                  "default": "v0.41.0"
+                  "default": "v1.21.1"
                 },
                 "controllerConfig": {
                   "type": "object",
@@ -227,7 +227,7 @@
                 "version": {
                   "type": "string",
                   "description": "Version of the CloudFront provider",
-                  "default": "v0.41.0"
+                  "default": "v1.21.1"
                 },
                 "controllerConfig": {
                   "type": "object",
@@ -246,7 +246,7 @@
                 "version": {
                   "type": "string",
                   "description": "Version of the Secrets Manager provider",
-                  "default": "v0.41.0"
+                  "default": "v1.21.1"
                 },
                 "controllerConfig": {
                   "type": "object",
