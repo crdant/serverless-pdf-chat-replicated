@@ -6,7 +6,5 @@ metadata:
     {{- include "providers.labels" . | nindent 4 }}
 spec:
   package: {{ include "providers.packageUrl" (dict "Values" .Values "providerName" "iam") }}
-  {{- if .Values.aws.providers.iam.controllerConfig }}
-  controllerConfigRef:
-    name: {{ .Values.aws.providers.iam.controllerConfig.name }}
-  {{- end }}
+  runtimeConfigRef:
+    name: {{ include "providers.fullname" . }}-default

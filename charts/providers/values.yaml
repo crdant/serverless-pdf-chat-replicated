@@ -3,6 +3,21 @@ aws:
   region: "us-west-2"
   # Name of the provider configuration
   providerConfigName: "default"
+  # Default deployment runtime configuration
+  defaultDeploymentConfig:
+    # Resource limits for provider controllers
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+    # Security context for provider controllers
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 65532
+      runAsGroup: 65532
   # Authentication settings for AWS
   authentication:
     # Method to authenticate with AWS (secret, irsa, or ec2)

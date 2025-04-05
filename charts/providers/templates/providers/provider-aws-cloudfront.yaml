@@ -6,7 +6,5 @@ metadata:
     {{- include "providers.labels" . | nindent 4 }}
 spec:
   package: {{ include "providers.packageUrl" (dict "Values" .Values "providerName" "cloudfront") }}
-  {{- if .Values.aws.providers.cloudfront.controllerConfig }}
-  controllerConfigRef:
-    name: {{ .Values.aws.providers.cloudfront.controllerConfig.name }}
-  {{- end }}
+  runtimeConfigRef:
+    name: {{ include "providers.fullname" . }}-default

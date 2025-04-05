@@ -15,6 +15,66 @@
           "description": "Name of the provider configuration",
           "default": "default"
         },
+        "defaultDeploymentConfig": {
+          "type": "object",
+          "properties": {
+            "resources": {
+              "type": "object",
+              "properties": {
+                "limits": {
+                  "type": "object",
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "description": "CPU limit for provider controllers",
+                      "default": "500m"
+                    },
+                    "memory": {
+                      "type": "string",
+                      "description": "Memory limit for provider controllers",
+                      "default": "512Mi"
+                    }
+                  }
+                },
+                "requests": {
+                  "type": "object",
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "description": "CPU request for provider controllers",
+                      "default": "100m"
+                    },
+                    "memory": {
+                      "type": "string",
+                      "description": "Memory request for provider controllers",
+                      "default": "256Mi"
+                    }
+                  }
+                }
+              }
+            },
+            "securityContext": {
+              "type": "object",
+              "properties": {
+                "runAsNonRoot": {
+                  "type": "boolean",
+                  "description": "Run provider controllers as non-root",
+                  "default": true
+                },
+                "runAsUser": {
+                  "type": "integer",
+                  "description": "User ID to run provider controllers",
+                  "default": 65532
+                },
+                "runAsGroup": {
+                  "type": "integer",
+                  "description": "Group ID to run provider controllers",
+                  "default": 65532
+                }
+              }
+            }
+          }
+        },
         "authentication": {
           "type": "object",
           "properties": {
