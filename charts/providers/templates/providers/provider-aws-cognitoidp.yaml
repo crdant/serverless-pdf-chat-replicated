@@ -1,11 +1,11 @@
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: upbound-provider-aws-cognitoidp
+  name: {{ include "crossplane-providers.fullname" . }}-aws-cognitoidp
   labels:
     {{- include "crossplane-providers.labels" . | nindent 4 }}
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-cognitoidp:{{ .Values.aws.providers.cognitoidp.version }}
+  package: {{ include "crossplane-providers.packageUrl" (dict "Values" .Values "providerName" "cognitoidp") }}
   {{- if .Values.aws.providers.cognitoidp.controllerConfig }}
   controllerConfigRef:
     name: {{ .Values.aws.providers.cognitoidp.controllerConfig.name }}

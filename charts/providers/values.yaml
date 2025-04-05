@@ -21,33 +21,45 @@ aws:
         secretAccessKey: "aws_secret_access_key"
   # AWS provider configurations
   providers:
+    # Registry for all providers
+    registry: "xpkg.upbound.io/upbound"
     iam:
+      package: "provider-aws-iam"
       version: "v1.21.1"
       controllerConfig: {}
     s3:
+      package: "provider-aws-s3"
       version: "v1.21.1"
       controllerConfig: {}
     dynamodb:
+      package: "provider-aws-dynamodb"
       version: "v1.21.1"
       controllerConfig: {}
     lambda:
+      package: "provider-aws-lambda"
       version: "v1.21.1"
       controllerConfig: {}
     sqs:
+      package: "provider-aws-sqs"
       version: "v1.21.1"
       controllerConfig: {}
     apigateway:
+      package: "provider-aws-apigateway"
       version: "v1.21.1"
       controllerConfig: {}
     cognitoidp:
+      package: "provider-aws-cognitoidp"
       version: "v1.21.1"
       controllerConfig: {}
     bedrock:
+      package: "provider-aws-bedrock"
       version: "v1.21.1"
       controllerConfig: {}
     cloudfront:
+      package: "provider-aws-cloudfront"
       version: "v1.21.1"
       controllerConfig: {}
     secretsmanager:
+      package: "provider-aws-secretsmanager"
       version: "v1.21.1"
       controllerConfig: {}

@@ -70,3 +70,11 @@ Get the credentials secret key
 {{- define "crossplane-providers.secretKey" -}}
 {{- "creds" }}
 {{- end }}
+
+{{/*
+Get the provider package URL
+*/}}
+{{- define "crossplane-providers.packageUrl" -}}
+{{- $provider := index .Values.aws.providers .providerName -}}
+{{- printf "%s/%s:%s" .Values.aws.providers.registry $provider.package $provider.version -}}
+{{- end }}

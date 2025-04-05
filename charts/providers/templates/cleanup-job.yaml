@@ -23,8 +23,12 @@ spec:
           # Delete provider config
           kubectl delete providerconfig.aws.upbound.io {{ .Values.aws.providerConfigName }} --ignore-not-found
           
-          # Delete family provider
-          kubectl delete provider.pkg.crossplane.io upbound-provider-family-aws --ignore-not-found
+          # Delete providers
+          {{- range $key, $value := .Values.aws.providers }}
+          {{- if ne $key "registry" }}
+          kubectl delete provider.pkg.crossplane.io {{ include "crossplane-providers.fullname" $ }}-aws-{{ $key }} --ignore-not-found
+          {{- end }}
+          {{- end }}
           
           # Wait for cleanup to complete
           sleep 10
