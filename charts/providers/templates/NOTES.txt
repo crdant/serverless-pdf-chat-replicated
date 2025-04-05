@@ -5,8 +5,8 @@ AWS Crossplane providers have been successfully installed in your cluster.
 PROVIDER CONFIGURATION:
 -----------------------
 A ProviderConfig named "{{ .Values.aws.providerConfigName }}" has been created, 
-configured to use AWS credentials from the secret "{{ include "crossplane-providers.secretName" . }}" 
-in the "{{ include "crossplane-providers.secretNamespace" . }}" namespace.
+configured to use AWS credentials from the secret "{{ include "providers.secretName" . }}" 
+in the "{{ include "providers.secretNamespace" . }}" namespace.
 
 INSTALLED PROVIDERS:
 -------------------
@@ -51,4 +51,4 @@ If you encounter issues with the providers:
    kubectl logs -n crossplane-system <provider-pod-name>
 
 4. Verify AWS credentials are correctly configured in the secret:
-   kubectl get secret {{ include "crossplane-providers.secretName" . }} -n {{ include "crossplane-providers.secretNamespace" . }}
+   kubectl get secret {{ include "providers.secretName" . }} -n {{ include "providers.secretNamespace" . }}

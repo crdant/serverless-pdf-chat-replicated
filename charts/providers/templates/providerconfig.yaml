@@ -11,8 +11,8 @@ spec:
     source: {{ .Values.aws.authentication.method | title }}
     {{- if eq .Values.aws.authentication.method "secret" }}
     secretRef:
-      namespace: {{ include "crossplane-providers.secretNamespace" . }}
-      name: {{ include "crossplane-providers.secretName" . }}
-      key: {{ include "crossplane-providers.secretKey" . }}
+      namespace: {{ include "providers.secretNamespace" . }}
+      name: {{ include "providers.secretName" . }}
+      key: {{ include "providers.secretKey" . }}
     {{- end }}
   region: {{ .Values.aws.region }}

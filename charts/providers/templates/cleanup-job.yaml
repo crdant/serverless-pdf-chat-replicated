@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "crossplane-providers.fullname" . }}-cleanup
+  name: {{ include "providers.fullname" . }}-cleanup
   annotations:
     "helm.sh/hook": post-delete
     "helm.sh/hook-weight": "0"
@@ -9,9 +9,9 @@ metadata:
 spec:
   template:
     metadata:
-      name: {{ include "crossplane-providers.fullname" . }}-cleanup
+      name: {{ include "providers.fullname" . }}-cleanup
     spec:
-      serviceAccountName: {{ include "crossplane-providers.fullname" . }}-cleanup
+      serviceAccountName: {{ include "providers.fullname" . }}-cleanup
       restartPolicy: Never
       containers:
       - name: kubectl
@@ -26,7 +26,7 @@ spec:
           # Delete providers
           {{- range $key, $value := .Values.aws.providers }}
           {{- if ne $key "registry" }}
-          kubectl delete provider.pkg.crossplane.io {{ include "crossplane-providers.fullname" $ }}-aws-{{ $key }} --ignore-not-found
+          kubectl delete provider.pkg.crossplane.io {{ include "providers.fullname" $ }}-aws-{{ $key }} --ignore-not-found
           {{- end }}
           {{- end }}
           
@@ -36,7 +36,7 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ include "crossplane-providers.fullname" . }}-cleanup
+  name: {{ include "providers.fullname" . }}-cleanup
   annotations:
     "helm.sh/hook": post-delete
     "helm.sh/hook-weight": "-1"
@@ -45,7 +45,7 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "crossplane-providers.fullname" . }}-cleanup
+  name: {{ include "providers.fullname" . }}-cleanup
   annotations:
     "helm.sh/hook": post-delete
     "helm.sh/hook-weight": "-1"
@@ -61,16 +61,16 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "crossplane-providers.fullname" . }}-cleanup
+  name: {{ include "providers.fullname" . }}-cleanup
   annotations:
     "helm.sh/hook": post-delete
     "helm.sh/hook-weight": "-1"
     "helm.sh/hook-delete-policy": hook-succeeded,hook-failed
 subjects:
 - kind: ServiceAccount
-  name: {{ include "crossplane-providers.fullname" . }}-cleanup
+  name: {{ include "providers.fullname" . }}-cleanup
   namespace: {{ .Release.Namespace }}
 roleRef:
   kind: ClusterRole
-  name: {{ include "crossplane-providers.fullname" . }}-cleanup
+  name: {{ include "providers.fullname" . }}-cleanup
   apiGroup: rbac.authorization.k8s.io

@@ -1,11 +1,11 @@
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: {{ include "crossplane-providers.fullname" . }}-aws-cloudfront
+  name: {{ include "providers.fullname" . }}-aws-cloudfront
   labels:
-    {{- include "crossplane-providers.labels" . | nindent 4 }}
+    {{- include "providers.labels" . | nindent 4 }}
 spec:
-  package: {{ include "crossplane-providers.packageUrl" (dict "Values" .Values "providerName" "cloudfront") }}
+  package: {{ include "providers.packageUrl" (dict "Values" .Values "providerName" "cloudfront") }}
   {{- if .Values.aws.providers.cloudfront.controllerConfig }}
   controllerConfigRef:
     name: {{ .Values.aws.providers.cloudfront.controllerConfig.name }}
