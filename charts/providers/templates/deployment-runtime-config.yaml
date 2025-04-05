@@ -1,28 +1,3 @@
-apiVersion: pkg.crossplane.io/v1alpha1
-kind: DeploymentRuntimeConfig
-metadata:
-  name: {{ include "providers.fullname" . }}-default
-  labels:
-    {{- include "providers.labels" . | nindent 4 }}
-spec:
-  deploymentTemplate:
-    spec:
-      selector: {}
-      template:
-        spec:
-          securityContext:
-            runAsNonRoot: {{ .Values.aws.defaultDeploymentConfig.securityContext.runAsNonRoot }}
-            runAsUser: {{ .Values.aws.defaultDeploymentConfig.securityContext.runAsUser }}
-            runAsGroup: {{ .Values.aws.defaultDeploymentConfig.securityContext.runAsGroup }}
-          containers:
-            - name: package-runtime
-              resources:
-                limits:
-                  cpu: {{ .Values.aws.defaultDeploymentConfig.resources.limits.cpu }}
-                  memory: {{ .Values.aws.defaultDeploymentConfig.resources.limits.memory }}
-                requests:
-                  cpu: {{ .Values.aws.defaultDeploymentConfig.resources.requests.cpu }}
-                  memory: {{ .Values.aws.defaultDeploymentConfig.resources.requests.memory }}
 apiVersion: pkg.crossplane.io/v1beta1
 kind: DeploymentRuntimeConfig
 metadata:

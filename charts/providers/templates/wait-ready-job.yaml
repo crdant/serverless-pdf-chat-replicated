@@ -1,0 +1,77 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "providers.fullname" . }}-wait-ready
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "0"  # Run before provider config (weight 1)
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+spec:
+  backoffLimit: 10
+  template:
+    metadata:
+      name: {{ include "providers.fullname" . }}-wait-ready
+    spec:
+      serviceAccountName: {{ include "providers.fullname" . }}-wait-ready
+      restartPolicy: OnFailure
+      containers:
+      - name: kubectl
+        image: bitnami/kubectl:latest
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Waiting for all providers to be ready..."
+          
+          # Wait for all providers to be ready
+          {{- range $key, $value := .Values.aws.providers }}
+          {{- if ne $key "registry" }}
+          echo "Waiting for provider {{ include "providers.fullname" $ }}-aws-{{ $key }} to be ready..."
+          kubectl wait --for=condition=Healthy provider.pkg.crossplane.io/{{ include "providers.fullname" $ }}-aws-{{ $key }} --timeout=300s
+          if [ $? -ne 0 ]; then
+            echo "Provider {{ include "providers.fullname" $ }}-aws-{{ $key }} failed to become ready within timeout"
+            exit 1
+          fi
+          {{- end }}
+          {{- end }}
+          
+          echo "All providers are ready!"
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "providers.fullname" . }}-wait-ready
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "-1"
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "providers.fullname" . }}-wait-ready
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "-1"
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+rules:
+- apiGroups: ["pkg.crossplane.io"]
+  resources: ["providers"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "providers.fullname" . }}-wait-ready
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "-1"
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+subjects:
+- kind: ServiceAccount
+  name: {{ include "providers.fullname" . }}-wait-ready
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: {{ include "providers.fullname" . }}-wait-ready
+  apiGroup: rbac.authorization.k8s.io
