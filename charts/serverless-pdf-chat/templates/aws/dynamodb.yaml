@@ -15,15 +15,15 @@ spec:
   forProvider:
     region: {{ .Values.aws.region }}
     {{- if .Values.aws.dynamodb.documentTable.name }}
-    name: {{ .Values.aws.dynamodb.documentTable.name }}
+    tableName: {{ .Values.aws.dynamodb.documentTable.name }}
     {{- else }}
-    name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
+    tableName: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
     {{- end }}
     billingMode: {{ $.Values.aws.dynamodb.billingMode }}
-    attribute:
+    attributeDefinitions:
     {{- range .Values.aws.dynamodb.documentTable.attributeDefinitions }}
-    - name: {{ .attributeName }}
-      type: {{ .attributeType }}
+    - attributeName: {{ .attributeName }}
+      attributeType: {{ .attributeType }}
     {{- end }}
     keySchema:
     {{- range .Values.aws.dynamodb.documentTable.keySchema }}
@@ -50,15 +50,15 @@ spec:
   forProvider:
     region: {{ .Values.aws.region }}
     {{- if .Values.aws.dynamodb.memoryTable.name }}
-    name: {{ .Values.aws.dynamodb.memoryTable.name }}
+    tableName: {{ .Values.aws.dynamodb.memoryTable.name }}
     {{- else }}
-    name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "memory") }}
+    tableName: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "memory") }}
     {{- end }}
     billingMode: {{ $.Values.aws.dynamodb.billingMode }}
-    attribute:
+    attributeDefinitions:
     {{- range .Values.aws.dynamodb.memoryTable.attributeDefinitions }}
-    - name: {{ .attributeName }}
-      type: {{ .attributeType }}
+    - attributeName: {{ .attributeName }}
+      attributeType: {{ .attributeType }}
     {{- end }}
     keySchema:
     {{- range .Values.aws.dynamodb.memoryTable.keySchema }}

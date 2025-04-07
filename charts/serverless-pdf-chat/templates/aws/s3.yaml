@@ -13,44 +13,46 @@ spec:
   forProvider:
     region: {{ .Values.aws.region }}
     {{- if .Values.aws.s3.documentBucketName }}
-    bucket: {{ .Values.aws.s3.documentBucketName }}
+    bucketName: {{ .Values.aws.s3.documentBucketName }}
     {{- else }}
-    bucket: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
+    bucketName: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
     {{- end }}
     forceDestroy: true
     {{- if .Values.aws.s3.versioning }}
-    versioning:
-      enabled: {{ .Values.aws.s3.versioning }}
+    versioningConfiguration:
+      status: "Enabled"
     {{- end }}
     {{- if .Values.aws.s3.corsEnabled }}
-    corsRule:
-      - allowedHeaders:
-          - "*"
-        allowedMethods:
-          - GET
-          - PUT
-          - POST
-          - DELETE
-          - HEAD
-        allowedOrigins:
-          - "*"
-        exposeHeaders:
-          - ETag
-        maxAgeSeconds: 3000
+    corsConfiguration:
+      corsRules:
+        - allowedHeaders:
+            - "*"
+          allowedMethods:
+            - GET
+            - PUT
+            - POST
+            - DELETE
+            - HEAD
+          allowedOrigins:
+            - "*"
+          exposeHeaders:
+            - ETag
+          maxAge: 3000
     {{- end }}
     serverSideEncryptionConfiguration:
-      rule:
+      rules:
         - applyServerSideEncryptionByDefault:
-            sseAlgorithm: AES256
+            sseAlgorithm: "AES256"
     {{- if .Values.aws.s3.lifecycleRules }}
-    lifecycleRule:
-      {{- range .Values.aws.s3.lifecycleRules }}
-      - status: {{ if .enabled }}Enabled{{ else }}Disabled{{ end }}
-        {{- if .expiration }}
-        expiration:
-          days: {{ .expiration }}
+    lifecycleConfiguration:
+      rules:
+        {{- range .Values.aws.s3.lifecycleRules }}
+        - status: {{ if .enabled }}"Enabled"{{ else }}"Disabled"{{ end }}
+          {{- if .expiration }}
+          expiration:
+            days: {{ .expiration }}
+          {{- end }}
         {{- end }}
-      {{- end }}
     {{- end }}
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
