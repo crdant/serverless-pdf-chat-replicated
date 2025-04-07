@@ -35,6 +35,10 @@ $(foreach element,$(CHARTS),$(eval $(call make-chart-target,$(element))))
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
 
+.PHONY: clean
+clean:
+	rm -rf $(BUILDDIR)
+
 .PHONY: lint
 lint: $(RELEASE_FILES) 
 	replicated release lint --yaml-dir $(BUILDDIR)
