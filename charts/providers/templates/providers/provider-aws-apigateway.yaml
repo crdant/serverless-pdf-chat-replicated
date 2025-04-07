@@ -7,4 +7,4 @@ metadata:
 spec:
   package: {{ include "providers.packageUrl" (dict "Values" .Values "providerName" "apigateway") }}
   runtimeConfigRef:
-    name: {{ include "providers.fullname" . }}-default
+    name: {{ include "providers.runtimeConfigName" . }}
