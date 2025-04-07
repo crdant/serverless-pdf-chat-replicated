@@ -44,6 +44,30 @@
               "description": "Enable CORS for the S3 bucket",
               "default": true
             },
+            "versioning": {
+              "type": "boolean",
+              "description": "Enable versioning for the S3 bucket",
+              "default": true
+            },
+            "lifecycleRules": {
+              "type": "array",
+              "description": "Lifecycle rules for the S3 bucket",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "Whether the rule is enabled",
+                    "default": true
+                  },
+                  "expiration": {
+                    "type": "integer",
+                    "description": "Number of days after which objects expire",
+                    "default": 90
+                  }
+                }
+              }
+            },
             "publicAccessBlockConfiguration": {
               "type": "object",
               "properties": {
@@ -187,6 +211,13 @@
             }
           }
         }
+      }
+    },
+    "tags": {
+      "type": "object",
+      "description": "Tags to apply to all resources",
+      "additionalProperties": {
+        "type": "string"
       }
     }
   }
