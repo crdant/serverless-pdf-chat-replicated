@@ -72,6 +72,13 @@ Get the credentials secret key
 {{- end }}
 
 {{/*
+Get the runtime config name
+*/}}
+{{- define "providers.runtimeConfigName" -}}
+{{- printf "%s-default" (include "providers.fullname" .) -}}
+{{- end }}
+
+{{/*
 Get the provider package URL
 */}}
 {{- define "providers.packageUrl" -}}

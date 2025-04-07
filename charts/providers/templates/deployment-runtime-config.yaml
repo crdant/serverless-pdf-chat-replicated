@@ -1,7 +1,7 @@
 apiVersion: pkg.crossplane.io/v1beta1
 kind: DeploymentRuntimeConfig
 metadata:
-  name: default
+  name: {{ include "providers.runtimeConfigName" . }}
   labels:
     {{- include "providers.labels" . | nindent 4 }}
 spec:
