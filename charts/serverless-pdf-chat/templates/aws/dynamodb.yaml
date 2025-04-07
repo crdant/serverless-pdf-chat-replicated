@@ -20,15 +20,14 @@ spec:
     tableName: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
     {{- end }}
     billingMode: {{ $.Values.aws.dynamodb.billingMode }}
-    attributeDefinitions:
+    attribute:
     {{- range .Values.aws.dynamodb.documentTable.attributeDefinitions }}
-    - attributeName: {{ .attributeName }}
-      attributeType: {{ .attributeType }}
+    - name: {{ .attributeName }}
+      type: {{ .attributeType }}
     {{- end }}
-    keySchema:
-    {{- range .Values.aws.dynamodb.documentTable.keySchema }}
-    - attributeName: {{ .attributeName }}
-      keyType: {{ .keyType }}
+    hashKey: {{ .Values.aws.dynamodb.documentTable.hashKey }}
+    {{- if .Values.aws.dynamodb.documentTable.rangeKey }}
+    rangeKey: {{ .Values.aws.dynamodb.documentTable.rangeKey }}
     {{- end }}
   providerConfigRef:
     name: {{ $.Values.aws.providerConfigName }}
@@ -55,15 +54,14 @@ spec:
     tableName: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "memory") }}
     {{- end }}
     billingMode: {{ $.Values.aws.dynamodb.billingMode }}
-    attributeDefinitions:
+    attribute:
     {{- range .Values.aws.dynamodb.memoryTable.attributeDefinitions }}
-    - attributeName: {{ .attributeName }}
-      attributeType: {{ .attributeType }}
+    - name: {{ .attributeName }}
+      type: {{ .attributeType }}
     {{- end }}
-    keySchema:
-    {{- range .Values.aws.dynamodb.memoryTable.keySchema }}
-    - attributeName: {{ .attributeName }}
-      keyType: {{ .keyType }}
+    hashKey: {{ .Values.aws.dynamodb.memoryTable.hashKey }}
+    {{- if .Values.aws.dynamodb.memoryTable.rangeKey }}
+    rangeKey: {{ .Values.aws.dynamodb.memoryTable.rangeKey }}
     {{- end }}
   providerConfigRef:
     name: {{ $.Values.aws.providerConfigName }}
