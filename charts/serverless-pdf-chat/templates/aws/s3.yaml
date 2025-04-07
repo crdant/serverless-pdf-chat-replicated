@@ -64,12 +64,12 @@ metadata:
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
-    bucketRef:
+    bucket_ref:
       name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
-    blockPublicAcls: {{ .Values.aws.s3.publicAccessBlockConfiguration.blockPublicAcls }}
-    blockPublicPolicy: {{ .Values.aws.s3.publicAccessBlockConfiguration.blockPublicPolicy }}
-    ignorePublicAcls: {{ .Values.aws.s3.publicAccessBlockConfiguration.ignorePublicAcls }}
-    restrictPublicBuckets: {{ .Values.aws.s3.publicAccessBlockConfiguration.restrictPublicBuckets }}
+    block_public_acls: {{ .Values.aws.s3.publicAccessBlockConfiguration.blockPublicAcls }}
+    block_public_policy: {{ .Values.aws.s3.publicAccessBlockConfiguration.blockPublicPolicy }}
+    ignore_public_acls: {{ .Values.aws.s3.publicAccessBlockConfiguration.ignorePublicAcls }}
+    restrict_public_buckets: {{ .Values.aws.s3.publicAccessBlockConfiguration.restrictPublicBuckets }}
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
 {{- end }}
