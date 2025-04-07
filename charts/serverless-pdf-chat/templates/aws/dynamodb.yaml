@@ -1,0 +1,38 @@
+{{- if .Values.aws.dynamodb }}
+{{- if .Values.aws.dynamodb.tables }}
+{{- range .Values.aws.dynamodb.tables }}
+---
+apiVersion: {{ include "providers.apiVersion" $ }}
+kind: DynamoDBTable
+metadata:
+  name: {{ .name }}
+  labels:
+    {{- include "serverless-pdf-chat.labels" $ | nindent 4 }}
+  {{- with $.Values.tags }}
+  tags:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  tableName: {{ .name }}
+  region: {{ $.Values.aws.region }}
+  hashKey: {{ .hashKey }}
+  {{- if .rangeKey }}
+  rangeKey: {{ .rangeKey }}
+  {{- end }}
+  readCapacity: {{ .readCapacity }}
+  writeCapacity: {{ .writeCapacity }}
+  attributeDefinitions:
+    - attributeName: {{ .hashKey }}
+      attributeType: S
+    {{- if .rangeKey }}
+    - attributeName: {{ .rangeKey }}
+      attributeType: S
+    {{- end }}
+  {{- if .ttlAttribute }}
+  timeToLiveSpecification:
+    enabled: true
+    attributeName: {{ .ttlAttribute }}
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

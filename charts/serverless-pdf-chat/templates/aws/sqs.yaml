@@ -1,0 +1,28 @@
+{{- if .Values.aws.sqs }}
+{{- if .Values.aws.sqs.queues }}
+{{- range .Values.aws.sqs.queues }}
+---
+apiVersion: {{ include "providers.apiVersion" $ }}
+kind: SQSQueue
+metadata:
+  name: {{ .name }}
+  labels:
+    {{- include "serverless-pdf-chat.labels" $ | nindent 4 }}
+  {{- with $.Values.tags }}
+  tags:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  queueName: {{ .name }}
+  region: {{ $.Values.aws.region }}
+  visibilityTimeout: {{ .visibilityTimeout }}
+  messageRetentionPeriod: {{ .messageRetentionPeriod }}
+  delaySeconds: {{ .delaySeconds }}
+  {{- if .deadLetterQueue }}
+  redrivePolicy:
+    deadLetterTargetArn: {{ .deadLetterQueue.arn }}
+    maxReceiveCount: {{ .deadLetterQueue.maxReceiveCount | default 5 }}
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

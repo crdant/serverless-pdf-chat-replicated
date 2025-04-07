@@ -1,0 +1,42 @@
+# Default values for serverless-pdf-chat
+# This is a YAML-formatted file.
+
+aws:
+  region: us-east-1
+  
+  s3:
+    bucketName: pdf-chat-documents
+    versioning: true
+    encryption: true
+    lifecycleRules:
+      - enabled: true
+        expiration: 90
+        
+  dynamodb:
+    tables:
+      - name: pdf-chat-conversations
+        hashKey: conversationId
+        readCapacity: 5
+        writeCapacity: 5
+        ttlAttribute: expiresAt
+        
+      - name: pdf-chat-documents
+        hashKey: documentId
+        readCapacity: 5
+        writeCapacity: 5
+        
+  sqs:
+    queues:
+      - name: pdf-processing-queue
+        visibilityTimeout: 300
+        messageRetentionPeriod: 86400
+        delaySeconds: 0
+        
+      - name: chat-response-queue
+        visibilityTimeout: 60
+        messageRetentionPeriod: 86400
+        delaySeconds: 0
+        
+tags:
+  environment: dev
+  application: pdf-chat

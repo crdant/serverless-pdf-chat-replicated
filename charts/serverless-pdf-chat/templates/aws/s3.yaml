@@ -1,0 +1,35 @@
+{{- if .Values.aws.s3 }}
+apiVersion: {{ include "providers.apiVersion" . }}
+kind: S3Bucket
+metadata:
+  name: {{ .Values.aws.s3.bucketName }}
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+  {{- with .Values.tags }}
+  tags:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  bucketName: {{ .Values.aws.s3.bucketName }}
+  region: {{ .Values.aws.region }}
+  {{- if .Values.aws.s3.versioning }}
+  versioning:
+    enabled: {{ .Values.aws.s3.versioning }}
+  {{- end }}
+  {{- if .Values.aws.s3.encryption }}
+  encryption:
+    serverSideEncryptionConfiguration:
+      - serverSideEncryptionByDefault:
+          sseAlgorithm: AES256
+  {{- end }}
+  {{- if .Values.aws.s3.lifecycleRules }}
+  lifecycleRules:
+    {{- range .Values.aws.s3.lifecycleRules }}
+    - status: {{ if .enabled }}Enabled{{ else }}Disabled{{ end }}
+      {{- if .expiration }}
+      expiration:
+        days: {{ .expiration }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end }}
