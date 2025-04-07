@@ -6,9 +6,6 @@ global:
   environment: "dev"
 
 aws:
-  region: "us-east-1"
-  providerConfigName: "default"
-  
   s3:
     documentBucketName: null
     corsEnabled: true
