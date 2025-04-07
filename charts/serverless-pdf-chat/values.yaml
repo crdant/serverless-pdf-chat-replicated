@@ -1,42 +1,57 @@
 # Default values for serverless-pdf-chat
 # This is a YAML-formatted file.
 
+global:
+  namePrefix: "pdf-chat"
+  environment: "dev"
+
 aws:
-  region: us-east-1
+  region: "us-east-1"
+  providerConfigName: "default"
   
   s3:
-    bucketName: pdf-chat-documents
+    documentBucketName: null
+    corsEnabled: true
     versioning: true
-    encryption: true
     lifecycleRules:
       - enabled: true
         expiration: 90
+    publicAccessBlockConfiguration:
+      blockPublicAcls: true
+      blockPublicPolicy: true
+      ignorePublicAcls: true
+      restrictPublicBuckets: true
         
   dynamodb:
-    tables:
-      - name: pdf-chat-conversations
-        hashKey: conversationId
-        readCapacity: 5
-        writeCapacity: 5
-        ttlAttribute: expiresAt
+    billingMode: "PAY_PER_REQUEST"
+    documentTable:
+      name: null
+      keySchema:
+        - attributeName: "documentId"
+          keyType: "HASH"
+      attributeDefinitions:
+        - attributeName: "documentId"
+          attributeType: "S"
         
-      - name: pdf-chat-documents
-        hashKey: documentId
-        readCapacity: 5
-        writeCapacity: 5
+    memoryTable:
+      name: null
+      keySchema:
+        - attributeName: "sessionId"
+          keyType: "HASH"
+        - attributeName: "messageId"
+          keyType: "RANGE"
+      attributeDefinitions:
+        - attributeName: "sessionId"
+          attributeType: "S"
+        - attributeName: "messageId"
+          attributeType: "S"
         
   sqs:
-    queues:
-      - name: pdf-processing-queue
-        visibilityTimeout: 300
-        messageRetentionPeriod: 86400
-        delaySeconds: 0
-        
-      - name: chat-response-queue
-        visibilityTimeout: 60
-        messageRetentionPeriod: 86400
-        delaySeconds: 0
+    embeddingQueue:
+      name: null
+      visibilityTimeout: 180
+      messageRetentionPeriod: 3600
         
 tags:
-  environment: dev
-  application: pdf-chat
+  environment: "dev"
+  application: "pdf-chat"
