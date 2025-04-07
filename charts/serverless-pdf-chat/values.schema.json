@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["global", "aws"],
+  "properties": {
+    "global": {
+      "type": "object",
+      "properties": {
+        "namePrefix": {
+          "type": "string",
+          "description": "Prefix for all resource names",
+          "default": "pdf-chat"
+        },
+        "environment": {
+          "type": "string",
+          "description": "Environment name (dev, staging, prod, etc.)",
+          "default": "dev"
+        }
+      }
+    },
+    "aws": {
+      "type": "object",
+      "required": ["providerConfigName", "s3", "dynamodb", "sqs"],
+      "properties": {
+        "region": {
+          "type": "string",
+          "description": "AWS region for resources",
+          "default": "us-east-1"
+        },
+        "providerConfigName": {
+          "type": "string",
+          "description": "Name of the AWS provider configuration to use",
+          "default": "default"
+        },
+        "s3": {
+          "type": "object",
+          "properties": {
+            "documentBucketName": {
+              "type": ["string", "null"],
+              "description": "Custom name for the document bucket. If empty, a name will be generated."
+            },
+            "corsEnabled": {
+              "type": "boolean",
+              "description": "Enable CORS for the S3 bucket",
+              "default": true
+            },
+            "publicAccessBlockConfiguration": {
+              "type": "object",
+              "properties": {
+                "blockPublicAcls": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "blockPublicPolicy": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "ignorePublicAcls": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "restrictPublicBuckets": {
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            }
+          }
+        },
+        "dynamodb": {
+          "type": "object",
+          "required": ["documentTable", "memoryTable", "billingMode"],
+          "properties": {
+            "documentTable": {
+              "type": "object",
+              "required": ["keySchema", "attributeDefinitions"],
+              "properties": {
+                "name": {
+                  "type": ["string", "null"],
+                  "description": "Custom name for the document table. If empty, a name will be generated."
+                },
+                "keySchema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["attributeName", "keyType"],
+                    "properties": {
+                      "attributeName": {
+                        "type": "string"
+                      },
+                      "keyType": {
+                        "type": "string",
+                        "enum": ["HASH", "RANGE"]
+                      }
+                    }
+                  }
+                },
+                "attributeDefinitions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["attributeName", "attributeType"],
+                    "properties": {
+                      "attributeName": {
+                        "type": "string"
+                      },
+                      "attributeType": {
+                        "type": "string",
+                        "enum": ["S", "N", "B"]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "memoryTable": {
+              "type": "object",
+              "required": ["keySchema", "attributeDefinitions"],
+              "properties": {
+                "name": {
+                  "type": ["string", "null"],
+                  "description": "Custom name for the memory table. If empty, a name will be generated."
+                },
+                "keySchema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["attributeName", "keyType"],
+                    "properties": {
+                      "attributeName": {
+                        "type": "string"
+                      },
+                      "keyType": {
+                        "type": "string",
+                        "enum": ["HASH", "RANGE"]
+                      }
+                    }
+                  }
+                },
+                "attributeDefinitions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["attributeName", "attributeType"],
+                    "properties": {
+                      "attributeName": {
+                        "type": "string"
+                      },
+                      "attributeType": {
+                        "type": "string",
+                        "enum": ["S", "N", "B"]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "billingMode": {
+              "type": "string",
+              "enum": ["PROVISIONED", "PAY_PER_REQUEST"],
+              "default": "PAY_PER_REQUEST"
+            }
+          }
+        },
+        "sqs": {
+          "type": "object",
+          "required": ["embeddingQueue"],
+          "properties": {
+            "embeddingQueue": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": ["string", "null"],
+                  "description": "Custom name for the embedding queue. If empty, a name will be generated."
+                },
+                "visibilityTimeout": {
+                  "type": "integer",
+                  "description": "The visibility timeout for the queue in seconds",
+                  "default": 180
+                },
+                "messageRetentionPeriod": {
+                  "type": "integer",
+                  "description": "The message retention period in seconds",
+                  "default": 3600
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
