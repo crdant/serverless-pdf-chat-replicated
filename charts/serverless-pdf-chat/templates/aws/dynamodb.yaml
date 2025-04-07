@@ -14,7 +14,6 @@ metadata:
   {{- end }}
 spec:
   tableName: {{ .name }}
-  region: {{ $.Values.aws.region }}
   hashKey: {{ .hashKey }}
   {{- if .rangeKey }}
   rangeKey: {{ .rangeKey }}
