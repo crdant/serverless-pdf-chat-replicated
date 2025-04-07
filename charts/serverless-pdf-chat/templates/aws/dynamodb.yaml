@@ -13,6 +13,7 @@ metadata:
   {{- end }}
 spec:
   forProvider:
+    region: {{ .Values.aws.region }}
     {{- if .Values.aws.dynamodb.documentTable.name }}
     name: {{ .Values.aws.dynamodb.documentTable.name }}
     {{- else }}
@@ -47,6 +48,7 @@ metadata:
   {{- end }}
 spec:
   forProvider:
+    region: {{ .Values.aws.region }}
     {{- if .Values.aws.dynamodb.memoryTable.name }}
     name: {{ .Values.aws.dynamodb.memoryTable.name }}
     {{- else }}

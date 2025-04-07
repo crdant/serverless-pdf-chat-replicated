@@ -13,6 +13,7 @@ metadata:
   {{- end }}
 spec:
   forProvider:
+    region: {{ .Values.aws.region }}
     {{- if .Values.aws.sqs.embeddingQueue.name }}
     name: {{ .Values.aws.sqs.embeddingQueue.name }}
     {{- else }}

@@ -11,6 +11,7 @@ metadata:
   {{- end }}
 spec:
   forProvider:
+    region: {{ .Values.aws.region }}
     {{- if .Values.aws.s3.documentBucketName }}
     bucket: {{ .Values.aws.s3.documentBucketName }}
     {{- else }}
@@ -62,6 +63,7 @@ metadata:
     {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
 spec:
   forProvider:
+    region: {{ .Values.aws.region }}
     bucketRef:
       name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
     blockPublicAcls: {{ .Values.aws.s3.publicAccessBlockConfiguration.blockPublicAcls }}

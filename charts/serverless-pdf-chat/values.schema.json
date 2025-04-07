@@ -22,6 +22,11 @@
       "type": "object",
       "required": ["providerConfigName", "s3", "dynamodb", "sqs"],
       "properties": {
+        "region": {
+          "type": "string",
+          "description": "AWS region for resources",
+          "default": "us-west-2"
+        },
         "providerConfigName": {
           "type": "string",
           "description": "Name of the AWS provider configuration to use",
