@@ -75,7 +75,7 @@ Get the credentials secret key
 Get the runtime config name
 */}}
 {{- define "providers.runtimeConfigName" -}}
-{{- printf "%s-default" (include "providers.fullname" .) -}}
+default
 {{- end }}
 
 {{/*
