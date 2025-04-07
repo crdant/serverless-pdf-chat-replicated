@@ -1,5 +1,5 @@
-{{- if .Values.aws.dynamodb -}}
-{{- if .Values.aws.dynamodb.documentTable -}}
+{{- if .Values.aws.dynamodb }}
+{{- if .Values.aws.dynamodb.documentTable }}
 ---
 apiVersion: dynamodb.aws.upbound.io/v1beta1
 kind: Table
