@@ -1,5 +1,5 @@
-{{- if .Values.aws.sqs }}
-{{- if .Values.aws.sqs.embeddingQueue }}
+{{- if .Values.aws.sqs -}}
+{{- if .Values.aws.sqs.embeddingQueue -}}
 ---
 apiVersion: sqs.aws.upbound.io/v1beta1
 kind: Queue
