@@ -1,11 +1,10 @@
 {{- if .Values.aws.sqs }}
-{{- if .Values.aws.sqs.queues }}
-{{- range .Values.aws.sqs.queues }}
+{{- if .Values.aws.sqs.embeddingQueue }}
 ---
-apiVersion: {{ include "providers.apiVersion" $ }}
-kind: SQSQueue
+apiVersion: sqs.aws.upbound.io/v1beta1
+kind: Queue
 metadata:
-  name: {{ .name }}
+  name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "embedding") }}
   labels:
     {{- include "serverless-pdf-chat.labels" $ | nindent 4 }}
   {{- with $.Values.tags }}
@@ -13,16 +12,16 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  queueName: {{ .name }}
-  region: {{ $.Values.aws.region }}
-  visibilityTimeout: {{ .visibilityTimeout }}
-  messageRetentionPeriod: {{ .messageRetentionPeriod }}
-  delaySeconds: {{ .delaySeconds }}
-  {{- if .deadLetterQueue }}
-  redrivePolicy:
-    deadLetterTargetArn: {{ .deadLetterQueue.arn }}
-    maxReceiveCount: {{ .deadLetterQueue.maxReceiveCount | default 5 }}
-  {{- end }}
-{{- end }}
+  forProvider:
+    {{- if .Values.aws.sqs.embeddingQueue.name }}
+    name: {{ .Values.aws.sqs.embeddingQueue.name }}
+    {{- else }}
+    name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "embedding") }}
+    {{- end }}
+    visibilityTimeoutSeconds: {{ .Values.aws.sqs.embeddingQueue.visibilityTimeout }}
+    messageRetentionSeconds: {{ .Values.aws.sqs.embeddingQueue.messageRetentionPeriod }}
+    delaySeconds: 0
+  providerConfigRef:
+    name: {{ $.Values.aws.providerConfigName }}
 {{- end }}
 {{- end }}

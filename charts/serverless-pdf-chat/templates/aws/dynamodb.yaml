@@ -1,11 +1,10 @@
 {{- if .Values.aws.dynamodb }}
-{{- if .Values.aws.dynamodb.tables }}
-{{- range .Values.aws.dynamodb.tables }}
+{{- if .Values.aws.dynamodb.documentTable }}
 ---
-apiVersion: {{ include "providers.apiVersion" $ }}
-kind: DynamoDBTable
+apiVersion: dynamodb.aws.upbound.io/v1beta1
+kind: Table
 metadata:
-  name: {{ .name }}
+  name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
   labels:
     {{- include "serverless-pdf-chat.labels" $ | nindent 4 }}
   {{- with $.Values.tags }}
@@ -13,25 +12,58 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  tableName: {{ .name }}
-  hashKey: {{ .hashKey }}
-  {{- if .rangeKey }}
-  rangeKey: {{ .rangeKey }}
-  {{- end }}
-  readCapacity: {{ .readCapacity }}
-  writeCapacity: {{ .writeCapacity }}
-  attributeDefinitions:
-    - attributeName: {{ .hashKey }}
-      attributeType: S
-    {{- if .rangeKey }}
-    - attributeName: {{ .rangeKey }}
-      attributeType: S
+  forProvider:
+    {{- if .Values.aws.dynamodb.documentTable.name }}
+    name: {{ .Values.aws.dynamodb.documentTable.name }}
+    {{- else }}
+    name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
     {{- end }}
-  {{- if .ttlAttribute }}
-  timeToLiveSpecification:
-    enabled: true
-    attributeName: {{ .ttlAttribute }}
-  {{- end }}
+    billingMode: {{ $.Values.aws.dynamodb.billingMode }}
+    attribute:
+    {{- range .Values.aws.dynamodb.documentTable.attributeDefinitions }}
+    - name: {{ .attributeName }}
+      type: {{ .attributeType }}
+    {{- end }}
+    keySchema:
+    {{- range .Values.aws.dynamodb.documentTable.keySchema }}
+    - attributeName: {{ .attributeName }}
+      keyType: {{ .keyType }}
+    {{- end }}
+  providerConfigRef:
+    name: {{ $.Values.aws.providerConfigName }}
 {{- end }}
+
+{{- if .Values.aws.dynamodb.memoryTable }}
+---
+apiVersion: dynamodb.aws.upbound.io/v1beta1
+kind: Table
+metadata:
+  name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "memory") }}
+  labels:
+    {{- include "serverless-pdf-chat.labels" $ | nindent 4 }}
+  {{- with $.Values.tags }}
+  tags:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  forProvider:
+    {{- if .Values.aws.dynamodb.memoryTable.name }}
+    name: {{ .Values.aws.dynamodb.memoryTable.name }}
+    {{- else }}
+    name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "memory") }}
+    {{- end }}
+    billingMode: {{ $.Values.aws.dynamodb.billingMode }}
+    attribute:
+    {{- range .Values.aws.dynamodb.memoryTable.attributeDefinitions }}
+    - name: {{ .attributeName }}
+      type: {{ .attributeType }}
+    {{- end }}
+    keySchema:
+    {{- range .Values.aws.dynamodb.memoryTable.keySchema }}
+    - attributeName: {{ .attributeName }}
+      keyType: {{ .keyType }}
+    {{- end }}
+  providerConfigRef:
+    name: {{ $.Values.aws.providerConfigName }}
 {{- end }}
 {{- end }}

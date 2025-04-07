@@ -47,3 +47,12 @@ Selector labels
 app.kubernetes.io/name: {{ include "serverless-pdf-chat.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Create a resource name based on the global prefix, environment, and resource name
+*/}}
+{{- define "serverless-pdf-chat.resourceName" -}}
+{{- $values := .Values -}}
+{{- $name := .name -}}
+{{- printf "%s-%s-%s" $values.global.namePrefix $values.global.environment $name -}}
+{{- end -}}
