@@ -470,9 +470,9 @@
                       "type": "integer",
                       "description": "Function memory size in MB"
                     },
-                    "codePath": {
+                    "repository": {
                       "type": "string",
-                      "description": "Path to the function code"
+                      "description": "Repository for the function image"
                     },
                     "environment": {
                       "type": "array",
@@ -505,9 +505,9 @@
                       "type": "integer",
                       "description": "Function memory size in MB"
                     },
-                    "codePath": {
+                    "repository": {
                       "type": "string",
-                      "description": "Path to the function code"
+                      "description": "Repository for the function image"
                     },
                     "environment": {
                       "type": "array",
@@ -540,9 +540,9 @@
                       "type": "integer",
                       "description": "Function memory size in MB"
                     },
-                    "codePath": {
+                    "repository": {
                       "type": "string",
-                      "description": "Path to the function code"
+                      "description": "Repository for the function image"
                     },
                     "environment": {
                       "type": "array",
@@ -575,9 +575,9 @@
                       "type": "integer",
                       "description": "Function memory size in MB"
                     },
-                    "codePath": {
+                    "repository": {
                       "type": "string",
-                      "description": "Path to the function code"
+                      "description": "Repository for the function image"
                     },
                     "environment": {
                       "type": "array",
@@ -610,9 +610,9 @@
                       "type": "integer",
                       "description": "Function memory size in MB"
                     },
-                    "codePath": {
+                    "repository": {
                       "type": "string",
-                      "description": "Path to the function code"
+                      "description": "Repository for the function image"
                     },
                     "environment": {
                       "type": "array",
@@ -645,9 +645,9 @@
                       "type": "integer",
                       "description": "Function memory size in MB"
                     },
-                    "codePath": {
+                    "repository": {
                       "type": "string",
-                      "description": "Path to the function code"
+                      "description": "Repository for the function image"
                     },
                     "environment": {
                       "type": "array",
@@ -680,9 +680,9 @@
                       "type": "integer",
                       "description": "Function memory size in MB"
                     },
-                    "codePath": {
+                    "repository": {
                       "type": "string",
-                      "description": "Path to the function code"
+                      "description": "Repository for the function image"
                     },
                     "environment": {
                       "type": "array",
@@ -715,9 +715,9 @@
                       "type": "integer",
                       "description": "Function memory size in MB"
                     },
-                    "codePath": {
+                    "repository": {
                       "type": "string",
-                      "description": "Path to the function code"
+                      "description": "Repository for the function image"
                     },
                     "environment": {
                       "type": "array",

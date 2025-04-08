@@ -7,34 +7,9 @@ global:
 
 images:
   registry: "ghcr.io"
-  repository: "your-org/serverless-pdf-chat"
+  repository: "crdant/serverless-pdf-chat"
   tag: "latest"
   pullPolicy: "IfNotPresent"
-  lambda:
-    uploadTrigger:
-      repository: "upload-trigger"
-      tag: null  # Will use global tag if null
-    generatePresignedUrl:
-      repository: "generate-presigned-url"
-      tag: null
-    generateEmbeddings:
-      repository: "generate-embeddings"
-      tag: null
-    getDocument:
-      repository: "get-document"
-      tag: null
-    getAllDocuments:
-      repository: "get-all-documents"
-      tag: null
-    deleteDocument:
-      repository: "delete-document"
-      tag: null
-    addConversation:
-      repository: "add-conversation"
-      tag: null
-    generateResponse:
-      repository: "generate-response"
-      tag: null
 
 application:
   config:
@@ -106,7 +81,8 @@ aws:
         description: "Handles S3 uploads and triggers document processing"
         timeout: 30
         memorySize: 256
-        codePath: "./lambda/upload_trigger"
+        repository: "upload-trigger"
+        tag: null  # Will use global tag if null
         environment:
           - ADDITIONAL_ENV_VAR: "value"
       generatePresignedUrl:
@@ -114,43 +90,50 @@ aws:
         description: "Generates presigned URLs for document uploads"
         timeout: 10
         memorySize: 128
-        codePath: "./lambda/generate_presigned_url"
+        repository: "generate-presigned-url"
+        tag: null
       generateEmbeddings:
         name: null
         description: "Processes documents and generates embeddings"
         timeout: 180
         memorySize: 1024
-        codePath: "./lambda/generate_embeddings"
+        repository: "generate-embeddings"
+        tag: null
       getDocument:
         name: null
         description: "Retrieves document information"
         timeout: 10
         memorySize: 128
-        codePath: "./lambda/get_document"
+        repository: "get-document"
+        tag: null
       getAllDocuments:
         name: null
         description: "Retrieves all user documents"
         timeout: 10
         memorySize: 128
-        codePath: "./lambda/get_all_documents"
+        repository: "get-all-documents"
+        tag: null
       deleteDocument:
         name: null
         description: "Deletes a document and its embeddings"
         timeout: 30
         memorySize: 256
-        codePath: "./lambda/delete_document"
+        repository: "delete-document"
+        tag: null
       addConversation:
         name: null
         description: "Adds a new conversation to memory"
         timeout: 10
         memorySize: 128
-        codePath: "./lambda/add_conversation"
+        repository: "add-conversation"
+        tag: null
       generateResponse:
         name: null
         description: "Generates a response using the LLM"
         timeout: 60
         memorySize: 512
-        codePath: "./lambda/generate_response"
+        repository: "generate-response"
+        tag: null
         
 tags:
   environment: "dev"

@@ -17,7 +17,7 @@ RELEASE_FILES :=
 
 # Docker variables
 DOCKER_REGISTRY ?= ghcr.io
-DOCKER_REPO ?= your-org/serverless-pdf-chat
+DOCKER_REPO ?= crdant/serverless-pdf-chat
 DOCKER_TAG ?= latest
 LAMBDA_FUNCTIONS := upload-trigger generate-presigned-url generate-embeddings get-document get-all-documents delete-document add-conversation generate-response
 DOCKER_IMAGES := $(addprefix docker-build-,$(LAMBDA_FUNCTIONS))
