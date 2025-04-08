@@ -50,8 +50,13 @@ $(foreach element,$(CHARTS),$(eval $(call make-chart-target,$(element))))
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
 
-# Add lambda packaging to the charts target
-charts:: package-lambdas
+# Define pre-charts target
+.PHONY: pre-charts
+pre-charts: package-lambdas
+
+# Make charts depend on pre-charts
+.PHONY: charts
+charts: pre-charts
 
 # Create work directory and clone/pull repository
 $(WORK_DIR):
@@ -75,17 +80,17 @@ $(LAMBDA_DIST_DIR):
 
 $(LAMBDA_DIST_DIR)/%.zip: clone-upstream | $(LAMBDA_DIST_DIR)
 	@echo "Packaging Lambda function: $*"
-	@mkdir -p $(LAMBDA_DIST_DIR)/$*-tmp
+	@mkdir -p $(BUILDDIR)/$*-tmp
 	@if [ -d "$(LAMBDA_SRC_DIR)/$*" ]; then \
 		cd $(LAMBDA_SRC_DIR)/$* && \
 		if [ -f "requirements.txt" ]; then \
-			pip install -r requirements.txt -t $(LAMBDA_DIST_DIR)/$*-tmp --no-cache-dir; \
+			pip install -r requirements.txt -t $(BUILDDIR)/$*-tmp --no-cache-dir; \
 		fi && \
-		cp -r *.py $(LAMBDA_DIST_DIR)/$*-tmp/ && \
-		cd $(LAMBDA_DIST_DIR)/$*-tmp && \
-		zip -r ../$(notdir $*).zip . && \
+		cp -r *.py $(BUILDDIR)/$*-tmp/ && \
+		cd $(BUILDDIR)/$*-tmp && \
+		zip -r $(LAMBDA_DIST_DIR)/$(notdir $*).zip . && \
 		cd $(CURDIR) && \
-		rm -rf $(LAMBDA_DIST_DIR)/$*-tmp; \
+		rm -rf $(BUILDDIR)/$*-tmp; \
 	else \
 		echo "Warning: Source directory for $* not found at $(LAMBDA_SRC_DIR)/$*"; \
 		touch $(LAMBDA_DIST_DIR)/$*.zip; \
