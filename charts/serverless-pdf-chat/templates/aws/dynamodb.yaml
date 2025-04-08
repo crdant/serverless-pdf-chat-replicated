@@ -14,7 +14,7 @@ metadata:
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
-    billing_mode: {{ $.Values.aws.dynamodb.billingMode }}
+    billingMode: {{ $.Values.aws.dynamodb.billingMode }}
     tags:
       {{- if .Values.aws.dynamodb.documentTable.name }}
       Name: {{ .Values.aws.dynamodb.documentTable.name }}
@@ -52,7 +52,7 @@ metadata:
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
-    billing_mode: {{ $.Values.aws.dynamodb.billingMode }}
+    billingMode: {{ $.Values.aws.dynamodb.billingMode }}
     tags:
       {{- if .Values.aws.dynamodb.memoryTable.name }}
       Name: {{ .Values.aws.dynamodb.memoryTable.name }}
