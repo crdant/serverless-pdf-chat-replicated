@@ -124,6 +124,11 @@ clean: clean-lambdas
 .PHONY: clean-all
 clean-all: clean clean-work
 
+# Convenience target for the complete Lambda workflow
+.PHONY: lambdas
+lambdas: clone-upstream package-lambdas upload-lambdas
+	@echo "Lambda workflow completed: cloned repo, packaged functions, and uploaded to S3"
+
 .PHONY: lint
 lint: $(RELEASE_FILES) 
 	replicated release lint --yaml-dir $(BUILDDIR)
