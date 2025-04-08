@@ -16,6 +16,7 @@ BUILDDIR      := $(PROJECTDIR)/build
 RELEASE_FILES := 
 
 # Docker variables
+DOCKER_CMD ?= docker  # Default to docker, can be overridden with DOCKER_CMD=nerdctl
 DOCKER_REGISTRY ?= ghcr.io
 DOCKER_REPO ?= crdant/serverless-pdf-chat
 DOCKER_TAG ?= latest
@@ -44,12 +45,12 @@ define make-docker-target
 .PHONY: docker-build-$1
 docker-build-$1:
 	@echo "Building Docker image: $1"
-	docker build -t $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG) -f $(DOCKERDIR)/$1/Dockerfile $(DOCKERDIR)/$1
+	$(DOCKER_CMD) build -t $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG) -f $(DOCKERDIR)/$1/Dockerfile $(DOCKERDIR)/$1
 
 .PHONY: docker-push-$1
 docker-push-$1: docker-build-$1
 	@echo "Pushing Docker image: $1"
-	docker push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG)
+	$(DOCKER_CMD) push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG)
 
 # Add each image to the images target dependencies
 images:: docker-push-$1
