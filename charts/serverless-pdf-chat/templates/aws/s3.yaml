@@ -2,14 +2,14 @@
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: Bucket
 metadata:
-  name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}-{{ $randomSuffix }}
+  name: {{ include "serverless-pdf-chat.bucketName" . }}
   labels:
     {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
     tags:
-      Name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}-{{ $randomSuffix }}
+      Name: {{ include "serverless-pdf-chat.bucketName" . }}
       {{- with .Values.tags }}
       {{- toYaml . | nindent 6 }}
       {{- end }}
