@@ -19,9 +19,9 @@ RELEASE_FILES :=
 DOCKER_CMD ?= docker  # Default to docker, can be overridden with DOCKER_CMD=nerdctl
 DOCKER_REGISTRY ?= ghcr.io
 DOCKER_REPO ?= crdant/serverless-pdf-chat
-# Use the chart version as the default Docker tag
-CHART_VERSION := $(shell yq .version $(CHARTDIR)/serverless-pdf-chat/Chart.yaml)
-DOCKER_TAG ?= $(CHART_VERSION)
+# Use the chart appVersion as the default Docker tag
+APP_VERSION := $(shell yq .appVersion $(CHARTDIR)/serverless-pdf-chat/Chart.yaml)
+DOCKER_TAG ?= $(APP_VERSION)
 DOCKERDIR := $(PROJECTDIR)/docker
 DOCKER_IMAGES := $(shell find $(DOCKERDIR) -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
 

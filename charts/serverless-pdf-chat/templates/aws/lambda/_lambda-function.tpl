@@ -18,7 +18,7 @@ spec:
                  .Values.images.registry 
                  .Values.images.repository 
                  .functionConfig.repository 
-                 (default .Values.images.tag .functionConfig.tag) }}
+                 (default (default .Values.images.tag .functionConfig.tag) .Chart.AppVersion) }}
     timeout: {{ default .Values.aws.lambda.timeout .functionConfig.timeout }}
     memorySize: {{ default .Values.aws.lambda.memorySize .functionConfig.memorySize }}
     # Use the roleArn helper

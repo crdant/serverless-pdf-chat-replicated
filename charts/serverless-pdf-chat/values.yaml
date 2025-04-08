@@ -8,7 +8,7 @@ global:
 images:
   registry: "ghcr.io"
   repository: "crdant/serverless-pdf-chat"
-  tag: "latest"
+  tag: null  # Will use Chart.AppVersion if null
   pullPolicy: "IfNotPresent"
 
 application:
