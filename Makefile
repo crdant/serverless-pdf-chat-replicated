@@ -19,9 +19,8 @@ RELEASE_FILES :=
 DOCKER_REGISTRY ?= ghcr.io
 DOCKER_REPO ?= crdant/serverless-pdf-chat
 DOCKER_TAG ?= latest
-LAMBDA_FUNCTIONS := upload-trigger generate-presigned-url generate-embeddings get-document get-all-documents delete-document add-conversation generate-response
-DOCKER_IMAGES := $(addprefix docker-build-,$(LAMBDA_FUNCTIONS))
-DOCKER_PUSHES := $(addprefix docker-push-,$(LAMBDA_FUNCTIONS))
+DOCKERDIR := $(PROJECTDIR)/docker
+DOCKER_IMAGES := $(shell find $(DOCKERDIR) -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
 
 define make-manifest-target
 $(BUILDDIR)/$(notdir $1): $1 | $$(BUILDDIR)
@@ -40,23 +39,30 @@ charts:: $(BUILDDIR)/$1-$(VER).tgz
 endef
 $(foreach element,$(CHARTS),$(eval $(call make-chart-target,$(element))))
 
+# Define Docker build and push targets dynamically
+define make-docker-target
+.PHONY: docker-build-$1
+docker-build-$1:
+	@echo "Building Docker image: $1"
+	docker build -t $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG) -f $(DOCKERDIR)/$1/Dockerfile $(DOCKERDIR)/$1
+
+.PHONY: docker-push-$1
+docker-push-$1: docker-build-$1
+	@echo "Pushing Docker image: $1"
+	docker push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG)
+
+# Add each image to the images target dependencies
+images:: docker-push-$1
+endef
+$(foreach image,$(DOCKER_IMAGES),$(eval $(call make-docker-target,$(image))))
+
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
 
-# Docker build targets
-.PHONY: docker-build-%
-docker-build-%:
-	docker build -t $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$*:$(DOCKER_TAG) -f docker/$*/Dockerfile .
-
-.PHONY: docker-push-%
-docker-push-%: docker-build-%
-	docker push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$*:$(DOCKER_TAG)
-
-.PHONY: docker-build
-docker-build: $(DOCKER_IMAGES)
-
-.PHONY: docker-push
-docker-push: $(DOCKER_PUSHES)
+# Main images target
+.PHONY: images
+images:
+	@echo "All Docker images built and pushed successfully"
 
 .PHONY: clean
 clean:
