@@ -22,6 +22,9 @@ DOCKER_REPO ?= crdant/serverless-pdf-chat
 # Use the chart appVersion as the default Docker tag
 APP_VERSION := $(shell yq .appVersion $(CHARTDIR)/serverless-pdf-chat/Chart.yaml)
 DOCKER_TAG ?= $(APP_VERSION)
+# Extract major and major.minor versions for additional tags
+MAJOR_VERSION := $(shell echo $(DOCKER_TAG) | cut -d. -f1)
+MINOR_VERSION := $(shell echo $(DOCKER_TAG) | cut -d. -f1,2)
 DOCKERDIR := $(PROJECTDIR)/docker
 DOCKER_IMAGES := $(shell find $(DOCKERDIR) -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
 
@@ -48,11 +51,16 @@ define make-docker-target
 docker-build-$1:
 	@echo "Building Docker image: $1 with tag $(DOCKER_TAG)"
 	$(DOCKER_CMD) build -t $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG) -f $(DOCKERDIR)/$1/Dockerfile $(DOCKERDIR)/$1
+	$(DOCKER_CMD) tag $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG) $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MINOR_VERSION)
+	$(DOCKER_CMD) tag $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG) $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MAJOR_VERSION)
+	@echo "Tagged image with $(DOCKER_TAG), $(MINOR_VERSION), and $(MAJOR_VERSION)"
 
 .PHONY: docker-push-$1
 docker-push-$1: docker-build-$1
-	@echo "Pushing Docker image: $1 with tag $(DOCKER_TAG)"
+	@echo "Pushing Docker image: $1 with tags $(DOCKER_TAG), $(MINOR_VERSION), and $(MAJOR_VERSION)"
 	$(DOCKER_CMD) push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG)
+	$(DOCKER_CMD) push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MINOR_VERSION)
+	$(DOCKER_CMD) push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MAJOR_VERSION)
 
 # Add each image to the images target dependencies
 images:: docker-push-$1
