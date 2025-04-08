@@ -26,17 +26,6 @@ spec:
       rules:
         - applyServerSideEncryptionByDefault:
             sseAlgorithm: "AES256"
-    {{- if .Values.aws.s3.lifecycleRules }}
-    lifecycleConfiguration:
-      rules:
-        {{- range .Values.aws.s3.lifecycleRules }}
-        - status: {{ if .enabled }}"Enabled"{{ else }}"Disabled"{{ end }}
-          {{- if .expiration }}
-          expiration:
-            days: {{ .expiration }}
-          {{- end }}
-        {{- end }}
-    {{- end }}
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
 ---
@@ -55,6 +44,36 @@ spec:
     blockPublicPolicy: {{ .Values.aws.s3.publicAccessBlockConfiguration.blockPublicPolicy }}
     ignorePublicAcls: {{ .Values.aws.s3.publicAccessBlockConfiguration.ignorePublicAcls }}
     restrictPublicBuckets: {{ .Values.aws.s3.publicAccessBlockConfiguration.restrictPublicBuckets }}
+  providerConfigRef:
+    name: {{ .Values.aws.providerConfigName }}
+{{- end }}
+
+{{- if and .Values.aws.s3 .Values.aws.s3.lifecycleRules }}
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketLifecycleConfiguration
+metadata:
+  name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents-lifecycle") }}
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+spec:
+  forProvider:
+    region: {{ .Values.aws.region }}
+    bucketRef:
+      name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
+    rule:
+      {{- range .Values.aws.s3.lifecycleRules }}
+      - id: {{ .id | default "default-rule" }}
+        status: {{ if .enabled }}Enabled{{ else }}Disabled{{ end }}
+        {{- if .prefix }}
+        filter:
+          prefix: {{ .prefix | quote }}
+        {{- end }}
+        {{- if .expiration }}
+        expiration:
+          days: {{ .expiration }}
+        {{- end }}
+      {{- end }}
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
 {{- end }}
