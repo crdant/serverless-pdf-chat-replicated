@@ -18,10 +18,6 @@ spec:
       {{- toYaml . | nindent 6 }}
     {{- end }}
     forceDestroy: true
-    {{- if .Values.aws.s3.versioning }}
-    versioningConfiguration:
-      status: "Enabled"
-    {{- end }}
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
 ---
@@ -57,6 +53,25 @@ spec:
     blockPublicPolicy: {{ .Values.aws.s3.publicAccessBlockConfiguration.blockPublicPolicy }}
     ignorePublicAcls: {{ .Values.aws.s3.publicAccessBlockConfiguration.ignorePublicAcls }}
     restrictPublicBuckets: {{ .Values.aws.s3.publicAccessBlockConfiguration.restrictPublicBuckets }}
+  providerConfigRef:
+    name: {{ .Values.aws.providerConfigName }}
+{{- end }}
+
+{{- if and .Values.aws.s3 .Values.aws.s3.versioning }}
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketVersioning
+metadata:
+  name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents-versioning") }}
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+spec:
+  forProvider:
+    region: {{ .Values.aws.region }}
+    bucketRef:
+      name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
+    versioningConfiguration:
+      - status: Enabled
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
 {{- end }}
