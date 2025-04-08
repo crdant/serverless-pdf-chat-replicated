@@ -1,8 +1,9 @@
 {{- if .Values.aws.s3 }}
+{{- $randomSuffix := substr 0 8 (uuidv4) }}
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: Bucket
 metadata:
-  name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
+  name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}-{{ $randomSuffix }}
   labels:
     {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
 spec:
@@ -12,7 +13,7 @@ spec:
       {{- if .Values.aws.s3.documentBucketName }}
       Name: {{ .Values.aws.s3.documentBucketName }}
       {{- else }}
-      Name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}-{{ substr 0 8 (uuidv4) }}
+      Name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}-{{ $randomSuffix }}
       {{- end }}
       {{- with .Values.tags }}
       {{- toYaml . | nindent 6 }}
@@ -31,7 +32,7 @@ spec:
   forProvider:
     region: {{ .Values.aws.region }}
     bucketRef:
-      name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
+      name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}-{{ $randomSuffix }}
     rule:
       - applyServerSideEncryptionByDefault:
           - sseAlgorithm: "AES256"
@@ -48,7 +49,7 @@ spec:
   forProvider:
     region: {{ .Values.aws.region }}
     bucketRef:
-      name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
+      name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}-{{ $randomSuffix }}
     blockPublicAcls: {{ .Values.aws.s3.publicAccessBlockConfiguration.blockPublicAcls }}
     blockPublicPolicy: {{ .Values.aws.s3.publicAccessBlockConfiguration.blockPublicPolicy }}
     ignorePublicAcls: {{ .Values.aws.s3.publicAccessBlockConfiguration.ignorePublicAcls }}
@@ -69,7 +70,7 @@ spec:
   forProvider:
     region: {{ .Values.aws.region }}
     bucketRef:
-      name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
+      name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}-{{ $randomSuffix }}
     versioningConfiguration:
       - status: Enabled
   providerConfigRef:
@@ -88,7 +89,7 @@ spec:
   forProvider:
     region: {{ .Values.aws.region }}
     bucketRef:
-      name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
+      name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}-{{ $randomSuffix }}
     rule:
       {{- range .Values.aws.s3.lifecycleRules }}
       - id: {{ .id | default "default-rule" }}
