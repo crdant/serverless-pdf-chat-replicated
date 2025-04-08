@@ -49,9 +49,9 @@ Thumbs.db
 secrets/*
 work/*
 
-# Don't ignore Lambda packages in the chart
-!charts/serverless-pdf-chat/lambdas/*.zip
-!charts/serverless-pdf-chat/templates/aws/lambda/lambda-code-uploader.yaml
+# Docker
+.dockerignore
+docker-compose.override.yml
 
 .aider*
 !.aider.conf.yml

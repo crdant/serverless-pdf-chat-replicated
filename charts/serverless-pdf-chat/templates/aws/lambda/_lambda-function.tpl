@@ -12,17 +12,13 @@ spec:
   forProvider:
     region: {{ .Values.aws.region }}
     description: {{ .functionConfig.description | quote }}
-    runtime: {{ .Values.aws.lambda.runtime }}
-    handler: {{ .Values.aws.lambda.handler }}
+    # Use container image instead of S3 code
+    packageType: "Image"
+    imageUri: {{ printf "ghcr.io/%s/serverless-pdf-chat/%s:%s" .Values.github.organization .functionName .Values.github.tag }}
     timeout: {{ default .Values.aws.lambda.timeout .functionConfig.timeout }}
     memorySize: {{ default .Values.aws.lambda.memorySize .functionConfig.memorySize }}
     # Use the roleArn helper
     role: {{ include "serverless-pdf-chat.roleArn" (dict "account" .Values.aws.accountId "name" (default (printf "%s-lambda-role" (include "serverless-pdf-chat.fullname" .)) .Values.aws.iam.roles.lambdaRole.name)) }}
-    
-    # Code configuration
-    packageType: "Zip"
-    s3Bucket: {{ include "serverless-pdf-chat.bucketName" . }}
-    s3Key: {{ printf "lambda/%s.zip" .functionName }}
     
     # Environment variables
     environment:

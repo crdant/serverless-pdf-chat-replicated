@@ -18,6 +18,21 @@
         }
       }
     },
+    "github": {
+      "type": "object",
+      "properties": {
+        "organization": {
+          "type": "string",
+          "description": "GitHub organization name",
+          "default": "your-org"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Docker image tag to use",
+          "default": "latest"
+        }
+      }
+    },
     "application": {
       "type": "object",
       "properties": {

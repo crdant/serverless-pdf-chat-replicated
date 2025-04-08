@@ -5,6 +5,10 @@ global:
   namePrefix: "pdf-chat"
   environment: "dev"
 
+github:
+  organization: "your-org"
+  tag: "latest"  # Or use a specific version
+
 application:
   config:
     region: "us-west-2"

@@ -1,0 +1,63 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docker/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'docker/**'
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        function: [
+          "upload-trigger",
+          "generate-presigned-url",
+          "generate-embeddings",
+          "get-document",
+          "get-all-documents",
+          "delete-document",
+          "add-conversation",
+          "generate-response"
+        ]
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/serverless-pdf-chat/${{ matrix.function }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=sha,format=short
+            latest
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: docker/${{ matrix.function }}/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
