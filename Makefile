@@ -59,11 +59,6 @@ $(foreach image,$(DOCKER_IMAGES),$(eval $(call make-docker-target,$(image))))
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
 
-# Main images target
-.PHONY: images
-images:
-	@echo "All Docker images built and pushed successfully"
-
 .PHONY: clean
 clean:
 	rm -rf $(BUILDDIR)
