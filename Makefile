@@ -94,6 +94,8 @@ $(LAMBDA_DIST_DIR)/%.zip: clone-upstream | $(LAMBDA_DIST_DIR)
 .PHONY: package-lambdas
 package-lambdas: $(LAMBDA_PACKAGE_FILES)
 	@echo "All Lambda functions packaged successfully"
+	@mkdir -p $(CHARTDIR)/serverless-pdf-chat/lambdas
+	@cp $(LAMBDA_DIST_DIR)/*.zip $(CHARTDIR)/serverless-pdf-chat/lambdas/
 
 .PHONY: upload-lambdas
 upload-lambdas: package-lambdas

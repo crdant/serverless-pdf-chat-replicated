@@ -1,2 +1,4 @@
 # This file ensures the lambdas directory is tracked by Git
 # even if it's empty
+# The directory contains Lambda function packages
+# The packages are copied here by the package-lambdas target in the Makefile

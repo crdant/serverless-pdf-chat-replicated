@@ -1,10 +1,11 @@
 {{- $functions := list "upload_trigger" "generate_presigned_url" "generate_embeddings" "get_document" "get_all_documents" "delete_document" "add_conversation" "generate_response" }}
 {{- range $functions }}
 {{- $functionName := . }}
+{{- $dashFunctionName := $functionName | replace "_" "-" }}
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: BucketObject
 metadata:
-  name: {{ include "serverless-pdf-chat.fullname" $ }}-{{ $functionName | replace "_" "-" }}-code
+  name: {{ include "serverless-pdf-chat.fullname" $ }}-{{ $dashFunctionName }}-code
   labels:
     {{- include "serverless-pdf-chat.labels" $ | nindent 4 }}
 spec:
