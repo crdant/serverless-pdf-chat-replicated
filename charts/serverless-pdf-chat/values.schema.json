@@ -97,85 +97,19 @@
           "properties": {
             "documentTable": {
               "type": "object",
-              "required": ["keySchema", "attributeDefinitions"],
               "properties": {
                 "name": {
                   "type": ["string", "null"],
                   "description": "Custom name for the document table. If empty, a name will be generated."
-                },
-                "keySchema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "required": ["attributeName", "keyType"],
-                    "properties": {
-                      "attributeName": {
-                        "type": "string"
-                      },
-                      "keyType": {
-                        "type": "string",
-                        "enum": ["HASH", "RANGE"]
-                      }
-                    }
-                  }
-                },
-                "attributeDefinitions": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "required": ["attributeName", "attributeType"],
-                    "properties": {
-                      "attributeName": {
-                        "type": "string"
-                      },
-                      "attributeType": {
-                        "type": "string",
-                        "enum": ["S", "N", "B"]
-                      }
-                    }
-                  }
                 }
               }
             },
             "memoryTable": {
               "type": "object",
-              "required": ["keySchema", "attributeDefinitions"],
               "properties": {
                 "name": {
                   "type": ["string", "null"],
                   "description": "Custom name for the memory table. If empty, a name will be generated."
-                },
-                "keySchema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "required": ["attributeName", "keyType"],
-                    "properties": {
-                      "attributeName": {
-                        "type": "string"
-                      },
-                      "keyType": {
-                        "type": "string",
-                        "enum": ["HASH", "RANGE"]
-                      }
-                    }
-                  }
-                },
-                "attributeDefinitions": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "required": ["attributeName", "attributeType"],
-                    "properties": {
-                      "attributeName": {
-                        "type": "string"
-                      },
-                      "attributeType": {
-                        "type": "string",
-                        "enum": ["S", "N", "B"]
-                      }
-                    }
-                  }
                 }
               }
             },

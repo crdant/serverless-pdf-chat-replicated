@@ -25,25 +25,8 @@ aws:
     billingMode: "PAY_PER_REQUEST"
     documentTable:
       name: null
-      keySchema:
-        - attributeName: "documentId"
-          keyType: "HASH"
-      attributeDefinitions:
-        - attributeName: "documentId"
-          attributeType: "S"
-        
     memoryTable:
       name: null
-      keySchema:
-        - attributeName: "sessionId"
-          keyType: "HASH"
-        - attributeName: "messageId"
-          keyType: "RANGE"
-      attributeDefinitions:
-        - attributeName: "sessionId"
-          attributeType: "S"
-        - attributeName: "messageId"
-          attributeType: "S"
         
   sqs:
     embeddingQueue:
