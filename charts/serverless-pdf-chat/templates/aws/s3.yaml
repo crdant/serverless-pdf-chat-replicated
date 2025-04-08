@@ -5,10 +5,6 @@ metadata:
   name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
   labels:
     {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
-  {{- with .Values.tags }}
-  tags:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
@@ -16,6 +12,10 @@ spec:
     bucket: {{ .Values.aws.s3.documentBucketName }}
     {{- else }}
     bucket: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
+    {{- end }}
+    {{- with .Values.tags }}
+    tags:
+      {{- toYaml . | nindent 6 }}
     {{- end }}
     force_destroy: true
     {{- if .Values.aws.s3.versioning }}

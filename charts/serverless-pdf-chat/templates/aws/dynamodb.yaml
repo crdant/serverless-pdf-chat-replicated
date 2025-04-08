@@ -7,10 +7,6 @@ metadata:
   name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
   labels:
     {{- include "serverless-pdf-chat.labels" $ | nindent 4 }}
-  {{- with $.Values.tags }}
-  tags:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
@@ -45,10 +41,6 @@ metadata:
   name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "memory") }}
   labels:
     {{- include "serverless-pdf-chat.labels" $ | nindent 4 }}
-  {{- with $.Values.tags }}
-  tags:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
