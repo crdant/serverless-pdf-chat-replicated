@@ -20,12 +20,17 @@
     },
     "aws": {
       "type": "object",
-      "required": ["providerConfigName", "s3", "dynamodb", "sqs"],
+      "required": ["providerConfigName", "s3", "dynamodb", "sqs", "cognito", "iam"],
       "properties": {
         "region": {
           "type": "string",
           "description": "AWS region for resources",
           "default": "us-west-2"
+        },
+        "accountId": {
+          "type": "string",
+          "description": "AWS account ID",
+          "default": "123456789012"
         },
         "providerConfigName": {
           "type": "string",
@@ -140,6 +145,133 @@
                   "type": "integer",
                   "description": "The message retention period in seconds",
                   "default": 3600
+                }
+              }
+            }
+          }
+        },
+        "cognito": {
+          "type": "object",
+          "required": ["userPool", "userPoolClient"],
+          "properties": {
+            "userPool": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": ["string", "null"],
+                  "description": "Custom name for the user pool. If empty, a name will be generated."
+                },
+                "autoVerifiedAttributes": {
+                  "type": "array",
+                  "description": "Attributes that should be auto-verified",
+                  "default": ["email"],
+                  "items": {
+                    "type": "string",
+                    "enum": ["email", "phone_number"]
+                  }
+                },
+                "usernameAttributes": {
+                  "type": "array",
+                  "description": "Attributes that can be used as username",
+                  "default": ["email"],
+                  "items": {
+                    "type": "string",
+                    "enum": ["email", "phone_number"]
+                  }
+                },
+                "adminCreateUserConfig": {
+                  "type": "object",
+                  "properties": {
+                    "allowAdminCreateUserOnly": {
+                      "type": "boolean",
+                      "description": "Only allow administrators to create users",
+                      "default": true
+                    }
+                  }
+                },
+                "passwordPolicy": {
+                  "type": "object",
+                  "properties": {
+                    "minimumLength": {
+                      "type": "integer",
+                      "description": "Minimum length of password",
+                      "default": 8
+                    },
+                    "requireLowercase": {
+                      "type": "boolean",
+                      "description": "Require lowercase characters in password",
+                      "default": true
+                    },
+                    "requireNumbers": {
+                      "type": "boolean",
+                      "description": "Require numbers in password",
+                      "default": true
+                    },
+                    "requireSymbols": {
+                      "type": "boolean",
+                      "description": "Require symbols in password",
+                      "default": true
+                    },
+                    "requireUppercase": {
+                      "type": "boolean",
+                      "description": "Require uppercase characters in password",
+                      "default": true
+                    }
+                  }
+                }
+              }
+            },
+            "userPoolClient": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": ["string", "null"],
+                  "description": "Custom name for the user pool client. If empty, a name will be generated."
+                },
+                "generateSecret": {
+                  "type": "boolean",
+                  "description": "Generate client secret",
+                  "default": false
+                }
+              }
+            }
+          }
+        },
+        "iam": {
+          "type": "object",
+          "required": ["roles"],
+          "properties": {
+            "roles": {
+              "type": "object",
+              "required": ["lambdaRole"],
+              "properties": {
+                "lambdaRole": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the Lambda execution role",
+                      "default": "lambda-execution-role"
+                    },
+                    "assumeRolePolicyDocument": {
+                      "type": "string",
+                      "description": "JSON document for the assume role policy"
+                    },
+                    "policies": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "Name of the policy",
+                          "default": "lambda-execution-policy"
+                        },
+                        "document": {
+                          "type": "string",
+                          "description": "JSON document for the policy"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
