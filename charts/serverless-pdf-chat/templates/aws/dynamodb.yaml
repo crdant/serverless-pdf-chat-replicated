@@ -15,11 +15,20 @@ spec:
   forProvider:
     region: {{ .Values.aws.region }}
     {{- if .Values.aws.dynamodb.documentTable.name }}
-    tableName: {{ .Values.aws.dynamodb.documentTable.name }}
+    name: {{ .Values.aws.dynamodb.documentTable.name }}
     {{- else }}
-    tableName: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
+    name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
     {{- end }}
-    billingMode: {{ $.Values.aws.dynamodb.billingMode }}
+    billing_mode: {{ $.Values.aws.dynamodb.billingMode }}
+    tags:
+      {{- if .Values.aws.dynamodb.documentTable.name }}
+      Name: {{ .Values.aws.dynamodb.documentTable.name }}
+      {{- else }}
+      Name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
+      {{- end }}
+      {{- with $.Values.tags }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
     attribute:
     {{- range .Values.aws.dynamodb.documentTable.attributeDefinitions }}
     - name: {{ .attributeName }}
@@ -49,11 +58,20 @@ spec:
   forProvider:
     region: {{ .Values.aws.region }}
     {{- if .Values.aws.dynamodb.memoryTable.name }}
-    tableName: {{ .Values.aws.dynamodb.memoryTable.name }}
+    name: {{ .Values.aws.dynamodb.memoryTable.name }}
     {{- else }}
-    tableName: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "memory") }}
+    name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "memory") }}
     {{- end }}
-    billingMode: {{ $.Values.aws.dynamodb.billingMode }}
+    billing_mode: {{ $.Values.aws.dynamodb.billingMode }}
+    tags:
+      {{- if .Values.aws.dynamodb.memoryTable.name }}
+      Name: {{ .Values.aws.dynamodb.memoryTable.name }}
+      {{- else }}
+      Name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "memory") }}
+      {{- end }}
+      {{- with $.Values.tags }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
     attribute:
     {{- range .Values.aws.dynamodb.memoryTable.attributeDefinitions }}
     - name: {{ .attributeName }}
