@@ -56,9 +56,8 @@ spec:
     restrictPublicBuckets: {{ .Values.aws.s3.publicAccessBlockConfiguration.restrictPublicBuckets }}
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
-{{- end }}
 
-{{- if and .Values.aws.s3 .Values.aws.s3.versioning }}
+{{- if .Values.aws.s3.versioning }}
 ---
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: BucketVersioning
@@ -77,7 +76,7 @@ spec:
     name: {{ .Values.aws.providerConfigName }}
 {{- end }}
 
-{{- if and .Values.aws.s3 .Values.aws.s3.lifecycleRules }}
+{{- if .Values.aws.s3.lifecycleRules }}
 ---
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: BucketLifecycleConfiguration
@@ -107,7 +106,7 @@ spec:
     name: {{ .Values.aws.providerConfigName }}
 {{- end }}
 
-{{- if and .Values.aws.s3 .Values.aws.s3.corsEnabled }}
+{{- if .Values.aws.s3.corsEnabled }}
 ---
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: BucketCorsConfiguration
@@ -136,4 +135,5 @@ spec:
         maxAgeSeconds: 3000
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
+{{- end }}
 {{- end }}
