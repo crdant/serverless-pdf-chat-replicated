@@ -53,14 +53,9 @@ spec:
       {{- toYaml . | nindent 6 }}
       {{- end }}
     attribute:
-    {{- range .Values.aws.dynamodb.memoryTable.attributeDefinitions }}
-    - name: {{ .attributeName }}
-      type: {{ .attributeType }}
-    {{- end }}
-    hashKey: {{ .Values.aws.dynamodb.memoryTable.hashKey }}
-    {{- if .Values.aws.dynamodb.memoryTable.rangeKey }}
-    rangeKey: {{ .Values.aws.dynamodb.memoryTable.rangeKey }}
-    {{- end }}
+    - name: SessionId
+      type: S
+    hashKey: SessionId
   providerConfigRef:
     name: {{ $.Values.aws.providerConfigName }}
 {{- end }}
