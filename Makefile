@@ -19,7 +19,8 @@ RELEASE_FILES :=
 LAMBDA_REPO_URL := https://github.com/aws-samples/serverless-pdf-chat.git
 LAMBDA_REPO_BRANCH ?= main
 WORK_DIR := $(PROJECTDIR)/work
-LAMBDA_SRC_DIR := $(WORK_DIR)/backend/src
+LAMBDA_REPO_DIR := $(WORK_DIR)/serverless-pdf-chat
+LAMBDA_SRC_DIR := $(LAMBDA_REPO_DIR)/backend/src
 LAMBDA_FUNCTIONS := upload_trigger generate_presigned_url generate_embeddings get_document get_all_documents delete_document add_conversation generate_response
 LAMBDA_DIST_DIR := $(BUILDDIR)/lambda
 LAMBDA_PACKAGE_FILES := $(foreach func,$(LAMBDA_FUNCTIONS),$(LAMBDA_DIST_DIR)/$(func).zip)
@@ -58,13 +59,14 @@ $(WORK_DIR):
 
 .PHONY: clone-upstream
 clone-upstream: | $(WORK_DIR)
-	@if [ -d "$(WORK_DIR)/.git" ]; then \
+	@if [ -d "$(LAMBDA_REPO_DIR)/.git" ]; then \
 		echo "Upstream repository already exists, pulling latest changes..."; \
-		cd $(WORK_DIR) && git pull; \
+		cd $(LAMBDA_REPO_DIR) && git pull; \
 	else \
 		echo "Cloning upstream repository..."; \
-		git clone $(LAMBDA_REPO_URL) $(WORK_DIR) && \
-		cd $(WORK_DIR) && git checkout $(LAMBDA_REPO_BRANCH); \
+		mkdir -p $(WORK_DIR) && \
+		git clone $(LAMBDA_REPO_URL) $(LAMBDA_REPO_DIR) && \
+		cd $(LAMBDA_REPO_DIR) && git checkout $(LAMBDA_REPO_BRANCH); \
 	fi
 
 # Lambda packaging targets
