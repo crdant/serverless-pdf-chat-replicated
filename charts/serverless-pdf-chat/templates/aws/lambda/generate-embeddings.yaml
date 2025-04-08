@@ -14,7 +14,7 @@ spec:
   forProvider:
     region: {{ .Values.aws.region }}
     functionName: {{ default (printf "%s-%s" (include "serverless-pdf-chat.fullname" .) $functionName) $functionConfig.name }}
-    eventSourceArn: {{ printf "arn:aws:sqs:%s:%s:%s" .Values.aws.region .Values.aws.accountId (default (printf "%s-embedding-queue" (include "serverless-pdf-chat.fullname" .)) .Values.aws.sqs.embeddingQueue.name) }}
+    eventSourceArn: {{ include "serverless-pdf-chat.arn" (dict "service" "sqs" "region" .Values.aws.region "account" .Values.aws.accountId "resource" (default (printf "%s-embedding-queue" (include "serverless-pdf-chat.fullname" .)) .Values.aws.sqs.embeddingQueue.name)) }}
     batchSize: 1
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}

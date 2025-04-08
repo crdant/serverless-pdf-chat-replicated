@@ -56,3 +56,31 @@ Create a resource name based on the global prefix, environment, and resource nam
 {{- $name := .name -}}
 {{- printf "%s-%s-%s" $values.global.namePrefix $values.global.environment $name -}}
 {{- end -}}
+
+{{/*
+Generate an ARN for a resource
+Usage: {{ include "serverless-pdf-chat.arn" (dict "service" "s3" "region" .Values.aws.region "account" .Values.aws.accountId "resource" "my-bucket") }}
+*/}}
+{{- define "serverless-pdf-chat.arn" -}}
+{{- $service := .service -}}
+{{- $region := .region -}}
+{{- $account := .account -}}
+{{- $resource := .resource -}}
+{{- if eq $service "s3" -}}
+arn:aws:{{ $service }}:::{{ $resource }}
+{{- else if eq $service "logs" -}}
+arn:aws:{{ $service }}:*:*:{{ $resource }}
+{{- else -}}
+arn:aws:{{ $service }}:{{ $region }}:{{ $account }}:{{ $resource }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Generate an IAM role ARN
+Usage: {{ include "serverless-pdf-chat.roleArn" (dict "account" .Values.aws.accountId "name" "my-role-name") }}
+*/}}
+{{- define "serverless-pdf-chat.roleArn" -}}
+{{- $account := .account -}}
+{{- $name := .name -}}
+arn:aws:iam::{{ $account }}:role/{{ $name }}
+{{- end -}}

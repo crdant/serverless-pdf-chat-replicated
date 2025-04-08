@@ -17,7 +17,8 @@ spec:
     handler: {{ .Values.aws.lambda.handler }}
     timeout: {{ default .Values.aws.lambda.timeout .functionConfig.timeout }}
     memorySize: {{ default .Values.aws.lambda.memorySize .functionConfig.memorySize }}
-    role: {{ printf "arn:aws:iam::%s:role/%s" .Values.aws.accountId (default (printf "%s-lambda-role" (include "serverless-pdf-chat.fullname" .)) .Values.aws.iam.roles.lambdaRole.name) }}
+    # Use the roleArn helper
+    role: {{ include "serverless-pdf-chat.roleArn" (dict "account" .Values.aws.accountId "name" (default (printf "%s-lambda-role" (include "serverless-pdf-chat.fullname" .)) .Values.aws.iam.roles.lambdaRole.name)) }}
     
     # Code configuration
     packageType: "Zip"
