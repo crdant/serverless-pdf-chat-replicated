@@ -64,7 +64,7 @@ spec:
   forProvider:
     region: {{ .Values.aws.region }}
     bucketRef:
-      name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}-{{ $randomSuffix }}
+      name: {{ include "serverless-pdf-chat.bucketName" . }}
     versioningConfiguration:
       - status: Enabled
   providerConfigRef:
@@ -83,7 +83,7 @@ spec:
   forProvider:
     region: {{ .Values.aws.region }}
     bucketRef:
-      name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}-{{ $randomSuffix }}
+      name: {{ include "serverless-pdf-chat.bucketName" . }}
     rule:
       {{- range .Values.aws.s3.lifecycleRules }}
       - id: {{ .id | default "default-rule" }}
@@ -113,7 +113,7 @@ spec:
   forProvider:
     region: {{ .Values.aws.region }}
     bucketRef:
-      name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}-{{ $randomSuffix }}
+      name: {{ include "serverless-pdf-chat.bucketName" . }}
     corsRule:
       - allowedHeaders:
           - "*"
