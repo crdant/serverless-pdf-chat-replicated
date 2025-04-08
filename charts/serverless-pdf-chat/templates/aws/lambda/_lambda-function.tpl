@@ -14,11 +14,7 @@ spec:
     description: {{ .functionConfig.description | quote }}
     # Use container image instead of S3 code
     packageType: "Image"
-    imageUri: {{ printf "%s/%s/%s:%s" 
-                 .Values.images.registry 
-                 .Values.images.repository 
-                 .functionConfig.repository 
-                 (default (default .Values.images.tag .functionConfig.tag) .Chart.AppVersion) }}
+    imageUri: {{ printf "%s/%s/%s:%s" .Values.images.registry .Values.images.repository .functionConfig.repository (default (default .Values.images.tag .functionConfig.tag) .Chart.AppVersion) }}
     timeout: {{ default .Values.aws.lambda.timeout .functionConfig.timeout }}
     memorySize: {{ default .Values.aws.lambda.memorySize .functionConfig.memorySize }}
     # Use the roleArn helper
