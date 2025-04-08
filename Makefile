@@ -56,7 +56,7 @@ pre-charts: package-lambdas
 
 # Make charts depend on pre-charts
 .PHONY: charts
-charts: pre-charts
+charts:: pre-charts
 
 # Create work directory and clone/pull repository
 $(WORK_DIR):
