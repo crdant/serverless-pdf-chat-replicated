@@ -55,7 +55,7 @@ aws:
   iam:
     roles:
       lambdaRole:
-        name: "lambda-execution-role"
+        name: null  # Changed from "lambda-execution-role" to null to use generated name
         assumeRolePolicyDocument: |
           {
             "Version": "2012-10-17",
@@ -70,66 +70,8 @@ aws:
             ]
           }
         policies:
-          name: "lambda-execution-policy"
-          document: |
-            {
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "logs:CreateLogGroup",
-                    "logs:CreateLogStream",
-                    "logs:PutLogEvents"
-                  ],
-                  "Resource": "arn:aws:logs:*:*:*"
-                },
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "s3:GetObject",
-                    "s3:PutObject",
-                    "s3:ListBucket"
-                  ],
-                  "Resource": [
-                    "arn:aws:s3:::${documentBucketName}",
-                    "arn:aws:s3:::${documentBucketName}/*"
-                  ]
-                },
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "dynamodb:GetItem",
-                    "dynamodb:PutItem",
-                    "dynamodb:UpdateItem",
-                    "dynamodb:DeleteItem",
-                    "dynamodb:Query",
-                    "dynamodb:Scan"
-                  ],
-                  "Resource": [
-                    "${documentTableArn}",
-                    "${memoryTableArn}"
-                  ]
-                },
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "sqs:SendMessage",
-                    "sqs:ReceiveMessage",
-                    "sqs:DeleteMessage",
-                    "sqs:GetQueueAttributes"
-                  ],
-                  "Resource": "${embeddingQueueArn}"
-                },
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "bedrock:InvokeModel"
-                  ],
-                  "Resource": "*"
-                }
-              ]
-            }
+          name: null  # Changed from "lambda-execution-policy" to null to use generated name
+          # Removed the document field since we're now embedding the policy directly in the template
         
 tags:
   environment: "dev"
