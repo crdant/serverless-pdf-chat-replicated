@@ -7,6 +7,7 @@ global:
 
 aws:
   region: "us-west-2"
+  accountId: "123456789012"  # This should be replaced with the actual AWS account ID
   providerConfigName: "default"
   s3:
     documentBucketName: null
@@ -33,6 +34,102 @@ aws:
       name: null
       visibilityTimeout: 180
       messageRetentionPeriod: 3600
+  
+  cognito:
+    userPool:
+      name: null
+      autoVerifiedAttributes: ["email"]
+      usernameAttributes: ["email"]
+      adminCreateUserConfig:
+        allowAdminCreateUserOnly: true
+      passwordPolicy:
+        minimumLength: 8
+        requireLowercase: true
+        requireNumbers: true
+        requireSymbols: true
+        requireUppercase: true
+    userPoolClient:
+      name: null
+      generateSecret: false
+  
+  iam:
+    roles:
+      lambdaRole:
+        name: "lambda-execution-role"
+        assumeRolePolicyDocument: |
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": "lambda.amazonaws.com"
+                },
+                "Action": "sts:AssumeRole"
+              }
+            ]
+          }
+        policies:
+          name: "lambda-execution-policy"
+          document: |
+            {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ],
+                  "Resource": "arn:aws:logs:*:*:*"
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:GetObject",
+                    "s3:PutObject",
+                    "s3:ListBucket"
+                  ],
+                  "Resource": [
+                    "arn:aws:s3:::${documentBucketName}",
+                    "arn:aws:s3:::${documentBucketName}/*"
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "dynamodb:GetItem",
+                    "dynamodb:PutItem",
+                    "dynamodb:UpdateItem",
+                    "dynamodb:DeleteItem",
+                    "dynamodb:Query",
+                    "dynamodb:Scan"
+                  ],
+                  "Resource": [
+                    "${documentTableArn}",
+                    "${memoryTableArn}"
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "sqs:SendMessage",
+                    "sqs:ReceiveMessage",
+                    "sqs:DeleteMessage",
+                    "sqs:GetQueueAttributes"
+                  ],
+                  "Resource": "${embeddingQueueArn}"
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "bedrock:InvokeModel"
+                  ],
+                  "Resource": "*"
+                }
+              ]
+            }
         
 tags:
   environment: "dev"

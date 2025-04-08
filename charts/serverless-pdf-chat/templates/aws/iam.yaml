@@ -1,0 +1,34 @@
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: Role
+metadata:
+  name: {{ include "serverless-pdf-chat.fullname" . }}-lambda-role
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+spec:
+  forProvider:
+    name: {{ default (printf "%s-lambda-role" (include "serverless-pdf-chat.fullname" .)) .Values.aws.iam.roles.lambdaRole.name }}
+    assumeRolePolicy: |
+      {{ .Values.aws.iam.roles.lambdaRole.assumeRolePolicyDocument | nindent 6 }}
+  providerConfigRef:
+    name: {{ .Values.aws.providerConfigName }}
+
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: RolePolicy
+metadata:
+  name: {{ include "serverless-pdf-chat.fullname" . }}-lambda-policy
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+spec:
+  forProvider:
+    role: {{ default (printf "%s-lambda-role" (include "serverless-pdf-chat.fullname" .)) .Values.aws.iam.roles.lambdaRole.name }}
+    name: {{ default "lambda-execution-policy" .Values.aws.iam.roles.lambdaRole.policies.name }}
+    policy: |
+      {{- $documentBucketName := default (printf "%s-documents" (include "serverless-pdf-chat.fullname" .)) .Values.aws.s3.documentBucketName -}}
+      {{- $documentTableArn := printf "arn:aws:dynamodb:%s:%s:table/%s" .Values.aws.region .Values.aws.accountId (default (printf "%s-document-table" (include "serverless-pdf-chat.fullname" .)) .Values.aws.dynamodb.documentTable.name) -}}
+      {{- $memoryTableArn := printf "arn:aws:dynamodb:%s:%s:table/%s" .Values.aws.region .Values.aws.accountId (default (printf "%s-memory-table" (include "serverless-pdf-chat.fullname" .)) .Values.aws.dynamodb.memoryTable.name) -}}
+      {{- $embeddingQueueArn := printf "arn:aws:sqs:%s:%s:%s" .Values.aws.region .Values.aws.accountId (default (printf "%s-embedding-queue" (include "serverless-pdf-chat.fullname" .)) .Values.aws.sqs.embeddingQueue.name) -}}
+      {{- $policy := .Values.aws.iam.roles.lambdaRole.policies.document | replace "${documentBucketName}" $documentBucketName | replace "${documentTableArn}" $documentTableArn | replace "${memoryTableArn}" $memoryTableArn | replace "${embeddingQueueArn}" $embeddingQueueArn -}}
+      {{ $policy | nindent 6 }}
+  providerConfigRef:
+    name: {{ .Values.aws.providerConfigName }}
