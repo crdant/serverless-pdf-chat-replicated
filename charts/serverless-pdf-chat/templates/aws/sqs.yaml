@@ -7,10 +7,6 @@ metadata:
   name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "embedding") }}
   labels:
     {{- include "serverless-pdf-chat.labels" $ | nindent 4 }}
-  {{- with $.Values.tags }}
-  tags:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
@@ -18,6 +14,10 @@ spec:
     queueName: {{ .Values.aws.sqs.embeddingQueue.name }}
     {{- else }}
     queueName: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "embedding") }}
+    {{- end }}
+    {{- with $.Values.tags }}
+    tags:
+      {{- toYaml . | nindent 6 }}
     {{- end }}
     visibilityTimeoutSeconds: {{ .Values.aws.sqs.embeddingQueue.visibilityTimeout }}
     messageRetentionSeconds: {{ .Values.aws.sqs.embeddingQueue.messageRetentionPeriod }}
