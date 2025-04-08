@@ -56,8 +56,8 @@ charts:: package-lambdas
 $(WORK_DIR):
 	mkdir -p $(WORK_DIR)
 
-.PHONY: clone-repo
-clone-repo: | $(WORK_DIR)
+.PHONY: clone-upstream
+clone-upstream: | $(WORK_DIR)
 	@if [ -d "$(WORK_DIR)/.git" ]; then \
 		echo "Repository already exists, pulling latest changes..."; \
 		cd $(WORK_DIR) && git pull; \
@@ -71,7 +71,7 @@ clone-repo: | $(WORK_DIR)
 $(LAMBDA_DIST_DIR):
 	mkdir -p $(LAMBDA_DIST_DIR)
 
-$(LAMBDA_DIST_DIR)/%.zip: clone-repo | $(LAMBDA_DIST_DIR)
+$(LAMBDA_DIST_DIR)/%.zip: clone-upstream | $(LAMBDA_DIST_DIR)
 	@echo "Packaging Lambda function: $*"
 	@mkdir -p $(LAMBDA_DIST_DIR)/$*-tmp
 	@if [ -d "$(LAMBDA_SRC_DIR)/$*" ]; then \
