@@ -24,11 +24,63 @@ spec:
     role: {{ default (printf "%s-lambda-role" (include "serverless-pdf-chat.fullname" .)) .Values.aws.iam.roles.lambdaRole.name }}
     name: {{ default "lambda-execution-policy" .Values.aws.iam.roles.lambdaRole.policies.name }}
     policy: |
-      {{- $documentBucketName := default (printf "%s-documents" (include "serverless-pdf-chat.fullname" .)) .Values.aws.s3.documentBucketName -}}
-      {{- $documentTableArn := printf "arn:aws:dynamodb:%s:%s:table/%s" .Values.aws.region .Values.aws.accountId (default (printf "%s-document-table" (include "serverless-pdf-chat.fullname" .)) .Values.aws.dynamodb.documentTable.name) -}}
-      {{- $memoryTableArn := printf "arn:aws:dynamodb:%s:%s:table/%s" .Values.aws.region .Values.aws.accountId (default (printf "%s-memory-table" (include "serverless-pdf-chat.fullname" .)) .Values.aws.dynamodb.memoryTable.name) -}}
-      {{- $embeddingQueueArn := printf "arn:aws:sqs:%s:%s:%s" .Values.aws.region .Values.aws.accountId (default (printf "%s-embedding-queue" (include "serverless-pdf-chat.fullname" .)) .Values.aws.sqs.embeddingQueue.name) -}}
-      {{- $policy := .Values.aws.iam.roles.lambdaRole.policies.document | replace "${documentBucketName}" $documentBucketName | replace "${documentTableArn}" $documentTableArn | replace "${memoryTableArn}" $memoryTableArn | replace "${embeddingQueueArn}" $embeddingQueueArn -}}
-      {{ $policy | nindent 6 }}
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "logs:CreateLogGroup",
+              "logs:CreateLogStream",
+              "logs:PutLogEvents"
+            ],
+            "Resource": "arn:aws:logs:*:*:*"
+          },
+          {
+            "Effect": "Allow",
+            "Action": [
+              "s3:GetObject",
+              "s3:PutObject",
+              "s3:ListBucket"
+            ],
+            "Resource": [
+              "arn:aws:s3:::{{ default (printf "%s-documents" (include "serverless-pdf-chat.fullname" .)) .Values.aws.s3.documentBucketName }}",
+              "arn:aws:s3:::{{ default (printf "%s-documents" (include "serverless-pdf-chat.fullname" .)) .Values.aws.s3.documentBucketName }}/*"
+            ]
+          },
+          {
+            "Effect": "Allow",
+            "Action": [
+              "dynamodb:GetItem",
+              "dynamodb:PutItem",
+              "dynamodb:UpdateItem",
+              "dynamodb:DeleteItem",
+              "dynamodb:Query",
+              "dynamodb:Scan"
+            ],
+            "Resource": [
+              "arn:aws:dynamodb:{{ .Values.aws.region }}:{{ .Values.aws.accountId }}:table/{{ default (printf "%s-document-table" (include "serverless-pdf-chat.fullname" .)) .Values.aws.dynamodb.documentTable.name }}",
+              "arn:aws:dynamodb:{{ .Values.aws.region }}:{{ .Values.aws.accountId }}:table/{{ default (printf "%s-memory-table" (include "serverless-pdf-chat.fullname" .)) .Values.aws.dynamodb.memoryTable.name }}"
+            ]
+          },
+          {
+            "Effect": "Allow",
+            "Action": [
+              "sqs:SendMessage",
+              "sqs:ReceiveMessage",
+              "sqs:DeleteMessage",
+              "sqs:GetQueueAttributes"
+            ],
+            "Resource": "arn:aws:sqs:{{ .Values.aws.region }}:{{ .Values.aws.accountId }}:{{ default (printf "%s-embedding-queue" (include "serverless-pdf-chat.fullname" .)) .Values.aws.sqs.embeddingQueue.name }}"
+          },
+          {
+            "Effect": "Allow",
+            "Action": [
+              "bedrock:InvokeModel"
+            ],
+            "Resource": "*"
+          }
+        ]
+      }
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
