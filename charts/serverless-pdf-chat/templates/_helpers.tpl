@@ -92,3 +92,24 @@ Usage: {{ include "serverless-pdf-chat.roleArn" (dict "account" .Values.aws.acco
 {{- $name := .name -}}
 arn:aws:iam::{{ $account }}:role/{{ $name }}
 {{- end -}}
+
+{{/*
+Generate the DynamoDB document table name
+*/}}
+{{- define "serverless-pdf-chat.documentTableName" -}}
+{{- default (include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents")) .Values.aws.dynamodb.documentTable.name -}}
+{{- end -}}
+
+{{/*
+Generate the DynamoDB memory table name
+*/}}
+{{- define "serverless-pdf-chat.memoryTableName" -}}
+{{- default (include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "memory")) .Values.aws.dynamodb.memoryTable.name -}}
+{{- end -}}
+
+{{/*
+Generate the SQS embedding queue name
+*/}}
+{{- define "serverless-pdf-chat.embeddingQueueName" -}}
+{{- default (include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "embedding")) .Values.aws.sqs.embeddingQueue.name -}}
+{{- end -}}

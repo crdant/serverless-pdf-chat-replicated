@@ -29,9 +29,9 @@ spec:
       - variables:
           # Standard environment variables
           DOCUMENT_BUCKET: {{ include "serverless-pdf-chat.bucketName" . | quote }}
-          DOCUMENT_TABLE: {{ default (printf "%s-document-table" (include "serverless-pdf-chat.fullname" .)) .Values.aws.dynamodb.documentTable.name | quote }}
-          MEMORY_TABLE: {{ default (printf "%s-memory-table" (include "serverless-pdf-chat.fullname" .)) .Values.aws.dynamodb.memoryTable.name | quote }}
-          EMBEDDING_QUEUE: {{ default (printf "%s-embedding-queue" (include "serverless-pdf-chat.fullname" .)) .Values.aws.sqs.embeddingQueue.name | quote }}
+          DOCUMENT_TABLE: {{ include "serverless-pdf-chat.documentTableName" . | quote }}
+          MEMORY_TABLE: {{ include "serverless-pdf-chat.memoryTableName" . | quote }}
+          EMBEDDING_QUEUE: {{ include "serverless-pdf-chat.embeddingQueueName" . | quote }}
           EMBEDDING_MODEL_ID: {{ .Values.application.config.embeddingModelId | quote }}
           MODEL_ID: {{ .Values.application.config.modelId | quote }}
           REGION: {{ .Values.application.config.region | quote }}
