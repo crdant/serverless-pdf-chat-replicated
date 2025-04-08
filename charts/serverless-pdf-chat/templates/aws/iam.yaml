@@ -55,8 +55,8 @@ spec:
               "s3:ListBucket"
             ],
             "Resource": [
-              "{{ include "serverless-pdf-chat.arn" (dict "service" "s3" "resource" (default (printf "%s-%s-%s" (include "serverless-pdf-chat.fullname" .) .Values.aws.region .Values.aws.accountId) .Values.aws.s3.documentBucketName)) }}",
-              "{{ include "serverless-pdf-chat.arn" (dict "service" "s3" "resource" (printf "%s/*" (default (printf "%s-%s-%s" (include "serverless-pdf-chat.fullname" .) .Values.aws.region .Values.aws.accountId) .Values.aws.s3.documentBucketName))) }}"
+              "{{ include "serverless-pdf-chat.arn" (dict "service" "s3" "resource" (include "serverless-pdf-chat.bucketName" .)) }}",
+              "{{ include "serverless-pdf-chat.arn" (dict "service" "s3" "resource" (printf "%s/*" (include "serverless-pdf-chat.bucketName" .))) }}"
             ]
           },
           {

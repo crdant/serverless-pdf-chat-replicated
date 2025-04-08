@@ -58,6 +58,14 @@ Create a resource name based on the global prefix, environment, and resource nam
 {{- end -}}
 
 {{/*
+Generate the S3 bucket name with the same random suffix
+*/}}
+{{- define "serverless-pdf-chat.bucketName" -}}
+{{- $randomSuffix := substr 0 8 (sha256sum (printf "%s-%s" .Release.Name .Release.Namespace)) -}}
+{{- include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}-{{ $randomSuffix -}}
+{{- end -}}
+
+{{/*
 Generate an ARN for a resource
 Usage: {{ include "serverless-pdf-chat.arn" (dict "service" "s3" "region" .Values.aws.region "account" .Values.aws.accountId "resource" "my-bucket") }}
 */}}
