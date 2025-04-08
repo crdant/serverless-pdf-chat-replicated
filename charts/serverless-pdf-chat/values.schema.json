@@ -247,15 +247,10 @@
               "properties": {
                 "lambdaRole": {
                   "type": "object",
-                  "required": ["assumeRolePolicyDocument"],
                   "properties": {
                     "name": {
                       "type": ["string", "null"],
                       "description": "Name of the Lambda execution role. If null, a name will be generated."
-                    },
-                    "assumeRolePolicyDocument": {
-                      "type": "string",
-                      "description": "JSON document for the assume role policy"
                     },
                     "policies": {
                       "type": "object",

@@ -56,19 +56,6 @@ aws:
     roles:
       lambdaRole:
         name: null  # Optional, will use a generated name if not provided
-        assumeRolePolicyDocument: |
-          {
-            "Version": "2012-10-17",
-            "Statement": [
-              {
-                "Effect": "Allow",
-                "Principal": {
-                  "Service": "lambda.amazonaws.com"
-                },
-                "Action": "sts:AssumeRole"
-              }
-            ]
-          }
         policies:
           name: null  # Optional, will use a default name if not provided
         

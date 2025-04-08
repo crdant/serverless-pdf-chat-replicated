@@ -8,7 +8,18 @@ spec:
   forProvider:
     name: {{ default (printf "%s-lambda-role" (include "serverless-pdf-chat.fullname" .)) .Values.aws.iam.roles.lambdaRole.name }}
     assumeRolePolicy: |
-      {{ .Values.aws.iam.roles.lambdaRole.assumeRolePolicyDocument | nindent 6 }}
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "lambda.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+          }
+        ]
+      }
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
 
