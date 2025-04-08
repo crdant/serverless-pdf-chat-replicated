@@ -17,8 +17,9 @@ RELEASE_FILES :=
 
 # Docker variables
 DOCKER_CMD ?= docker  # Default to docker, can be overridden with DOCKER_CMD=nerdctl
-DOCKER_REGISTRY ?= ghcr.io
-DOCKER_REPO ?= crdant/serverless-pdf-chat
+DOCKER_REGISTRY ?= $(shell echo "$$(aws sts get-caller-identity --query Account --output text).dkr.ecr.$(AWS_REGION).amazonaws.com")
+DOCKER_REPO ?= serverless-pdf-chat
+AWS_REGION ?= us-west-2
 # Use the chart appVersion as the default Docker tag
 APP_VERSION := $(shell yq .appVersion $(CHARTDIR)/serverless-pdf-chat/Chart.yaml)
 DOCKER_TAG ?= $(APP_VERSION)
@@ -27,6 +28,19 @@ MAJOR_VERSION := $(shell echo $(DOCKER_TAG) | cut -d. -f1)
 MINOR_VERSION := $(shell echo $(DOCKER_TAG) | cut -d. -f1,2)
 DOCKERDIR := $(PROJECTDIR)/docker
 DOCKER_IMAGES := $(shell find $(DOCKERDIR) -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
+
+# ECR login target
+.PHONY: ecr-login
+ecr-login:
+	@echo "Logging in to Amazon ECR..."
+	aws ecr get-login-password --region $(AWS_REGION) | $(DOCKER_CMD) login --username AWS --password-stdin $(DOCKER_REGISTRY)
+
+# ECR repository creation target
+.PHONY: create-ecr-repo-%
+create-ecr-repo-%:
+	@echo "Creating ECR repository for $*..."
+	aws ecr describe-repositories --repository-names $(DOCKER_REPO)/$* --region $(AWS_REGION) || \
+	aws ecr create-repository --repository-name $(DOCKER_REPO)/$* --region $(AWS_REGION)
 
 define make-manifest-target
 $(BUILDDIR)/$(notdir $1): $1 | $$(BUILDDIR)
@@ -48,7 +62,7 @@ $(foreach element,$(CHARTS),$(eval $(call make-chart-target,$(element))))
 # Define Docker build and push targets dynamically
 define make-docker-target
 .PHONY: docker-build-$1
-docker-build-$1:
+docker-build-$1: create-ecr-repo-$1
 	@echo "Building Docker image: $1 with tag $(DOCKER_TAG)"
 	$(eval GIT_REMOTE := $$(shell git remote get-url origin))
 	$(eval GIT_HTTPS_URL := $$(shell echo "$(GIT_REMOTE)" | sed -E 's|git@([^:]+):|https://\1/|g' | sed -E 's|\.git$$||'))
@@ -65,7 +79,7 @@ docker-build-$1:
 	@echo "Tagged image with $(DOCKER_TAG), $(MINOR_VERSION), and $(MAJOR_VERSION)"
 
 .PHONY: docker-push-$1
-docker-push-$1: docker-build-$1
+docker-push-$1: docker-build-$1 ecr-login
 	@echo "Pushing Docker image: $1 with tags $(DOCKER_TAG), $(MINOR_VERSION), and $(MAJOR_VERSION)"
 	$(DOCKER_CMD) push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG)
 	$(DOCKER_CMD) push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MINOR_VERSION)

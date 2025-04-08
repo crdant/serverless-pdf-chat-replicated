@@ -6,8 +6,8 @@ global:
   environment: "dev"
 
 images:
-  registry: "ghcr.io"
-  repository: "crdant/serverless-pdf-chat"
+  registry: "{{ .Values.aws.accountId }}.dkr.ecr.{{ .Values.aws.region }}.amazonaws.com"  # ECR registry
+  repository: "serverless-pdf-chat"  # Repository name in ECR
   tag: null  # Will use Chart.AppVersion if null
   pullPolicy: "IfNotPresent"
 

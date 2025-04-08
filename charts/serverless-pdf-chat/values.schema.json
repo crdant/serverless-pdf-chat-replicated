@@ -23,18 +23,18 @@
       "properties": {
         "registry": {
           "type": "string",
-          "description": "Container registry to use",
-          "default": "ghcr.io"
+          "description": "Container registry to use (ECR)",
+          "default": "123456789012.dkr.ecr.us-west-2.amazonaws.com"
         },
         "repository": {
           "type": "string",
           "description": "Base repository for all images",
-          "default": "crdant/serverless-pdf-chat"
+          "default": "serverless-pdf-chat"
         },
         "tag": {
           "type": ["string", "null"],
           "description": "Default tag for all images",
-          "default": "latest"
+          "default": null
         },
         "pullPolicy": {
           "type": "string",
