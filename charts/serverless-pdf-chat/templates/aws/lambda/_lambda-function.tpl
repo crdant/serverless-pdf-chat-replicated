@@ -11,7 +11,6 @@ metadata:
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
-    name: {{ default (printf "%s-%s" (include "serverless-pdf-chat.fullname" .) .functionName) .functionConfig.name }}
     description: {{ .functionConfig.description | quote }}
     runtime: {{ .Values.aws.lambda.runtime }}
     handler: {{ .Values.aws.lambda.handler }}

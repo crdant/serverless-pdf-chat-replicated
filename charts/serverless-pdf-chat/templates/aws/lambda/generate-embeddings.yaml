@@ -13,7 +13,7 @@ metadata:
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
-    functionName: {{ default (printf "%s-%s" (include "serverless-pdf-chat.fullname" .) $functionName) $functionConfig.name }}
+    functionName: {{ include "serverless-pdf-chat.fullname" . }}-{{ $functionName }}
     eventSourceArn: {{ include "serverless-pdf-chat.arn" (dict "service" "sqs" "region" .Values.aws.region "account" .Values.aws.accountId "resource" (default (printf "%s-embedding-queue" (include "serverless-pdf-chat.fullname" .)) .Values.aws.sqs.embeddingQueue.name)) }}
     batchSize: 1
   providerConfigRef:

@@ -14,7 +14,7 @@ spec:
   forProvider:
     region: {{ .Values.aws.region }}
     action: "lambda:InvokeFunction"
-    functionName: {{ default (printf "%s-%s" (include "serverless-pdf-chat.fullname" .) $functionName) $functionConfig.name }}
+    functionName: {{ include "serverless-pdf-chat.fullname" . }}-{{ $functionName }}
     principal: "s3.amazonaws.com"
     sourceArn: {{ include "serverless-pdf-chat.arn" (dict "service" "s3" "resource" (default (printf "%s-documents" (include "serverless-pdf-chat.fullname" .)) .Values.aws.s3.documentBucketName)) }}
     statementId: "AllowS3Invoke"
