@@ -17,13 +17,13 @@ spec:
       - {{ . }}
       {{- end }}
     adminCreateUserConfig:
-      allowAdminCreateUserOnly: {{ .Values.aws.cognito.userPool.adminCreateUserConfig.allowAdminCreateUserOnly }}
+      - allowAdminCreateUserOnly: {{ .Values.aws.cognito.userPool.adminCreateUserConfig.allowAdminCreateUserOnly }}
     passwordPolicy:
-      minimumLength: {{ .Values.aws.cognito.userPool.passwordPolicy.minimumLength }}
-      requireLowercase: {{ .Values.aws.cognito.userPool.passwordPolicy.requireLowercase }}
-      requireNumbers: {{ .Values.aws.cognito.userPool.passwordPolicy.requireNumbers }}
-      requireSymbols: {{ .Values.aws.cognito.userPool.passwordPolicy.requireSymbols }}
-      requireUppercase: {{ .Values.aws.cognito.userPool.passwordPolicy.requireUppercase }}
+      - minimumLength: {{ .Values.aws.cognito.userPool.passwordPolicy.minimumLength }}
+        requireLowercase: {{ .Values.aws.cognito.userPool.passwordPolicy.requireLowercase }}
+        requireNumbers: {{ .Values.aws.cognito.userPool.passwordPolicy.requireNumbers }}
+        requireSymbols: {{ .Values.aws.cognito.userPool.passwordPolicy.requireSymbols }}
+        requireUppercase: {{ .Values.aws.cognito.userPool.passwordPolicy.requireUppercase }}
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
 
