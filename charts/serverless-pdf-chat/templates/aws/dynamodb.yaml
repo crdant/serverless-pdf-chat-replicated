@@ -21,14 +21,12 @@ spec:
       {{- toYaml . | nindent 6 }}
       {{- end }}
     attribute:
-    {{- range .Values.aws.dynamodb.documentTable.attributeDefinitions }}
-    - name: {{ .attributeName }}
-      type: {{ .attributeType }}
-    {{- end }}
-    hashKey: {{ .Values.aws.dynamodb.documentTable.hashKey }}
-    {{- if .Values.aws.dynamodb.documentTable.rangeKey }}
-    rangeKey: {{ .Values.aws.dynamodb.documentTable.rangeKey }}
-    {{- end }}
+    - name: userid
+      type: S
+    - name: documentid
+      type: S
+    hashKey: userid
+    rangeKey: documentid
   providerConfigRef:
     name: {{ $.Values.aws.providerConfigName }}
 {{- end }}
