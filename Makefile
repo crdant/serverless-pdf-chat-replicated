@@ -39,8 +39,8 @@ ecr-login:
 .PHONY: create-ecr-repo-%
 create-ecr-repo-%:
 	@echo "Creating ECR repository for $*..."
-	aws ecr describe-repositories --repository-names $(DOCKER_REPO)/$* --region $(AWS_REGION) || \
-	aws ecr create-repository --repository-name $(DOCKER_REPO)/$* --region $(AWS_REGION)
+	aws ecr describe-repositories --repository-names $(DOCKER_REPO)/$* --region $(AWS_REGION) --no-cli-pager || \
+	aws ecr create-repository --repository-name $(DOCKER_REPO)/$* --region $(AWS_REGION) --no-cli-pager
 
 define make-manifest-target
 $(BUILDDIR)/$(notdir $1): $1 | $$(BUILDDIR)
