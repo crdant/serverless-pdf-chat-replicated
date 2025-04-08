@@ -50,7 +50,16 @@ define make-docker-target
 .PHONY: docker-build-$1
 docker-build-$1:
 	@echo "Building Docker image: $1 with tag $(DOCKER_TAG)"
-	$(DOCKER_CMD) build -t $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG) -f $(DOCKERDIR)/$1/Dockerfile $(DOCKERDIR)/$1
+	$(eval GIT_REMOTE := $$(shell git remote get-url origin))
+	$(eval GIT_HTTPS_URL := $$(shell echo "$(GIT_REMOTE)" | sed -E 's|git@([^:]+):|https://\1/|g'))
+	$(DOCKER_CMD) build \
+		--label org.opencontainers.image.source="$(GIT_HTTPS_URL)" \
+		--label org.opencontainers.image.revision="$$(git rev-parse HEAD)" \
+		--label org.opencontainers.image.version="$(DOCKER_TAG)" \
+		--label org.opencontainers.image.title="$1" \
+		--label org.opencontainers.image.description="Lambda function for serverless-pdf-chat" \
+		-t $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG) \
+		-f $(DOCKERDIR)/$1/Dockerfile $(DOCKERDIR)/$1
 	$(DOCKER_CMD) tag $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG) $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MINOR_VERSION)
 	$(DOCKER_CMD) tag $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG) $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MAJOR_VERSION)
 	@echo "Tagged image with $(DOCKER_TAG), $(MINOR_VERSION), and $(MAJOR_VERSION)"
