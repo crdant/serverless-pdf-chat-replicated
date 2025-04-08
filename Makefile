@@ -50,13 +50,8 @@ $(foreach element,$(CHARTS),$(eval $(call make-chart-target,$(element))))
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
 
-# Define pre-charts target
-.PHONY: pre-charts
-pre-charts: package-lambdas
-
-# Make charts depend on pre-charts
+# Charts target is now independent of Lambda packaging
 .PHONY: charts
-charts:: pre-charts
 
 # Create work directory and clone/pull repository
 $(WORK_DIR):
