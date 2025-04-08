@@ -1,4 +1,4 @@
-{{- if and .Values.aws.s3 (ne (toString .Values.aws.s3) "{}") }}
+{{- if .Values.aws.s3 }}
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: Bucket
 metadata:
