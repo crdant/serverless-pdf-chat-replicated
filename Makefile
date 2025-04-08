@@ -65,7 +65,7 @@ define make-docker-target
 docker-build-$1: create-ecr-repo-$1
 	@echo "Building Docker image: $1 with tag $(DOCKER_TAG)"
 	$(eval GIT_REMOTE := $$(shell git remote get-url origin))
-	$(eval GIT_HTTPS_URL := $$(shell echo "$(GIT_REMOTE)" | sed -E 's|git@([^:]+):|https://\1/|g' | sed -E 's|\.git$$||'))
+	$(eval GIT_HTTPS_URL := $$(shell echo "$(GIT_REMOTE)" | sed -E 's|git@([^:]+):|https://\1/|g' | sed -E 's|\.git$\||'))
 	$(DOCKER_CMD) build \
 		--label org.opencontainers.image.source="$(GIT_HTTPS_URL)" \
 		--label org.opencontainers.image.revision="$$(git rev-parse HEAD)" \
