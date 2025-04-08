@@ -99,7 +99,7 @@ spec:
         {{- end }}
         {{- if .expiration }}
         expiration:
-          days: {{ .expiration }}
+          - days: {{ .expiration }}
         {{- end }}
       {{- end }}
   providerConfigRef:
