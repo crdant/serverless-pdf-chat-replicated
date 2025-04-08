@@ -50,9 +50,6 @@ $(foreach element,$(CHARTS),$(eval $(call make-chart-target,$(element))))
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
 
-# Charts target is now independent of Lambda packaging
-.PHONY: charts
-
 # Create work directory and clone/pull repository
 $(WORK_DIR):
 	mkdir -p $(WORK_DIR)
