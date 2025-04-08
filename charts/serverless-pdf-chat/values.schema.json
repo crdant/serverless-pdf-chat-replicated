@@ -247,11 +247,11 @@
               "properties": {
                 "lambdaRole": {
                   "type": "object",
+                  "required": ["assumeRolePolicyDocument"],
                   "properties": {
                     "name": {
-                      "type": "string",
-                      "description": "Name of the Lambda execution role",
-                      "default": "lambda-execution-role"
+                      "type": ["string", "null"],
+                      "description": "Name of the Lambda execution role. If null, a name will be generated."
                     },
                     "assumeRolePolicyDocument": {
                       "type": "string",
@@ -261,13 +261,8 @@
                       "type": "object",
                       "properties": {
                         "name": {
-                          "type": "string",
-                          "description": "Name of the policy",
-                          "default": "lambda-execution-policy"
-                        },
-                        "document": {
-                          "type": "string",
-                          "description": "JSON document for the policy"
+                          "type": ["string", "null"],
+                          "description": "Name of the policy. If null, a default name will be used."
                         }
                       }
                     }
