@@ -34,7 +34,7 @@ spec:
       name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
     rule:
       - applyServerSideEncryptionByDefault:
-          sseAlgorithm: "AES256"
+          - sseAlgorithm: "AES256"
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
 ---
