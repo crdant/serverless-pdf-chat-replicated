@@ -49,5 +49,8 @@ Thumbs.db
 secrets/*
 work/*
 
+# Don't ignore Lambda packages in the chart
+!charts/serverless-pdf-chat/lambdas/*.zip
+
 .aider*
 !.aider.conf.yml
