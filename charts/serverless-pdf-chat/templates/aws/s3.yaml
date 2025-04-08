@@ -10,11 +10,7 @@ spec:
   forProvider:
     region: {{ .Values.aws.region }}
     tags:
-      {{- if .Values.aws.s3.documentBucketName }}
-      Name: {{ .Values.aws.s3.documentBucketName }}
-      {{- else }}
       Name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}-{{ $randomSuffix }}
-      {{- end }}
       {{- with .Values.tags }}
       {{- toYaml . | nindent 6 }}
       {{- end }}

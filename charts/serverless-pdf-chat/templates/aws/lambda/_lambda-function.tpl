@@ -27,9 +27,15 @@ spec:
     # Environment variables
     environment:
       - variables:
-          {{- range $key, $value := .Values.aws.lambda.environment }}
-          {{ $key }}: {{ tpl $value $ | quote }}
-          {{- end }}
+          # Standard environment variables
+          DOCUMENT_BUCKET: {{ include "serverless-pdf-chat.bucketName" . | quote }}
+          DOCUMENT_TABLE: {{ default (printf "%s-document-table" (include "serverless-pdf-chat.fullname" .)) .Values.aws.dynamodb.documentTable.name | quote }}
+          MEMORY_TABLE: {{ default (printf "%s-memory-table" (include "serverless-pdf-chat.fullname" .)) .Values.aws.dynamodb.memoryTable.name | quote }}
+          EMBEDDING_QUEUE: {{ default (printf "%s-embedding-queue" (include "serverless-pdf-chat.fullname" .)) .Values.aws.sqs.embeddingQueue.name | quote }}
+          EMBEDDING_MODEL_ID: {{ .Values.application.config.embeddingModelId | quote }}
+          MODEL_ID: {{ .Values.application.config.modelId | quote }}
+          REGION: {{ .Values.application.config.region | quote }}
+          # Function-specific environment variables
           {{- if .functionConfig.environment }}
           {{- range $env := .functionConfig.environment }}
           {{- range $key, $value := $env }}

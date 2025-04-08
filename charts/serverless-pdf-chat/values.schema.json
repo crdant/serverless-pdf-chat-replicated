@@ -65,10 +65,6 @@
         "s3": {
           "type": "object",
           "properties": {
-            "documentBucketName": {
-              "type": ["string", "null"],
-              "description": "Custom name for the document bucket. If empty, a name will be generated."
-            },
             "corsEnabled": {
               "type": "boolean",
               "description": "Enable CORS for the S3 bucket",
@@ -315,13 +311,6 @@
               "type": "integer",
               "description": "Default Lambda memory size in MB",
               "default": 256
-            },
-            "environment": {
-              "type": "object",
-              "description": "Default environment variables for all Lambda functions",
-              "additionalProperties": {
-                "type": "string"
-              }
             },
             "functions": {
               "type": "object",
