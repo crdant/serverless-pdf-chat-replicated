@@ -1,5 +1,5 @@
-{{- $randomSuffix := substr 0 8 (uuidv4) }}
 {{- if .Values.aws.s3 }}
+{{- $randomSuffix := substr 0 8 (uuidv4) }}
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: Bucket
 metadata:
