@@ -19,7 +19,9 @@ RELEASE_FILES :=
 DOCKER_CMD ?= docker  # Default to docker, can be overridden with DOCKER_CMD=nerdctl
 DOCKER_REGISTRY ?= ghcr.io
 DOCKER_REPO ?= crdant/serverless-pdf-chat
-DOCKER_TAG ?= latest
+# Use the chart version as the default Docker tag
+CHART_VERSION := $(shell yq .version $(CHARTDIR)/serverless-pdf-chat/Chart.yaml)
+DOCKER_TAG ?= $(CHART_VERSION)
 DOCKERDIR := $(PROJECTDIR)/docker
 DOCKER_IMAGES := $(shell find $(DOCKERDIR) -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
 
@@ -44,12 +46,12 @@ $(foreach element,$(CHARTS),$(eval $(call make-chart-target,$(element))))
 define make-docker-target
 .PHONY: docker-build-$1
 docker-build-$1:
-	@echo "Building Docker image: $1"
+	@echo "Building Docker image: $1 with tag $(DOCKER_TAG)"
 	$(DOCKER_CMD) build -t $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG) -f $(DOCKERDIR)/$1/Dockerfile $(DOCKERDIR)/$1
 
 .PHONY: docker-push-$1
 docker-push-$1: docker-build-$1
-	@echo "Pushing Docker image: $1"
+	@echo "Pushing Docker image: $1 with tag $(DOCKER_TAG)"
 	$(DOCKER_CMD) push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG)
 
 # Add each image to the images target dependencies
