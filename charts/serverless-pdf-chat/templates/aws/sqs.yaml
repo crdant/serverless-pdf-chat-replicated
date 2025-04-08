@@ -11,9 +11,9 @@ spec:
   forProvider:
     region: {{ .Values.aws.region }}
     {{- if .Values.aws.sqs.embeddingQueue.name }}
-    queueName: {{ .Values.aws.sqs.embeddingQueue.name }}
+    name: {{ .Values.aws.sqs.embeddingQueue.name }}
     {{- else }}
-    queueName: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "embedding") }}
+    name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "embedding") }}
     {{- end }}
     {{- with $.Values.tags }}
     tags:
