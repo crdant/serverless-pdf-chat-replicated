@@ -1,6 +1,7 @@
 {{- $functionName := "upload-trigger" -}}
-{{- $functionConfig := index .Values.aws.lambda.functions "uploadTrigger" -}}
-{{- template "serverless-pdf-chat.lambda-function" (dict "Values" .Values "Release" .Release "Chart" .Chart "functionName" $functionName "functionConfig" $functionConfig) -}}
+{{- $functionCamelCase := "uploadTrigger" -}}
+{{- $functionConfig := index .Values.aws.lambda.functions $functionCamelCase -}}
+{{- template "serverless-pdf-chat.lambda-function" (dict "Values" .Values "Release" .Release "Chart" .Chart "functionName" $functionName "functionCamelCase" $functionCamelCase "functionConfig" $functionConfig) -}}
 
 ---
 # S3 Event Source Mapping

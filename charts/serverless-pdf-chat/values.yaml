@@ -5,9 +5,36 @@ global:
   namePrefix: "pdf-chat"
   environment: "dev"
 
-github:
-  organization: "your-org"
-  tag: "latest"  # Or use a specific version
+images:
+  registry: "ghcr.io"
+  repository: "your-org/serverless-pdf-chat"
+  tag: "latest"
+  pullPolicy: "IfNotPresent"
+  lambda:
+    uploadTrigger:
+      repository: "upload-trigger"
+      tag: null  # Will use global tag if null
+    generatePresignedUrl:
+      repository: "generate-presigned-url"
+      tag: null
+    generateEmbeddings:
+      repository: "generate-embeddings"
+      tag: null
+    getDocument:
+      repository: "get-document"
+      tag: null
+    getAllDocuments:
+      repository: "get-all-documents"
+      tag: null
+    deleteDocument:
+      repository: "delete-document"
+      tag: null
+    addConversation:
+      repository: "add-conversation"
+      tag: null
+    generateResponse:
+      repository: "generate-response"
+      tag: null
 
 application:
   config:

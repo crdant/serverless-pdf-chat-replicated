@@ -18,18 +18,138 @@
         }
       }
     },
-    "github": {
+    "images": {
       "type": "object",
       "properties": {
-        "organization": {
+        "registry": {
           "type": "string",
-          "description": "GitHub organization name",
-          "default": "your-org"
+          "description": "Container registry to use",
+          "default": "ghcr.io"
+        },
+        "repository": {
+          "type": "string",
+          "description": "Base repository for all images",
+          "default": "your-org/serverless-pdf-chat"
         },
         "tag": {
           "type": "string",
-          "description": "Docker image tag to use",
+          "description": "Default tag for all images",
           "default": "latest"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Image pull policy",
+          "default": "IfNotPresent",
+          "enum": ["Always", "IfNotPresent", "Never"]
+        },
+        "lambda": {
+          "type": "object",
+          "properties": {
+            "uploadTrigger": {
+              "type": "object",
+              "properties": {
+                "repository": {
+                  "type": "string",
+                  "description": "Repository for the upload-trigger image"
+                },
+                "tag": {
+                  "type": ["string", "null"],
+                  "description": "Tag for the upload-trigger image. If null, uses the global tag."
+                }
+              }
+            },
+            "generatePresignedUrl": {
+              "type": "object",
+              "properties": {
+                "repository": {
+                  "type": "string",
+                  "description": "Repository for the generate-presigned-url image"
+                },
+                "tag": {
+                  "type": ["string", "null"],
+                  "description": "Tag for the generate-presigned-url image. If null, uses the global tag."
+                }
+              }
+            },
+            "generateEmbeddings": {
+              "type": "object",
+              "properties": {
+                "repository": {
+                  "type": "string",
+                  "description": "Repository for the generate-embeddings image"
+                },
+                "tag": {
+                  "type": ["string", "null"],
+                  "description": "Tag for the generate-embeddings image. If null, uses the global tag."
+                }
+              }
+            },
+            "getDocument": {
+              "type": "object",
+              "properties": {
+                "repository": {
+                  "type": "string",
+                  "description": "Repository for the get-document image"
+                },
+                "tag": {
+                  "type": ["string", "null"],
+                  "description": "Tag for the get-document image. If null, uses the global tag."
+                }
+              }
+            },
+            "getAllDocuments": {
+              "type": "object",
+              "properties": {
+                "repository": {
+                  "type": "string",
+                  "description": "Repository for the get-all-documents image"
+                },
+                "tag": {
+                  "type": ["string", "null"],
+                  "description": "Tag for the get-all-documents image. If null, uses the global tag."
+                }
+              }
+            },
+            "deleteDocument": {
+              "type": "object",
+              "properties": {
+                "repository": {
+                  "type": "string",
+                  "description": "Repository for the delete-document image"
+                },
+                "tag": {
+                  "type": ["string", "null"],
+                  "description": "Tag for the delete-document image. If null, uses the global tag."
+                }
+              }
+            },
+            "addConversation": {
+              "type": "object",
+              "properties": {
+                "repository": {
+                  "type": "string",
+                  "description": "Repository for the add-conversation image"
+                },
+                "tag": {
+                  "type": ["string", "null"],
+                  "description": "Tag for the add-conversation image. If null, uses the global tag."
+                }
+              }
+            },
+            "generateResponse": {
+              "type": "object",
+              "properties": {
+                "repository": {
+                  "type": "string",
+                  "description": "Repository for the generate-response image"
+                },
+                "tag": {
+                  "type": ["string", "null"],
+                  "description": "Tag for the generate-response image. If null, uses the global tag."
+                }
+              }
+            }
+          }
         }
       }
     },

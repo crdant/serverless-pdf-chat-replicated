@@ -15,6 +15,14 @@ endif
 BUILDDIR      := $(PROJECTDIR)/build
 RELEASE_FILES := 
 
+# Docker variables
+DOCKER_REGISTRY ?= ghcr.io
+DOCKER_REPO ?= your-org/serverless-pdf-chat
+DOCKER_TAG ?= latest
+LAMBDA_FUNCTIONS := upload-trigger generate-presigned-url generate-embeddings get-document get-all-documents delete-document add-conversation generate-response
+DOCKER_IMAGES := $(addprefix docker-build-,$(LAMBDA_FUNCTIONS))
+DOCKER_PUSHES := $(addprefix docker-push-,$(LAMBDA_FUNCTIONS))
+
 define make-manifest-target
 $(BUILDDIR)/$(notdir $1): $1 | $$(BUILDDIR)
 	cp $1 $$(BUILDDIR)/$$(notdir $1)
@@ -34,6 +42,21 @@ $(foreach element,$(CHARTS),$(eval $(call make-chart-target,$(element))))
 
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
+
+# Docker build targets
+.PHONY: docker-build-%
+docker-build-%:
+	docker build -t $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$*:$(DOCKER_TAG) -f docker/$*/Dockerfile .
+
+.PHONY: docker-push-%
+docker-push-%: docker-build-%
+	docker push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$*:$(DOCKER_TAG)
+
+.PHONY: docker-build
+docker-build: $(DOCKER_IMAGES)
+
+.PHONY: docker-push
+docker-push: $(DOCKER_PUSHES)
 
 .PHONY: clean
 clean:

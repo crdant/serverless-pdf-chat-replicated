@@ -14,7 +14,11 @@ spec:
     description: {{ .functionConfig.description | quote }}
     # Use container image instead of S3 code
     packageType: "Image"
-    imageUri: {{ printf "ghcr.io/%s/serverless-pdf-chat/%s:%s" .Values.github.organization .functionName .Values.github.tag }}
+    imageUri: {{ printf "%s/%s/%s:%s" 
+                 .Values.images.registry 
+                 .Values.images.repository 
+                 (index .Values.images.lambda .functionCamelCase).repository 
+                 (default .Values.images.tag (index .Values.images.lambda .functionCamelCase).tag) }}
     timeout: {{ default .Values.aws.lambda.timeout .functionConfig.timeout }}
     memorySize: {{ default .Values.aws.lambda.memorySize .functionConfig.memorySize }}
     # Use the roleArn helper
