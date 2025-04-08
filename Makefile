@@ -59,10 +59,10 @@ $(WORK_DIR):
 .PHONY: clone-upstream
 clone-upstream: | $(WORK_DIR)
 	@if [ -d "$(WORK_DIR)/.git" ]; then \
-		echo "Repository already exists, pulling latest changes..."; \
+		echo "Upstream repository already exists, pulling latest changes..."; \
 		cd $(WORK_DIR) && git pull; \
 	else \
-		echo "Cloning repository..."; \
+		echo "Cloning upstream repository..."; \
 		git clone $(LAMBDA_REPO_URL) $(WORK_DIR) && \
 		cd $(WORK_DIR) && git checkout $(LAMBDA_REPO_BRANCH); \
 	fi
