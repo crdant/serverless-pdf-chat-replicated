@@ -22,23 +22,6 @@ spec:
     versioningConfiguration:
       status: "Enabled"
     {{- end }}
-    {{- if .Values.aws.s3.corsEnabled }}
-    corsConfiguration:
-      corsRules:
-        - allowedHeaders:
-            - "*"
-          allowedMethods:
-            - GET
-            - PUT
-            - POST
-            - DELETE
-            - HEAD
-          allowedOrigins:
-            - "*"
-          exposeHeaders:
-            - ETag
-          maxAge: 3000
-    {{- end }}
     serverSideEncryptionConfiguration:
       rules:
         - applyServerSideEncryptionByDefault:
@@ -72,6 +55,37 @@ spec:
     blockPublicPolicy: {{ .Values.aws.s3.publicAccessBlockConfiguration.blockPublicPolicy }}
     ignorePublicAcls: {{ .Values.aws.s3.publicAccessBlockConfiguration.ignorePublicAcls }}
     restrictPublicBuckets: {{ .Values.aws.s3.publicAccessBlockConfiguration.restrictPublicBuckets }}
+  providerConfigRef:
+    name: {{ .Values.aws.providerConfigName }}
+{{- end }}
+
+{{- if and .Values.aws.s3 .Values.aws.s3.corsEnabled }}
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketCorsConfiguration
+metadata:
+  name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents-cors") }}
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+spec:
+  forProvider:
+    region: {{ .Values.aws.region }}
+    bucketRef:
+      name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
+    corsRule:
+      - allowedHeaders:
+          - "*"
+        allowedMethods:
+          - GET
+          - PUT
+          - POST
+          - DELETE
+          - HEAD
+        allowedOrigins:
+          - "*"
+        exposeHeaders:
+          - ETag
+        maxAgeSeconds: 3000
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
 {{- end }}
