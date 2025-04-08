@@ -22,10 +22,23 @@ spec:
     versioningConfiguration:
       status: "Enabled"
     {{- end }}
-    serverSideEncryptionConfiguration:
-      rules:
-        - applyServerSideEncryptionByDefault:
-            sseAlgorithm: "AES256"
+  providerConfigRef:
+    name: {{ .Values.aws.providerConfigName }}
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketServerSideEncryptionConfiguration
+metadata:
+  name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents-encryption") }}
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+spec:
+  forProvider:
+    region: {{ .Values.aws.region }}
+    bucketRef:
+      name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
+    rule:
+      - applyServerSideEncryptionByDefault:
+          sseAlgorithm: "AES256"
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
 ---
