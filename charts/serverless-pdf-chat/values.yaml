@@ -71,7 +71,7 @@ aws:
     timeout: 30
     memorySize: 256
     environment:
-      DOCUMENT_BUCKET: "{{ default (printf \"%s-documents\" (include \"serverless-pdf-chat.fullname\" .)) .Values.aws.s3.documentBucketName }}"
+      DOCUMENT_BUCKET: "{{ default (printf \"%s-%s-%s\" (include \"serverless-pdf-chat.fullname\" .) .Values.aws.region .Values.aws.accountId) .Values.aws.s3.documentBucketName }}"
       DOCUMENT_TABLE: "{{ default (printf \"%s-document-table\" (include \"serverless-pdf-chat.fullname\" .)) .Values.aws.dynamodb.documentTable.name }}"
       MEMORY_TABLE: "{{ default (printf \"%s-memory-table\" (include \"serverless-pdf-chat.fullname\" .)) .Values.aws.dynamodb.memoryTable.name }}"
       EMBEDDING_QUEUE: "{{ default (printf \"%s-embedding-queue\" (include \"serverless-pdf-chat.fullname\" .)) .Values.aws.sqs.embeddingQueue.name }}"

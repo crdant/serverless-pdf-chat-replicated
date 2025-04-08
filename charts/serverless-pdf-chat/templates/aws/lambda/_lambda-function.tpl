@@ -21,7 +21,7 @@ spec:
     
     # Code configuration
     packageType: "Zip"
-    s3Bucket: {{ default (printf "%s-documents" (include "serverless-pdf-chat.fullname" .)) .Values.aws.s3.documentBucketName }}
+    s3Bucket: {{ default (printf "%s-%s-%s" (include "serverless-pdf-chat.fullname" .) .Values.aws.region .Values.aws.accountId) .Values.aws.s3.documentBucketName }}
     s3Key: {{ printf "lambda/%s.zip" .functionName }}
     
     # Environment variables
