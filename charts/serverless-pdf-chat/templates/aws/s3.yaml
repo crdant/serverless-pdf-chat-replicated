@@ -1,5 +1,5 @@
 {{- if .Values.aws.s3 }}
-{{- $randomSuffix := substr 0 8 (uuidv4) }}
+{{- $randomSuffix := substr 0 8 (sha256sum (printf "%s-%s" .Release.Name .Release.Namespace)) }}
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: Bucket
 metadata:
