@@ -1,3 +1,4 @@
 {{- $functionName := "generate-presigned-url" -}}
-{{- $functionConfig := index .Values.aws.lambda.functions "generatePresignedUrl" -}}
-{{- template "serverless-pdf-chat.lambda-function" (dict "Values" .Values "Release" .Release "Chart" .Chart "functionName" $functionName "functionConfig" $functionConfig) -}}
+{{- $functionCamelCase := "generatePresignedUrl" -}}
+{{- $functionConfig := index .Values.aws.lambda.functions $functionCamelCase -}}
+{{- template "serverless-pdf-chat.lambda-function" (dict "Values" .Values "Release" .Release "Chart" .Chart "functionName" $functionName "functionCamelCase" $functionCamelCase "functionConfig" $functionConfig) -}}

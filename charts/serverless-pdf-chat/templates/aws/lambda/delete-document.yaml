@@ -1,3 +1,4 @@
 {{- $functionName := "delete-document" -}}
-{{- $functionConfig := index .Values.aws.lambda.functions "deleteDocument" -}}
-{{- template "serverless-pdf-chat.lambda-function" (dict "Values" .Values "Release" .Release "Chart" .Chart "functionName" $functionName "functionConfig" $functionConfig) -}}
+{{- $functionCamelCase := "deleteDocument" -}}
+{{- $functionConfig := index .Values.aws.lambda.functions $functionCamelCase -}}
+{{- template "serverless-pdf-chat.lambda-function" (dict "Values" .Values "Release" .Release "Chart" .Chart "functionName" $functionName "functionCamelCase" $functionCamelCase "functionConfig" $functionConfig) -}}
