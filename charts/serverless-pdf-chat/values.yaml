@@ -55,7 +55,7 @@ aws:
   iam:
     roles:
       lambdaRole:
-        name: null  # Changed from "lambda-execution-role" to null to use generated name
+        name: null  # Optional, will use a generated name if not provided
         assumeRolePolicyDocument: |
           {
             "Version": "2012-10-17",
@@ -70,8 +70,7 @@ aws:
             ]
           }
         policies:
-          name: null  # Changed from "lambda-execution-policy" to null to use generated name
-          # Removed the document field since we're now embedding the policy directly in the template
+          name: null  # Optional, will use a default name if not provided
         
 tags:
   environment: "dev"
