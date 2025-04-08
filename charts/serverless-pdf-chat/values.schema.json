@@ -32,7 +32,7 @@
           "default": "crdant/serverless-pdf-chat"
         },
         "tag": {
-          "type": "string",
+          "type": ["string", "null"],
           "description": "Default tag for all images",
           "default": "latest"
         },
