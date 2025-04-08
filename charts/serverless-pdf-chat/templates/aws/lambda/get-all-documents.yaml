@@ -1,0 +1,3 @@
+{{- $functionName := "get-all-documents" -}}
+{{- $functionConfig := index .Values.aws.lambda.functions "getAllDocuments" -}}
+{{- template "serverless-pdf-chat.lambda-function" (dict "Values" .Values "Release" .Release "Chart" .Chart "functionName" $functionName "functionConfig" $functionConfig) -}}

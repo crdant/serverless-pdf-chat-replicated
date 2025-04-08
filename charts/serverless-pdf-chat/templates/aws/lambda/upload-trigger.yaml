@@ -1,0 +1,22 @@
+{{- $functionName := "upload-trigger" -}}
+{{- $functionConfig := index .Values.aws.lambda.functions "uploadTrigger" -}}
+{{- template "serverless-pdf-chat.lambda-function" (dict "Values" .Values "Release" .Release "Chart" .Chart "functionName" $functionName "functionConfig" $functionConfig) -}}
+
+---
+# S3 Event Source Mapping
+apiVersion: lambda.aws.upbound.io/v1beta1
+kind: Permission
+metadata:
+  name: {{ include "serverless-pdf-chat.fullname" . }}-{{ $functionName }}-s3-permission
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+spec:
+  forProvider:
+    region: {{ .Values.aws.region }}
+    action: "lambda:InvokeFunction"
+    functionName: {{ default (printf "%s-%s" (include "serverless-pdf-chat.fullname" .) $functionName) $functionConfig.name }}
+    principal: "s3.amazonaws.com"
+    sourceArn: {{ printf "arn:aws:s3:::%s" (default (printf "%s-documents" (include "serverless-pdf-chat.fullname" .)) .Values.aws.s3.documentBucketName) }}
+    statementId: "AllowS3Invoke"
+  providerConfigRef:
+    name: {{ .Values.aws.providerConfigName }}

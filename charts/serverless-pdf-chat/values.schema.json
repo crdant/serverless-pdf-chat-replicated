@@ -18,9 +18,34 @@
         }
       }
     },
+    "application": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "type": "object",
+          "properties": {
+            "region": {
+              "type": "string",
+              "description": "AWS region for application resources",
+              "default": "us-west-2"
+            },
+            "modelId": {
+              "type": "string",
+              "description": "Bedrock model ID for text generation",
+              "default": "anthropic.claude-3-sonnet-20240229-v1:0"
+            },
+            "embeddingModelId": {
+              "type": "string",
+              "description": "Bedrock model ID for embeddings",
+              "default": "amazon.titan-embed-text-v2:0"
+            }
+          }
+        }
+      }
+    },
     "aws": {
       "type": "object",
-      "required": ["providerConfigName", "s3", "dynamodb", "sqs", "cognito", "iam"],
+      "required": ["providerConfigName", "s3", "dynamodb", "sqs", "cognito", "iam", "lambda"],
       "properties": {
         "region": {
           "type": "string",
@@ -258,6 +283,325 @@
                         "name": {
                           "type": ["string", "null"],
                           "description": "Name of the policy. If null, a default name will be used."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "lambda": {
+          "type": "object",
+          "required": ["runtime", "handler", "functions"],
+          "properties": {
+            "runtime": {
+              "type": "string",
+              "description": "Lambda runtime environment",
+              "default": "python3.11"
+            },
+            "handler": {
+              "type": "string",
+              "description": "Lambda handler function",
+              "default": "lambda_function.lambda_handler"
+            },
+            "timeout": {
+              "type": "integer",
+              "description": "Default Lambda timeout in seconds",
+              "default": 30
+            },
+            "memorySize": {
+              "type": "integer",
+              "description": "Default Lambda memory size in MB",
+              "default": 256
+            },
+            "environment": {
+              "type": "object",
+              "description": "Default environment variables for all Lambda functions",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "functions": {
+              "type": "object",
+              "required": ["uploadTrigger", "generatePresignedUrl", "generateEmbeddings", "getDocument", "getAllDocuments", "deleteDocument", "addConversation", "generateResponse"],
+              "properties": {
+                "uploadTrigger": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": ["string", "null"],
+                      "description": "Custom name for the function. If null, a name will be generated."
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Description of the function"
+                    },
+                    "timeout": {
+                      "type": "integer",
+                      "description": "Function timeout in seconds"
+                    },
+                    "memorySize": {
+                      "type": "integer",
+                      "description": "Function memory size in MB"
+                    },
+                    "codePath": {
+                      "type": "string",
+                      "description": "Path to the function code"
+                    },
+                    "environment": {
+                      "type": "array",
+                      "description": "Function-specific environment variables",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "generatePresignedUrl": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": ["string", "null"],
+                      "description": "Custom name for the function. If null, a name will be generated."
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Description of the function"
+                    },
+                    "timeout": {
+                      "type": "integer",
+                      "description": "Function timeout in seconds"
+                    },
+                    "memorySize": {
+                      "type": "integer",
+                      "description": "Function memory size in MB"
+                    },
+                    "codePath": {
+                      "type": "string",
+                      "description": "Path to the function code"
+                    },
+                    "environment": {
+                      "type": "array",
+                      "description": "Function-specific environment variables",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "generateEmbeddings": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": ["string", "null"],
+                      "description": "Custom name for the function. If null, a name will be generated."
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Description of the function"
+                    },
+                    "timeout": {
+                      "type": "integer",
+                      "description": "Function timeout in seconds"
+                    },
+                    "memorySize": {
+                      "type": "integer",
+                      "description": "Function memory size in MB"
+                    },
+                    "codePath": {
+                      "type": "string",
+                      "description": "Path to the function code"
+                    },
+                    "environment": {
+                      "type": "array",
+                      "description": "Function-specific environment variables",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "getDocument": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": ["string", "null"],
+                      "description": "Custom name for the function. If null, a name will be generated."
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Description of the function"
+                    },
+                    "timeout": {
+                      "type": "integer",
+                      "description": "Function timeout in seconds"
+                    },
+                    "memorySize": {
+                      "type": "integer",
+                      "description": "Function memory size in MB"
+                    },
+                    "codePath": {
+                      "type": "string",
+                      "description": "Path to the function code"
+                    },
+                    "environment": {
+                      "type": "array",
+                      "description": "Function-specific environment variables",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "getAllDocuments": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": ["string", "null"],
+                      "description": "Custom name for the function. If null, a name will be generated."
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Description of the function"
+                    },
+                    "timeout": {
+                      "type": "integer",
+                      "description": "Function timeout in seconds"
+                    },
+                    "memorySize": {
+                      "type": "integer",
+                      "description": "Function memory size in MB"
+                    },
+                    "codePath": {
+                      "type": "string",
+                      "description": "Path to the function code"
+                    },
+                    "environment": {
+                      "type": "array",
+                      "description": "Function-specific environment variables",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "deleteDocument": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": ["string", "null"],
+                      "description": "Custom name for the function. If null, a name will be generated."
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Description of the function"
+                    },
+                    "timeout": {
+                      "type": "integer",
+                      "description": "Function timeout in seconds"
+                    },
+                    "memorySize": {
+                      "type": "integer",
+                      "description": "Function memory size in MB"
+                    },
+                    "codePath": {
+                      "type": "string",
+                      "description": "Path to the function code"
+                    },
+                    "environment": {
+                      "type": "array",
+                      "description": "Function-specific environment variables",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "addConversation": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": ["string", "null"],
+                      "description": "Custom name for the function. If null, a name will be generated."
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Description of the function"
+                    },
+                    "timeout": {
+                      "type": "integer",
+                      "description": "Function timeout in seconds"
+                    },
+                    "memorySize": {
+                      "type": "integer",
+                      "description": "Function memory size in MB"
+                    },
+                    "codePath": {
+                      "type": "string",
+                      "description": "Path to the function code"
+                    },
+                    "environment": {
+                      "type": "array",
+                      "description": "Function-specific environment variables",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "generateResponse": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": ["string", "null"],
+                      "description": "Custom name for the function. If null, a name will be generated."
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Description of the function"
+                    },
+                    "timeout": {
+                      "type": "integer",
+                      "description": "Function timeout in seconds"
+                    },
+                    "memorySize": {
+                      "type": "integer",
+                      "description": "Function memory size in MB"
+                    },
+                    "codePath": {
+                      "type": "string",
+                      "description": "Path to the function code"
+                    },
+                    "environment": {
+                      "type": "array",
+                      "description": "Function-specific environment variables",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string"
                         }
                       }
                     }

@@ -5,6 +5,12 @@ global:
   namePrefix: "pdf-chat"
   environment: "dev"
 
+application:
+  config:
+    region: "us-west-2"
+    modelId: "anthropic.claude-3-sonnet-20240229-v1:0"
+    embeddingModelId: "amazon.titan-embed-text-v2:0"
+
 aws:
   region: "us-west-2"
   accountId: "123456789012"  # This should be replaced with the actual AWS account ID
@@ -58,6 +64,71 @@ aws:
         name: null  # Optional, will use a generated name if not provided
         policies:
           name: null  # Optional, will use a default name if not provided
+  
+  lambda:
+    runtime: "python3.11"
+    handler: "lambda_function.lambda_handler"
+    timeout: 30
+    memorySize: 256
+    environment:
+      DOCUMENT_BUCKET: "{{ default (printf \"%s-documents\" (include \"serverless-pdf-chat.fullname\" .)) .Values.aws.s3.documentBucketName }}"
+      DOCUMENT_TABLE: "{{ default (printf \"%s-document-table\" (include \"serverless-pdf-chat.fullname\" .)) .Values.aws.dynamodb.documentTable.name }}"
+      MEMORY_TABLE: "{{ default (printf \"%s-memory-table\" (include \"serverless-pdf-chat.fullname\" .)) .Values.aws.dynamodb.memoryTable.name }}"
+      EMBEDDING_QUEUE: "{{ default (printf \"%s-embedding-queue\" (include \"serverless-pdf-chat.fullname\" .)) .Values.aws.sqs.embeddingQueue.name }}"
+      EMBEDDING_MODEL_ID: "{{ .Values.application.config.embeddingModelId }}"
+      MODEL_ID: "{{ .Values.application.config.modelId }}"
+      REGION: "{{ .Values.application.config.region }}"
+    functions:
+      uploadTrigger:
+        name: null
+        description: "Handles S3 uploads and triggers document processing"
+        timeout: 30
+        memorySize: 256
+        codePath: "./lambda/upload_trigger"
+        environment:
+          - ADDITIONAL_ENV_VAR: "value"
+      generatePresignedUrl:
+        name: null
+        description: "Generates presigned URLs for document uploads"
+        timeout: 10
+        memorySize: 128
+        codePath: "./lambda/generate_presigned_url"
+      generateEmbeddings:
+        name: null
+        description: "Processes documents and generates embeddings"
+        timeout: 180
+        memorySize: 1024
+        codePath: "./lambda/generate_embeddings"
+      getDocument:
+        name: null
+        description: "Retrieves document information"
+        timeout: 10
+        memorySize: 128
+        codePath: "./lambda/get_document"
+      getAllDocuments:
+        name: null
+        description: "Retrieves all user documents"
+        timeout: 10
+        memorySize: 128
+        codePath: "./lambda/get_all_documents"
+      deleteDocument:
+        name: null
+        description: "Deletes a document and its embeddings"
+        timeout: 30
+        memorySize: 256
+        codePath: "./lambda/delete_document"
+      addConversation:
+        name: null
+        description: "Adds a new conversation to memory"
+        timeout: 10
+        memorySize: 128
+        codePath: "./lambda/add_conversation"
+      generateResponse:
+        name: null
+        description: "Generates a response using the LLM"
+        timeout: 60
+        memorySize: 512
+        codePath: "./lambda/generate_response"
         
 tags:
   environment: "dev"
