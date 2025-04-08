@@ -37,7 +37,11 @@ metadata:
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
-    userPoolId: {{ "{{" }} resolve:userPool:{{ include "serverless-pdf-chat.fullname" . }}-user-pool:id {{ "}}" }}
+    # Use a selector to reference the user pool
+    userPoolIdSelector:
+      matchLabels:
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ include "serverless-pdf-chat.name" . }}
     name: {{ default (include "serverless-pdf-chat.fullname" .) .Values.aws.cognito.userPoolClient.name }}
     generateSecret: {{ .Values.aws.cognito.userPoolClient.generateSecret }}
   providerConfigRef:
