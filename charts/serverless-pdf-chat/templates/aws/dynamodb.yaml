@@ -14,11 +14,6 @@ metadata:
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
-    {{- if .Values.aws.dynamodb.documentTable.name }}
-    name: {{ .Values.aws.dynamodb.documentTable.name }}
-    {{- else }}
-    name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "documents") }}
-    {{- end }}
     billing_mode: {{ $.Values.aws.dynamodb.billingMode }}
     tags:
       {{- if .Values.aws.dynamodb.documentTable.name }}
@@ -57,11 +52,6 @@ metadata:
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
-    {{- if .Values.aws.dynamodb.memoryTable.name }}
-    name: {{ .Values.aws.dynamodb.memoryTable.name }}
-    {{- else }}
-    name: {{ include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "memory") }}
-    {{- end }}
     billing_mode: {{ $.Values.aws.dynamodb.billingMode }}
     tags:
       {{- if .Values.aws.dynamodb.memoryTable.name }}
