@@ -189,26 +189,8 @@ spec:
           toFieldPath: "spec.forProvider.jwtConfiguration[0].audience[0]"
           connectionSecretRef:
             name: userpoolclient
-        - type: CombineFromComposite
-          combine:
-            variables:
-              - fromFieldPath: "spec.region"
-            strategy: string
-            string:
-              fmt: "https://cognito-idp.%s.amazonaws.com/"
-          toFieldPath: "metadata.annotations.issuerPrefix"
-          policy:
-            fromFieldPath: Required
-        - type: CombineFromComposite
-          combine:
-            variables:
-              - fromFieldPath: "metadata.annotations.issuerPrefix"
-              - fromConnectionSecretKey: userPoolId
-                connectionSecretRef:
-                  name: userpool
-            strategy: string
-            string:
-              fmt: "%s%s"
+        - type: FromFieldPath
+          fromFieldPath: "status.atProvider.endpoint"
           toFieldPath: "spec.forProvider.jwtConfiguration[0].issuer"
-          policy:
-            fromFieldPath: Required
+          sourceRef:
+            name: userpool
