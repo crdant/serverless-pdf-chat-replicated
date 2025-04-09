@@ -117,12 +117,19 @@ spec:
         - type: FromCompositeFieldPath
           fromFieldPath: "status.userPool.id"
           toFieldPath: "spec.forProvider.userPoolId"
+          policy:
+            fromFieldPath: Required
         # Patch the User Pool Client ID to the composite's status
         - type: ToCompositeFieldPath
           fromFieldPath: "status.atProvider.id"
           toFieldPath: "status.userPoolClient.id"
       readinessChecks:
-        - type: None
+        - type: MatchFields
+          matchFields:
+            - path: status.atProvider.id
+              required: true
+            - path: status.atProvider.endpoint
+              required: true
       
     # Authorizer
     - name: authorizer
@@ -178,6 +185,8 @@ spec:
         - type: FromCompositeFieldPath
           fromFieldPath: "status.userPoolClient.id"
           toFieldPath: "spec.forProvider.jwtConfiguration[0].audience[0]"
+          policy:
+            fromFieldPath: Required
         # Construct the issuer URL using the User Pool endpoint
         - type: CombineFromComposite
           combine:
@@ -187,5 +196,10 @@ spec:
             string:
               fmt: "https://%s"
           toFieldPath: "spec.forProvider.jwtConfiguration[0].issuer"
+          policy:
+            fromFieldPath: Required
       readinessChecks:
-        - type: None
+        - type: MatchFields
+          matchFields:
+            - path: status.atProvider.id
+              required: true
