@@ -17,8 +17,8 @@ spec:
       - "$request.header.Authorization"
     jwtConfiguration:
       audience:
-        - {{ "{{" }} resolve:path:clientId {{ "}}" }}
-      issuer: {{ "{{" }} resolve:path:issuer {{ "}}" }}
+        - "{{ "{{" }} resolve:path:clientId {{ "}}" }}"
+      issuer: "{{ "{{" }} resolve:path:issuer {{ "}}" }}"
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
   references:
