@@ -94,6 +94,21 @@ arn:aws:iam::{{ $account }}:role/{{ $name }}
 {{- end -}}
 
 {{/*
+Common tags
+*/}}
+{{- define "serverless-pdf-chat.tags" -}}
+app.kubernetes.io/name: {{ include "serverless-pdf-chat.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+helm.sh/chart: {{ include "serverless-pdf-chat.chart" . }}
+{{- if .Values.tags }}
+{{- range $key, $value := .Values.tags }}
+{{ $key }}: {{ $value | quote }}
+{{- end }}
+{{- end }}
+{{- end -}}
+
+{{/*
 Generate the DynamoDB document table name
 */}}
 {{- define "serverless-pdf-chat.documentTableName" -}}
