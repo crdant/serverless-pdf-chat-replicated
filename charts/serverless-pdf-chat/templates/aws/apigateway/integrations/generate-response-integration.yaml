@@ -7,11 +7,11 @@ metadata:
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
-    api_id: {{ "{{" }} resolve:path:apiId {{ "}}" }}
-    integration_type: AWS_PROXY
-    integration_uri: {{ "{{" }} resolve:path:functionArn {{ "}}" }}
-    payload_format_version: "2.0"
-    connection_type: INTERNET
+    apiId: {{ "{{" }} resolve:path:apiId {{ "}}" }}
+    integrationType: AWS_PROXY
+    integrationUri: {{ "{{" }} resolve:path:functionArn {{ "}}" }}
+    payloadFormatVersion: "2.0"
+    connectionType: INTERNET
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
   references:
