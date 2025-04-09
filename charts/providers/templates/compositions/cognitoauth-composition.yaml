@@ -1,0 +1,169 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: cognitoauths.serverlesspdfchat.shortrib.io
+  labels:
+    provider: aws
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "10"  # Run after XRD (weight 5)
+spec:
+  compositeTypeRef:
+    apiVersion: serverlesspdfchat.shortrib.io/v1alpha1
+    kind: CognitoAuth
+  resources:
+    # User Pool
+    - name: userpool
+      base:
+        apiVersion: cognitoidp.aws.upbound.io/v1beta1
+        kind: UserPool
+        metadata:
+          labels: {}
+        spec:
+          forProvider:
+            region: ""  # Will be patched from composite
+            name: ""    # Will be patched from composite
+            autoVerifiedAttributes:
+              - email
+            usernameAttributes:
+              - email
+            adminCreateUserConfig:
+              - allowAdminCreateUserOnly: true
+            passwordPolicy:
+              - minimumLength: 8
+                requireLowercase: true
+                requireNumbers: true
+                requireSymbols: true
+                requireUppercase: true
+            tags: {}
+          providerConfigRef:
+            name: default
+      patches:
+        # Patch the User Pool name from the composite resource
+        - fromFieldPath: "spec.userPoolName"
+          toFieldPath: "spec.forProvider.name"
+        # Patch the region from the composite resource
+        - fromFieldPath: "spec.region"
+          toFieldPath: "spec.forProvider.region"
+        # Patch the provider config name
+        - fromFieldPath: "spec.providerConfigRef.name"
+          toFieldPath: "spec.providerConfigRef.name"
+          policy:
+            fromFieldPath: Optional
+        # Patch tags from the composite resource
+        - fromFieldPath: "spec.tags"
+          toFieldPath: "spec.forProvider.tags"
+          policy:
+            mergeOptions:
+              keepMapValues: true
+        # Patch labels from the composite resource
+        - fromFieldPath: "metadata.labels"
+          toFieldPath: "metadata.labels"
+          policy:
+            mergeOptions:
+              keepMapValues: true
+        # Patch the User Pool ID to the composite resource status
+        - fromFieldPath: "status.atProvider.id"
+          toFieldPath: "status.userPoolId"
+          
+    # User Pool Client
+    - name: userpoolclient
+      base:
+        apiVersion: cognitoidp.aws.upbound.io/v1beta1
+        kind: UserPoolClient
+        metadata:
+          labels: {}
+        spec:
+          forProvider:
+            region: ""  # Will be patched from composite
+            name: ""    # Will be patched from composite
+            generateSecret: false
+          providerConfigRef:
+            name: default
+      patches:
+        # Patch the User Pool Client name from the composite resource
+        - fromFieldPath: "spec.userPoolClientName"
+          toFieldPath: "spec.forProvider.name"
+        # Patch the region from the composite resource
+        - fromFieldPath: "spec.region"
+          toFieldPath: "spec.forProvider.region"
+        # Patch the provider config name
+        - fromFieldPath: "spec.providerConfigRef.name"
+          toFieldPath: "spec.providerConfigRef.name"
+          policy:
+            fromFieldPath: Optional
+        # Patch labels from the composite resource
+        - fromFieldPath: "metadata.labels"
+          toFieldPath: "metadata.labels"
+          policy:
+            mergeOptions:
+              keepMapValues: true
+        # Reference the User Pool ID from the User Pool resource
+        - type: FromCompositeFieldPath
+          fromFieldPath: "status.userPoolId"
+          toFieldPath: "spec.forProvider.userPoolId"
+        # Patch the User Pool Client ID to the composite resource status
+        - fromFieldPath: "status.atProvider.id"
+          toFieldPath: "status.userPoolClientId"
+          
+    # Authorizer
+    - name: authorizer
+      base:
+        apiVersion: apigatewayv2.aws.upbound.io/v1beta1
+        kind: Authorizer
+        metadata:
+          labels:
+            authorizer: ""  # Will be patched from composite
+        spec:
+          forProvider:
+            region: ""  # Will be patched from composite
+            name: "CognitoAuthorizer"
+            authorizerType: JWT
+            identitySources:
+              - "$request.header.Authorization"
+            jwtConfiguration:
+              - audience: []
+                issuer: ""
+          providerConfigRef:
+            name: default
+      patches:
+        # Patch the Authorizer name from the composite resource
+        - fromFieldPath: "spec.authorizerName"
+          toFieldPath: "metadata.labels.authorizer"
+        # Patch the Authorizer name from the composite resource
+        - fromFieldPath: "spec.authorizerName"
+          toFieldPath: "spec.forProvider.name"
+        # Patch the region from the composite resource
+        - fromFieldPath: "spec.region"
+          toFieldPath: "spec.forProvider.region"
+        # Patch the provider config name
+        - fromFieldPath: "spec.providerConfigRef.name"
+          toFieldPath: "spec.providerConfigRef.name"
+          policy:
+            fromFieldPath: Optional
+        # Patch labels from the composite resource
+        - fromFieldPath: "metadata.labels"
+          toFieldPath: "metadata.labels"
+          policy:
+            mergeOptions:
+              keepMapValues: true
+        # Reference the API ID selector from the composite resource
+        - fromFieldPath: "spec.apiIdSelector"
+          toFieldPath: "spec.forProvider.apiIdSelector"
+        # Reference the User Pool Client ID for the audience
+        - type: FromCompositeFieldPath
+          fromFieldPath: "status.userPoolClientId"
+          toFieldPath: "spec.forProvider.jwtConfiguration[0].audience[0]"
+        # Construct the issuer URL using the User Pool ID
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "spec.region"
+              - fromFieldPath: "status.userPoolId"
+            strategy: string
+            string:
+              fmt: "https://cognito-idp.%s.amazonaws.com/%s"
+          toFieldPath: "spec.forProvider.jwtConfiguration[0].issuer"
+        # Patch the Authorizer ID to the composite resource status
+        - fromFieldPath: "status.atProvider.id"
+          toFieldPath: "status.authorizerId"
