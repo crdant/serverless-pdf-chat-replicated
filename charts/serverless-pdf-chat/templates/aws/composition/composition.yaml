@@ -1,13 +1,16 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: cognitoauths.serverlesspdfchat.example.org
+  name: cognitoauths.serverlesspdfchat.shortrib.io
   labels:
     provider: aws
     {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "-15"
 spec:
   compositeTypeRef:
-    apiVersion: serverlesspdfchat.example.org/v1alpha1
+    apiVersion: serverlesspdfchat.shortrib.io/v1alpha1
     kind: CognitoAuth
   resources:
     # User Pool

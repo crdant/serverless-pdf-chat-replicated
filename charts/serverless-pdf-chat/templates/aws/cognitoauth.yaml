@@ -1,4 +1,4 @@
-apiVersion: serverlesspdfchat.example.org/v1alpha1
+apiVersion: serverlesspdfchat.shortrib.io/v1alpha1
 kind: CognitoAuth
 metadata:
   name: {{ include "serverless-pdf-chat.fullname" . }}-cognitoauth
