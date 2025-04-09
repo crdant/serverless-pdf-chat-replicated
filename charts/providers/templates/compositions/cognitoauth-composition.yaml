@@ -63,7 +63,7 @@ spec:
             mergeOptions:
               keepMapValues: true
         # Patch the User Pool ID to the composite resource status
-        - fromFieldPath: "status.atProvider.id"
+        - fromFieldPath: "status.id"
           toFieldPath: "status.userPoolId"
           
     # User Pool Client
@@ -103,7 +103,7 @@ spec:
           fromFieldPath: "status.userPoolId"
           toFieldPath: "spec.forProvider.userPoolId"
         # Patch the User Pool Client ID to the composite resource status
-        - fromFieldPath: "status.atProvider.id"
+        - fromFieldPath: "status.id"
           toFieldPath: "status.userPoolClientId"
           
     # Authorizer
@@ -165,5 +165,5 @@ spec:
               fmt: "https://cognito-idp.%s.amazonaws.com/%s"
           toFieldPath: "spec.forProvider.jwtConfiguration[0].issuer"
         # Patch the Authorizer ID to the composite resource status
-        - fromFieldPath: "status.atProvider.id"
+        - fromFieldPath: "status.id"
           toFieldPath: "status.authorizerId"

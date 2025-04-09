@@ -27,6 +27,12 @@ spec:
                 region:
                   type: string
                   description: "AWS region"
+                providerConfigRef:
+                  type: object
+                  description: "Reference to the provider configuration"
+                  properties:
+                    name:
+                      type: string
                 apiIdSelector:
                   type: object
                   description: "Selector for the API Gateway API"
@@ -67,3 +73,7 @@ spec:
                 authorizerId:
                   type: string
                   description: "ID of the created API Gateway Authorizer"
+                atProvider:
+                  type: object
+                  description: "Provider-specific status fields"
+                  x-kubernetes-preserve-unknown-fields: true
