@@ -154,14 +154,17 @@ spec:
         - type: FromCompositeFieldPath
           fromFieldPath: "status.userPoolClientId"
           toFieldPath: "spec.forProvider.jwtConfiguration[0].audience[0]"
-        # Construct the issuer URL using the User Pool endpoint
+        # Construct the issuer URL using the User Pool ID and region
         - type: FromCompositeFieldPath
-          fromFieldPath: "status.atProvider.endpoint"
+          fromFieldPath: "status.userPoolId"
           toFieldPath: "spec.forProvider.jwtConfiguration[0].issuer"
           transforms:
             - type: string
               string:
-                fmt: "https://%s"
+                fmt: "https://cognito-idp.%s.amazonaws.com/%s"
+                parameters:
+                  - fromFieldPath: "spec.region"
+                  - fromFieldPath: "status.userPoolId"
         # Patch the Authorizer ID to the composite resource status
         - fromFieldPath: "status.atProvider.id"
           toFieldPath: "status.authorizerId"
