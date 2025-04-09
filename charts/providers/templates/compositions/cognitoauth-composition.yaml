@@ -62,9 +62,10 @@ spec:
           policy:
             mergeOptions:
               keepMapValues: true
-        # Patch the User Pool ID to the composite resource status
-        - fromFieldPath: "status.atProvider.id"
-          toFieldPath: "status.userPoolId"
+      connectionDetails:
+        - fromConnectionSecretKey: id
+          name: userPoolId
+          type: FromValue
           
     # User Pool Client
     - name: userpoolclient
@@ -78,6 +79,7 @@ spec:
             region: ""  # Will be patched from composite
             name: ""    # Will be patched from composite
             generateSecret: false
+            userPoolId: ""  # Will be patched from userpool
           providerConfigRef:
             name: default
       patches:
@@ -99,13 +101,15 @@ spec:
             mergeOptions:
               keepMapValues: true
         # Reference the User Pool ID from the User Pool resource
-        - type: FromCompositeFieldPath
-          fromFieldPath: "status.userPoolId"
-          toFieldPath: "spec.forProvider.userPoolId"
-        # Patch the User Pool Client ID to the composite resource status
-        - fromFieldPath: "status.atProvider.id"
-          toFieldPath: "status.userPoolClientId"
-          
+        - type: PatchSet
+          patchSetName: userPoolIdRef
+      connectionDetails:
+        - fromConnectionSecretKey: id
+          name: userPoolClientId
+          type: FromValue
+      readinessChecks:
+        - type: None
+      
     # Authorizer
     - name: authorizer
       base:
@@ -150,21 +154,61 @@ spec:
         # Reference the API ID selector from the composite resource
         - fromFieldPath: "spec.apiIdSelector"
           toFieldPath: "spec.forProvider.apiIdSelector"
-        # Reference the User Pool Client ID for the audience
+        # Reference the User Pool Client ID for the audience and User Pool ID for the issuer
+        - type: PatchSet
+          patchSetName: cognitoAuthorizerConfig
+      readinessChecks:
+        - type: None
+        
+  patchSets:
+    - name: userPoolIdRef
+      patches:
         - type: FromCompositeFieldPath
-          fromFieldPath: "status.userPoolClientId"
+          fromFieldPath: "spec.region"
+          toFieldPath: "spec.forProvider.region"
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "spec.region"
+            strategy: string
+            string:
+              fmt: "%s"
+          toFieldPath: "spec.forProvider.region"
+          policy:
+            fromFieldPath: Required
+        - type: PatchFromConnectionSecretKey
+          fromConnectionSecretKey: userPoolId
+          toFieldPath: "spec.forProvider.userPoolId"
+          connectionSecretRef:
+            name: userpool
+    
+    - name: cognitoAuthorizerConfig
+      patches:
+        - type: PatchFromConnectionSecretKey
+          fromConnectionSecretKey: userPoolClientId
           toFieldPath: "spec.forProvider.jwtConfiguration[0].audience[0]"
-        # Construct the issuer URL using the User Pool ID and region
-        - type: FromCompositeFieldPath
-          fromFieldPath: "status.userPoolId"
+          connectionSecretRef:
+            name: userpoolclient
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "spec.region"
+            strategy: string
+            string:
+              fmt: "https://cognito-idp.%s.amazonaws.com/"
+          toFieldPath: "metadata.annotations.issuerPrefix"
+          policy:
+            fromFieldPath: Required
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "metadata.annotations.issuerPrefix"
+              - fromConnectionSecretKey: userPoolId
+                connectionSecretRef:
+                  name: userpool
+            strategy: string
+            string:
+              fmt: "%s%s"
           toFieldPath: "spec.forProvider.jwtConfiguration[0].issuer"
-          transforms:
-            - type: string
-              string:
-                fmt: "https://cognito-idp.%s.amazonaws.com/%s"
-                parameters:
-                  - fromFieldPath: "spec.region"
-                  - fromFieldPath: "status.userPoolId"
-        # Patch the Authorizer ID to the composite resource status
-        - fromFieldPath: "status.atProvider.id"
-          toFieldPath: "status.authorizerId"
+          policy:
+            fromFieldPath: Required
