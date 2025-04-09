@@ -7,11 +7,11 @@ metadata:
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
-    apiId: {{ "{{" }} resolve:path:apiId {{ "}}" }}
+    apiId: '{{ "{{" }} resolve:path:apiId {{ "}}" }}'
     routeKey: "GET /generate_presigned_url"
-    target: {{ "{{" }} resolve:path:target {{ "}}" }}
+    target: '{{ "{{" }} resolve:path:target {{ "}}" }}'
     authorizationType: JWT
-    authorizerId: {{ "{{" }} resolve:path:authorizerId {{ "}}" }}
+    authorizerId: '{{ "{{" }} resolve:path:authorizerId {{ "}}" }}'
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
   references:
