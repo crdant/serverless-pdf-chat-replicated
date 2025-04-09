@@ -11,7 +11,7 @@ spec:
     name: {{ include "serverless-pdf-chat.fullname" . }}-api
     protocolType: HTTP
     corsConfiguration:
-      - allowCredentials: true
+      - allowCredentials: false
         allowHeaders:
           - "*"
         allowMethods:
