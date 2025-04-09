@@ -238,6 +238,25 @@
                 }
               }
             },
+            "apigatewayv2": {
+              "type": "object",
+              "properties": {
+                "package": {
+                  "type": "string",
+                  "description": "Package name for the API Gateway v2 provider",
+                  "default": "provider-aws-apigatewayv2"
+                },
+                "version": {
+                  "type": "string",
+                  "description": "Version of the API Gateway v2 provider",
+                  "default": "v1.21.1"
+                },
+                "controllerConfig": {
+                  "type": "object",
+                  "description": "Controller configuration for the API Gateway v2 provider"
+                }
+              }
+            },
             "cognitoidp": {
               "type": "object",
               "properties": {

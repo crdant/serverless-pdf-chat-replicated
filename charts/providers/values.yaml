@@ -62,6 +62,10 @@ aws:
       package: "provider-aws-apigateway"
       version: "v1.21.1"
       controllerConfig: {}
+    apigatewayv2:
+      package: "provider-aws-apigatewayv2"
+      version: "v1.21.1"
+      controllerConfig: {}
     cognitoidp:
       package: "provider-aws-cognitoidp"
       version: "v1.21.1"
