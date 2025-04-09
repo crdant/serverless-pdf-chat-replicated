@@ -11,13 +11,13 @@ spec:
     name: {{ include "serverless-pdf-chat.fullname" . }}-api
     protocolType: HTTP
     corsConfiguration:
-      allowCredentials: true
-      allowHeaders:
-        - "*"
-      allowMethods:
-        - "*"
-      allowOrigins:
-        - "*"
+      - allowCredentials: true
+        allowHeaders:
+          - "*"
+        allowMethods:
+          - "*"
+        allowOrigins:
+          - "*"
     tags:
       {{- include "serverless-pdf-chat.tags" . | nindent 6 }}
   providerConfigRef:
