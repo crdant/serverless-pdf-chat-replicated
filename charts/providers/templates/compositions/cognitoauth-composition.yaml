@@ -155,6 +155,7 @@ spec:
           fromFieldPath: "status.userPoolClientId"
           toFieldPath: "spec.forProvider.jwtConfiguration[0].audience[0]"
         # Construct the issuer URL using the User Pool ID
+        # is this should be https://%s where the string is UserPool.status.atProvider.endpoint? - AI!
         - type: CombineFromComposite
           combine:
             variables:
