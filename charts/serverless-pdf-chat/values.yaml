@@ -145,7 +145,7 @@ aws:
           - "*"
         allowHeaders:
           - "*"
-        allowCredentials: true
+        allowCredentials: false
     stage:
       name: "dev"
       autoDeploy: true
