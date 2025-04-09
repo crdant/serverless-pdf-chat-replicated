@@ -40,32 +40,41 @@ spec:
             name: default
       patches:
         # Patch the User Pool name from the composite resource
-        - fromFieldPath: "spec.userPoolName"
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.userPoolName"
           toFieldPath: "spec.forProvider.name"
         # Patch the region from the composite resource
-        - fromFieldPath: "spec.region"
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.region"
           toFieldPath: "spec.forProvider.region"
         # Patch the provider config name
-        - fromFieldPath: "spec.providerConfigRef.name"
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.providerConfigRef.name"
           toFieldPath: "spec.providerConfigRef.name"
           policy:
             fromFieldPath: Optional
         # Patch tags from the composite resource
-        - fromFieldPath: "spec.tags"
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.tags"
           toFieldPath: "spec.forProvider.tags"
           policy:
             mergeOptions:
               keepMapValues: true
         # Patch labels from the composite resource
-        - fromFieldPath: "metadata.labels"
+        - type: FromCompositeFieldPath
+          fromFieldPath: "metadata.labels"
           toFieldPath: "metadata.labels"
           policy:
             mergeOptions:
               keepMapValues: true
-      connectionDetails:
-        - fromConnectionSecretKey: id
-          name: userPoolId
-          type: FromValue
+        # Patch the User Pool ID to the composite's status
+        - type: ToCompositeFieldPath
+          fromFieldPath: "status.atProvider.id"
+          toFieldPath: "status.userPoolId"
+        # Patch the User Pool endpoint to the composite's status
+        - type: ToCompositeFieldPath
+          fromFieldPath: "status.atProvider.endpoint"
+          toFieldPath: "status.userPoolEndpoint"
           
     # User Pool Client
     - name: userpoolclient
@@ -79,34 +88,39 @@ spec:
             region: ""  # Will be patched from composite
             name: ""    # Will be patched from composite
             generateSecret: false
-            userPoolId: ""  # Will be patched from userpool
+            userPoolId: ""  # Will be patched from composite status
           providerConfigRef:
             name: default
       patches:
         # Patch the User Pool Client name from the composite resource
-        - fromFieldPath: "spec.userPoolClientName"
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.userPoolClientName"
           toFieldPath: "spec.forProvider.name"
         # Patch the region from the composite resource
-        - fromFieldPath: "spec.region"
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.region"
           toFieldPath: "spec.forProvider.region"
         # Patch the provider config name
-        - fromFieldPath: "spec.providerConfigRef.name"
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.providerConfigRef.name"
           toFieldPath: "spec.providerConfigRef.name"
           policy:
             fromFieldPath: Optional
         # Patch labels from the composite resource
-        - fromFieldPath: "metadata.labels"
+        - type: FromCompositeFieldPath
+          fromFieldPath: "metadata.labels"
           toFieldPath: "metadata.labels"
           policy:
             mergeOptions:
               keepMapValues: true
-        # Reference the User Pool ID from the User Pool resource
-        - type: PatchSet
-          patchSetName: userPoolIdRef
-      connectionDetails:
-        - fromConnectionSecretKey: id
-          name: userPoolClientId
-          type: FromValue
+        # Reference the User Pool ID from the composite's status
+        - type: FromCompositeFieldPath
+          fromFieldPath: "status.userPoolId"
+          toFieldPath: "spec.forProvider.userPoolId"
+        # Patch the User Pool Client ID to the composite's status
+        - type: ToCompositeFieldPath
+          fromFieldPath: "status.atProvider.id"
+          toFieldPath: "status.userPoolClientId"
       readinessChecks:
         - type: None
       
@@ -132,69 +146,46 @@ spec:
             name: default
       patches:
         # Patch the Authorizer name from the composite resource
-        - fromFieldPath: "spec.authorizerName"
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.authorizerName"
           toFieldPath: "metadata.labels.authorizer"
         # Patch the Authorizer name from the composite resource
-        - fromFieldPath: "spec.authorizerName"
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.authorizerName"
           toFieldPath: "spec.forProvider.name"
         # Patch the region from the composite resource
-        - fromFieldPath: "spec.region"
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.region"
           toFieldPath: "spec.forProvider.region"
         # Patch the provider config name
-        - fromFieldPath: "spec.providerConfigRef.name"
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.providerConfigRef.name"
           toFieldPath: "spec.providerConfigRef.name"
           policy:
             fromFieldPath: Optional
         # Patch labels from the composite resource
-        - fromFieldPath: "metadata.labels"
+        - type: FromCompositeFieldPath
+          fromFieldPath: "metadata.labels"
           toFieldPath: "metadata.labels"
           policy:
             mergeOptions:
               keepMapValues: true
         # Reference the API ID selector from the composite resource
-        - fromFieldPath: "spec.apiIdSelector"
-          toFieldPath: "spec.forProvider.apiIdSelector"
-        # Reference the User Pool Client ID for the audience and User Pool ID for the issuer
-        - type: PatchSet
-          patchSetName: cognitoAuthorizerConfig
-      readinessChecks:
-        - type: None
-        
-  patchSets:
-    - name: userPoolIdRef
-      patches:
         - type: FromCompositeFieldPath
-          fromFieldPath: "spec.region"
-          toFieldPath: "spec.forProvider.region"
+          fromFieldPath: "spec.apiIdSelector"
+          toFieldPath: "spec.forProvider.apiIdSelector"
+        # Reference the User Pool Client ID for the audience
+        - type: FromCompositeFieldPath
+          fromFieldPath: "status.userPoolClientId"
+          toFieldPath: "spec.forProvider.jwtConfiguration[0].audience[0]"
+        # Construct the issuer URL using the User Pool endpoint
         - type: CombineFromComposite
           combine:
             variables:
-              - fromFieldPath: "spec.region"
+              - fromFieldPath: "status.userPoolEndpoint"
             strategy: string
             string:
-              fmt: "%s"
-          toFieldPath: "spec.forProvider.region"
-          policy:
-            fromFieldPath: Required
-        - type: PatchFromConnectionSecretKey
-          fromConnectionSecretKey: userPoolId
-          toFieldPath: "spec.forProvider.userPoolId"
-          connectionSecretRef:
-            name: userpool
-    
-    - name: cognitoAuthorizerConfig
-      patches:
-        - type: PatchFromConnectionSecretKey
-          fromConnectionSecretKey: userPoolClientId
-          toFieldPath: "spec.forProvider.jwtConfiguration[0].audience[0]"
-          connectionSecretRef:
-            name: userpoolclient
-        - type: FromFieldPath
-          fromFieldPath: "status.atProvider.endpoint"
+              fmt: "https://%s"
           toFieldPath: "spec.forProvider.jwtConfiguration[0].issuer"
-          sourceRef:
-            name: userpool
-          transforms:
-            - type: string
-              string:
-                fmt: "https://%s"
+      readinessChecks:
+        - type: None
