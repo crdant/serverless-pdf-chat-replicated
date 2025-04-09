@@ -63,4 +63,20 @@ spec:
                 - authorizerName
             status:
               type: object
+              properties:
+                userPool:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: "ID of the Cognito User Pool"
+                    endpoint:
+                      type: string
+                      description: "Endpoint of the Cognito User Pool"
+                userPoolClient:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: "ID of the Cognito User Pool Client"
               x-kubernetes-preserve-unknown-fields: true

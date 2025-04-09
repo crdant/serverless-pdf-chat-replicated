@@ -70,11 +70,11 @@ spec:
         # Patch the User Pool ID to the composite's status
         - type: ToCompositeFieldPath
           fromFieldPath: "status.atProvider.id"
-          toFieldPath: "status.userPoolId"
+          toFieldPath: "status.userPool.id"
         # Patch the User Pool endpoint to the composite's status
         - type: ToCompositeFieldPath
           fromFieldPath: "status.atProvider.endpoint"
-          toFieldPath: "status.userPoolEndpoint"
+          toFieldPath: "status.userPool.endpoint"
           
     # User Pool Client
     - name: userpoolclient
@@ -115,12 +115,12 @@ spec:
               keepMapValues: true
         # Reference the User Pool ID from the composite's status
         - type: FromCompositeFieldPath
-          fromFieldPath: "status.userPoolId"
+          fromFieldPath: "status.userPool.id"
           toFieldPath: "spec.forProvider.userPoolId"
         # Patch the User Pool Client ID to the composite's status
         - type: ToCompositeFieldPath
           fromFieldPath: "status.atProvider.id"
-          toFieldPath: "status.userPoolClientId"
+          toFieldPath: "status.userPoolClient.id"
       readinessChecks:
         - type: None
       
@@ -176,13 +176,13 @@ spec:
           toFieldPath: "spec.forProvider.apiIdSelector"
         # Reference the User Pool Client ID for the audience
         - type: FromCompositeFieldPath
-          fromFieldPath: "status.userPoolClientId"
+          fromFieldPath: "status.userPoolClient.id"
           toFieldPath: "spec.forProvider.jwtConfiguration[0].audience[0]"
         # Construct the issuer URL using the User Pool endpoint
         - type: CombineFromComposite
           combine:
             variables:
-              - fromFieldPath: "status.userPoolEndpoint"
+              - fromFieldPath: "status.userPool.endpoint"
             strategy: string
             string:
               fmt: "https://%s"
