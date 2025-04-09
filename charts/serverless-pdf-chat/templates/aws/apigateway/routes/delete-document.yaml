@@ -7,11 +7,11 @@ metadata:
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
-    apiId: {{ "{{" }} resolve:path:apiId {{ "}}" }}
-    routeKey: "DELETE /doc/{documentid}"
+    api_id: {{ "{{" }} resolve:path:apiId {{ "}}" }}
+    route_key: "DELETE /doc/{documentid}"
     target: {{ "{{" }} resolve:path:target {{ "}}" }}
-    authorizationType: JWT
-    authorizerId: {{ "{{" }} resolve:path:authorizerId {{ "}}" }}
+    authorization_type: JWT
+    authorizer_id: {{ "{{" }} resolve:path:authorizerId {{ "}}" }}
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
   references:

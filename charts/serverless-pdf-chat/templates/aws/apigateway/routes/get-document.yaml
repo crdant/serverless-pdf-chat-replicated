@@ -7,11 +7,11 @@ metadata:
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
-    apiId: {{ "{{" }} resolve:path:apiId {{ "}}" }}
-    routeKey: "GET /doc/{documentid}/{conversationid}"
+    api_id: {{ "{{" }} resolve:path:apiId {{ "}}" }}
+    route_key: "GET /doc/{documentid}/{conversationid}"
     target: {{ "{{" }} resolve:path:target {{ "}}" }}
-    authorizationType: JWT
-    authorizerId: {{ "{{" }} resolve:path:authorizerId {{ "}}" }}
+    authorization_type: JWT
+    authorizer_id: {{ "{{" }} resolve:path:authorizerId {{ "}}" }}
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
   references:
