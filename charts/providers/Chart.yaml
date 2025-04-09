@@ -2,11 +2,6 @@ apiVersion: v2
 name: providers
 description: A Helm chart for AWS Crossplane providers used in the Serverless PDF Chat application
 type: application
-version: 0.5.4
+version: 0.6.0
 appVersion: "1.0.0"
 apiVersion: v2
-name: cloud-providers
-description: A Helm chart for installing cloud providers for Crossplane
-type: application
-version: 0.2.0
-appVersion: "1.0.0"
