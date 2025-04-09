@@ -4,6 +4,7 @@ metadata:
   name: {{ include "serverless-pdf-chat.fullname" . }}-api
   labels:
     {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+    api: {{ include "serverless-pdf-chat.fullname" . }}-api
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
