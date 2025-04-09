@@ -66,6 +66,85 @@
               "default": "amazon.titan-embed-text-v2:0"
             }
           }
+        },
+        "apigateway": {
+          "type": "object",
+          "properties": {
+            "api": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": ["string", "null"],
+                  "description": "Custom name for the API Gateway. If null, a name will be generated."
+                },
+                "corsConfiguration": {
+                  "type": "object",
+                  "properties": {
+                    "allowOrigins": {
+                      "type": "array",
+                      "description": "List of allowed origins",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "allowMethods": {
+                      "type": "array",
+                      "description": "List of allowed HTTP methods",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "allowHeaders": {
+                      "type": "array",
+                      "description": "List of allowed headers",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "allowCredentials": {
+                      "type": "boolean",
+                      "description": "Whether to allow credentials"
+                    }
+                  }
+                }
+              }
+            },
+            "stage": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the API Gateway stage",
+                  "default": "dev"
+                },
+                "autoDeploy": {
+                  "type": "boolean",
+                  "description": "Whether to automatically deploy changes",
+                  "default": true
+                }
+              }
+            },
+            "authorizer": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the authorizer",
+                  "default": "CognitoAuthorizer"
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Type of the authorizer",
+                  "default": "JWT"
+                },
+                "identitySource": {
+                  "type": "string",
+                  "description": "Identity source for the authorizer",
+                  "default": "$request.header.Authorization"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -623,65 +702,6 @@
                   }
                 }
               }
-            }
-          }
-        }
-      }
-    },
-    "apigateway": {
-      "type": "object",
-      "properties": {
-        "api": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": ["string", "null"],
-              "description": "Custom name for the API Gateway. If null, a name will be generated."
-            },
-            "corsConfiguration": {
-              "type": "object",
-              "properties": {
-                "allowOrigins": {
-                  "type": "array",
-                  "description": "List of allowed origins",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "allowMethods": {
-                  "type": "array",
-                  "description": "List of allowed HTTP methods",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "allowHeaders": {
-                  "type": "array",
-                  "description": "List of allowed headers",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "allowCredentials": {
-                  "type": "boolean",
-                  "description": "Whether to allow credentials"
-                }
-              }
-            }
-          }
-        },
-        "stage": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string",
-              "description": "Name of the API Gateway stage",
-              "default": "dev"
-            },
-            "autoDeploy": {
-              "type": "boolean",
-              "description": "Whether to automatically deploy changes",
-              "default": true
             }
           }
         }

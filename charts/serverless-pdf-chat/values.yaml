@@ -149,6 +149,10 @@ aws:
     stage:
       name: "dev"
       autoDeploy: true
+    authorizer:
+      name: "CognitoAuthorizer"
+      type: "JWT"
+      identitySource: "$request.header.Authorization"
         
 tags:
   environment: "dev"
