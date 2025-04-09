@@ -1,0 +1,17 @@
+apiVersion: serverlesspdfchat.example.org/v1alpha1
+kind: CognitoAuth
+metadata:
+  name: {{ include "serverless-pdf-chat.fullname" . }}-cognitoauth
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+spec:
+  region: {{ .Values.aws.region }}
+  apiIdSelector:
+    matchLabels:
+      {{- include "serverless-pdf-chat.selectorLabels" . | nindent 6 }}
+      api: {{ include "serverless-pdf-chat.fullname" . }}-api
+  userPoolName: {{ include "serverless-pdf-chat.fullname" . }}-user-pool
+  userPoolClientName: {{ include "serverless-pdf-chat.fullname" . }}-user-pool-client
+  authorizerName: {{ include "serverless-pdf-chat.fullname" . }}-cognito-authorizer
+  tags:
+    {{- include "serverless-pdf-chat.tags" . | nindent 4 }}

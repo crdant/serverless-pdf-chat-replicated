@@ -1,0 +1,66 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: cognitoauths.serverlesspdfchat.example.org
+spec:
+  group: serverlesspdfchat.example.org
+  names:
+    kind: CognitoAuth
+    plural: cognitoauths
+  claimNames:
+    kind: CognitoAuthClaim
+    plural: cognitoauthclaims
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                region:
+                  type: string
+                  description: "AWS region"
+                apiIdSelector:
+                  type: object
+                  description: "Selector for the API Gateway API"
+                  properties:
+                    matchLabels:
+                      type: object
+                      additionalProperties:
+                        type: string
+                userPoolName:
+                  type: string
+                  description: "Name of the Cognito User Pool"
+                userPoolClientName:
+                  type: string
+                  description: "Name of the Cognito User Pool Client"
+                authorizerName:
+                  type: string
+                  description: "Name of the API Gateway Authorizer"
+                tags:
+                  type: object
+                  description: "Tags to apply to all resources"
+                  additionalProperties:
+                    type: string
+              required:
+                - region
+                - apiIdSelector
+                - userPoolName
+                - userPoolClientName
+                - authorizerName
+            status:
+              type: object
+              properties:
+                userPoolId:
+                  type: string
+                  description: "ID of the created Cognito User Pool"
+                userPoolClientId:
+                  type: string
+                  description: "ID of the created Cognito User Pool Client"
+                authorizerId:
+                  type: string
+                  description: "ID of the created API Gateway Authorizer"
