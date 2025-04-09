@@ -194,3 +194,7 @@ spec:
           toFieldPath: "spec.forProvider.jwtConfiguration[0].issuer"
           sourceRef:
             name: userpool
+          transforms:
+            - type: string
+              string:
+                fmt: "https://%s"
