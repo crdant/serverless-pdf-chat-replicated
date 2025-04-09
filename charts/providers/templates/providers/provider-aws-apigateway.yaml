@@ -1,10 +1,10 @@
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: {{ include "providers.fullname" . }}-aws-apigateway
+  name: {{ include "providers.fullname" . }}-aws-apigatewayv2
   labels:
     {{- include "providers.labels" . | nindent 4 }}
 spec:
-  package: {{ include "providers.packageUrl" (dict "Values" .Values "providerName" "apigateway") }}
+  package: {{ include "providers.packageUrl" (dict "Values" .Values "providerName" "apigatewayv2") }}
   runtimeConfigRef:
     name: {{ include "providers.runtimeConfigName" . }}
