@@ -4,6 +4,7 @@ metadata:
   name: {{ include "serverless-pdf-chat.fullname" . }}-cognito-authorizer
   labels:
     {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+    authorizer: {{ include "serverless-pdf-chat.fullname" . }}-cognito-authorizer
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
@@ -17,17 +18,7 @@ spec:
       - "$request.header.Authorization"
     jwtConfiguration:
       - audience:
-          - '{{ "{{" }} resolve:path:clientId {{ "}}" }}'
-        issuer: '{{ "{{" }} resolve:path:issuer {{ "}}" }}'
+          - {{ include "serverless-pdf-chat.fullname" . }}-user-pool-client
+        issuer: https://cognito-idp.{{ .Values.aws.region }}.amazonaws.com/{{ include "serverless-pdf-chat.fullname" . }}-user-pool
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
-  references:
-    - clientId:
-        from:
-          apiRef:
-            name: {{ include "serverless-pdf-chat.fullname" . }}-user-pool-client
-    - issuer:
-        from:
-          apiRef:
-            name: {{ include "serverless-pdf-chat.fullname" . }}-user-pool
-            path: forProvider.endpoint

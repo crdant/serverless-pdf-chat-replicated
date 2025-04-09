@@ -7,25 +7,19 @@ metadata:
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
-    apiId: '{{ "{{" }} resolve:path:apiId {{ "}}" }}'
+    apiIdSelector:
+      matchLabels:
+        {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
+        api: {{ include "serverless-pdf-chat.fullname" . }}-api
     routeKey: "POST /doc/{documentid}"
-    target: '{{ "{{" }} resolve:path:target {{ "}}" }}'
+    targetSelector:
+      matchLabels:
+        {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
+        integration: {{ include "serverless-pdf-chat.fullname" . }}-add-conversation-integration
     authorizationType: JWT
-    authorizerId: '{{ "{{" }} resolve:path:authorizerId {{ "}}" }}'
+    authorizerIdSelector:
+      matchLabels:
+        {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
+        authorizer: {{ include "serverless-pdf-chat.fullname" . }}-cognito-authorizer
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
-  references:
-    - apiId:
-        from:
-          apiRef:
-            name: {{ include "serverless-pdf-chat.fullname" . }}-api
-    - target:
-        from:
-          apiRef:
-            name: {{ include "serverless-pdf-chat.fullname" . }}-add-conversation-integration
-            path: forProvider.integrationId
-    - authorizerId:
-        from:
-          apiRef:
-            name: {{ include "serverless-pdf-chat.fullname" . }}-cognito-authorizer
-            path: status.atProvider.id

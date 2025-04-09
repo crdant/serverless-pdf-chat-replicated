@@ -4,6 +4,7 @@ metadata:
   name: {{ include "serverless-pdf-chat.fullname" . }}-generate-presigned-url-integration
   labels:
     {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+    integration: {{ include "serverless-pdf-chat.fullname" . }}-generate-presigned-url-integration
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
@@ -12,14 +13,11 @@ spec:
         {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
         api: {{ include "serverless-pdf-chat.fullname" . }}-api
     integrationType: AWS_PROXY
-    integrationUri: '{{ "{{" }} resolve:path:functionArn {{ "}}" }}'
+    integrationUriSelector:
+      matchLabels:
+        {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
+        function: {{ include "serverless-pdf-chat.fullname" . }}-generate-presigned-url-function
     payloadFormatVersion: "2.0"
     connectionType: INTERNET
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
-  references:
-    - functionArn:
-        from:
-          apiRef:
-            name: {{ include "serverless-pdf-chat.fullname" . }}-generate-presigned-url-function
-            path: status.atProvider.arn

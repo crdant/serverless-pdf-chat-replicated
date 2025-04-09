@@ -7,15 +7,13 @@ metadata:
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
-    apiId: '{{ "{{" }} resolve:path:apiId {{ "}}" }}'
+    apiIdSelector:
+      matchLabels:
+        {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
+        api: {{ include "serverless-pdf-chat.fullname" . }}-api
     name: {{ .Values.global.environment }}
     autoDeploy: true
     tags:
       {{- include "serverless-pdf-chat.tags" . | nindent 6 }}
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
-  references:
-    - apiId:
-        from:
-          apiRef:
-            name: {{ include "serverless-pdf-chat.fullname" . }}-api
