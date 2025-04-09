@@ -58,10 +58,6 @@ aws:
       package: "provider-aws-sqs"
       version: "v1.21.1"
       controllerConfig: {}
-    apigateway:
-      package: "provider-aws-apigateway"
-      version: "v1.21.1"
-      controllerConfig: {}
     apigatewayv2:
       package: "provider-aws-apigatewayv2"
       version: "v1.21.1"

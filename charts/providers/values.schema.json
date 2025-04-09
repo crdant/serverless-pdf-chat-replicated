@@ -219,25 +219,6 @@
                 }
               }
             },
-            "apigateway": {
-              "type": "object",
-              "properties": {
-                "package": {
-                  "type": "string",
-                  "description": "Package name for the API Gateway provider",
-                  "default": "provider-aws-apigateway"
-                },
-                "version": {
-                  "type": "string",
-                  "description": "Version of the API Gateway provider",
-                  "default": "v1.21.1"
-                },
-                "controllerConfig": {
-                  "type": "object",
-                  "description": "Controller configuration for the API Gateway provider"
-                }
-              }
-            },
             "apigatewayv2": {
               "type": "object",
               "properties": {
