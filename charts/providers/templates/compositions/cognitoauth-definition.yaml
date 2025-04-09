@@ -64,6 +64,10 @@ spec:
             status:
               type: object
               properties:
+                atProvider:
+                  type: object
+                  description: "Provider-specific status fields"
+                  x-kubernetes-preserve-unknown-fields: true
                 userPoolId:
                   type: string
                   description: "ID of the created Cognito User Pool"
@@ -73,7 +77,3 @@ spec:
                 authorizerId:
                   type: string
                   description: "ID of the created API Gateway Authorizer"
-                atProvider:
-                  type: object
-                  description: "Provider-specific status fields"
-                  x-kubernetes-preserve-unknown-fields: true
