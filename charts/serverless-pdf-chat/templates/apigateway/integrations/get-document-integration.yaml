@@ -1,0 +1,26 @@
+apiVersion: apigatewayv2.aws.upbound.io/v1beta1
+kind: Integration
+metadata:
+  name: {{ include "serverless-pdf-chat.fullname" . }}-get-document-integration
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+spec:
+  forProvider:
+    region: {{ .Values.aws.region }}
+    apiId: {{ "{{" }} resolve:path:apiId {{ "}}" }}
+    integrationType: AWS_PROXY
+    integrationUri: {{ "{{" }} resolve:path:functionArn {{ "}}" }}
+    payloadFormatVersion: "2.0"
+    connectionType: INTERNET
+  providerConfigRef:
+    name: {{ .Values.aws.providerConfigName }}
+  references:
+    - apiId:
+        from:
+          apiRef:
+            name: {{ include "serverless-pdf-chat.fullname" . }}-api
+    - functionArn:
+        from:
+          apiRef:
+            name: {{ include "serverless-pdf-chat.fullname" . }}-get-document-function
+            path: status.atProvider.arn

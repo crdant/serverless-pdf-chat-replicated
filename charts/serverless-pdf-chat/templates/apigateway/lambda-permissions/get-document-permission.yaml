@@ -1,0 +1,26 @@
+apiVersion: lambda.aws.upbound.io/v1beta1
+kind: Permission
+metadata:
+  name: {{ include "serverless-pdf-chat.fullname" . }}-get-document-permission
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+spec:
+  forProvider:
+    region: {{ .Values.aws.region }}
+    action: lambda:InvokeFunction
+    functionName: {{ "{{" }} resolve:path:functionName {{ "}}" }}
+    principal: apigateway.amazonaws.com
+    sourceArn: {{ "{{" }} resolve:path:sourceArn {{ "}}" }}
+  providerConfigRef:
+    name: {{ .Values.aws.providerConfigName }}
+  references:
+    - functionName:
+        from:
+          apiRef:
+            name: {{ include "serverless-pdf-chat.fullname" . }}-get-document-function
+            path: status.atProvider.functionName
+    - sourceArn:
+        from:
+          apiRef:
+            name: {{ include "serverless-pdf-chat.fullname" . }}-api
+            path: status.atProvider.executionArn

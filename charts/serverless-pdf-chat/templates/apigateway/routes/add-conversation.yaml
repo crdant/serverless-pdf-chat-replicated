@@ -1,0 +1,31 @@
+apiVersion: apigatewayv2.aws.upbound.io/v1beta1
+kind: Route
+metadata:
+  name: {{ include "serverless-pdf-chat.fullname" . }}-add-conversation-route
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+spec:
+  forProvider:
+    region: {{ .Values.aws.region }}
+    apiId: {{ "{{" }} resolve:path:apiId {{ "}}" }}
+    routeKey: "POST /doc/{documentid}"
+    target: {{ "{{" }} resolve:path:target {{ "}}" }}
+    authorizationType: JWT
+    authorizerId: {{ "{{" }} resolve:path:authorizerId {{ "}}" }}
+  providerConfigRef:
+    name: {{ .Values.aws.providerConfigName }}
+  references:
+    - apiId:
+        from:
+          apiRef:
+            name: {{ include "serverless-pdf-chat.fullname" . }}-api
+    - target:
+        from:
+          apiRef:
+            name: {{ include "serverless-pdf-chat.fullname" . }}-add-conversation-integration
+            path: forProvider.integrationId
+    - authorizerId:
+        from:
+          apiRef:
+            name: {{ include "serverless-pdf-chat.fullname" . }}-cognito-authorizer
+            path: status.atProvider.id

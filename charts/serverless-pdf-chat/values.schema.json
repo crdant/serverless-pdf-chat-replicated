@@ -71,7 +71,7 @@
     },
     "aws": {
       "type": "object",
-      "required": ["providerConfigName", "s3", "dynamodb", "sqs", "cognito", "iam", "lambda"],
+      "required": ["providerConfigName", "s3", "dynamodb", "sqs", "cognito", "iam", "lambda", "apigateway"],
       "properties": {
         "region": {
           "type": "string",
@@ -623,6 +623,65 @@
                   }
                 }
               }
+            }
+          }
+        }
+      }
+    },
+    "apigateway": {
+      "type": "object",
+      "properties": {
+        "api": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": ["string", "null"],
+              "description": "Custom name for the API Gateway. If null, a name will be generated."
+            },
+            "corsConfiguration": {
+              "type": "object",
+              "properties": {
+                "allowOrigins": {
+                  "type": "array",
+                  "description": "List of allowed origins",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "allowMethods": {
+                  "type": "array",
+                  "description": "List of allowed HTTP methods",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "allowHeaders": {
+                  "type": "array",
+                  "description": "List of allowed headers",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "allowCredentials": {
+                  "type": "boolean",
+                  "description": "Whether to allow credentials"
+                }
+              }
+            }
+          }
+        },
+        "stage": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Name of the API Gateway stage",
+              "default": "dev"
+            },
+            "autoDeploy": {
+              "type": "boolean",
+              "description": "Whether to automatically deploy changes",
+              "default": true
             }
           }
         }

@@ -1,0 +1,23 @@
+apiVersion: apigatewayv2.aws.upbound.io/v1beta1
+kind: API
+metadata:
+  name: {{ include "serverless-pdf-chat.fullname" . }}-api
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+spec:
+  forProvider:
+    region: {{ .Values.aws.region }}
+    name: {{ include "serverless-pdf-chat.fullname" . }}-api
+    protocolType: HTTP
+    corsConfiguration:
+      allowCredentials: true
+      allowHeaders:
+        - "*"
+      allowMethods:
+        - "*"
+      allowOrigins:
+        - "*"
+    tags:
+      {{- include "serverless-pdf-chat.tags" . | nindent 6 }}
+  providerConfigRef:
+    name: {{ .Values.aws.providerConfigName }}

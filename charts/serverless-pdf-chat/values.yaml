@@ -134,6 +134,21 @@ aws:
         memorySize: 512
         repository: "generate-response"
         tag: null
+  
+  apigateway:
+    api:
+      name: null
+      corsConfiguration:
+        allowOrigins:
+          - "*"
+        allowMethods:
+          - "*"
+        allowHeaders:
+          - "*"
+        allowCredentials: true
+    stage:
+      name: "dev"
+      autoDeploy: true
         
 tags:
   environment: "dev"
