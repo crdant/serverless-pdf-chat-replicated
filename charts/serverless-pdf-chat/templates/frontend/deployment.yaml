@@ -24,7 +24,10 @@ spec:
         {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: frontend
     spec:
-      {{- with .Values.frontend.image.pullSecrets }}
+      {{- if .Values.aws.awsAccessKeyId }}
+      imagePullSecrets:
+        - name: {{ include "serverless-pdf-chat.fullname" . }}-ecr-credentials
+      {{- else if .Values.frontend.image.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
