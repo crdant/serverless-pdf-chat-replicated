@@ -42,6 +42,6 @@ spec:
       - s3:ObjectCreated:*
       filterPrefix: ""
       filterSuffix: ".pdf"
-      lambdaFunctionArn: '{{ include "serverless-pdf-chat.arn" (dict "service" "lambda" "region" .Values.aws.region "account" .Values.aws.accountId "resource" "function:" (include "serverless-pdf-chat.fullname" .) "-" $functionName) }}'
+      lambdaFunctionArn: {{ include "serverless-pdf-chat.arn" (dict "service" "lambda" "region" .Values.aws.region "account" .Values.aws.accountId "resource" (printf "function:%s-%s" (include "serverless-pdf-chat.fullname" .) $functionName)) }}
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
