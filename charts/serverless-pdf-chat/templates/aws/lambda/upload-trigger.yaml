@@ -21,3 +21,27 @@ spec:
     statementId: "AllowS3Invoke"
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
+
+---
+# S3 Bucket Notification Configuration
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketNotification
+metadata:
+  name: {{ include "serverless-pdf-chat.fullname" . }}-{{ $functionName }}-notification
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+spec:
+  forProvider:
+    region: {{ .Values.aws.region }}
+    bucketSelector:
+      matchLabels:
+        {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
+        bucket: {{ include "serverless-pdf-chat.fullname" . }}-bucket
+    lambdaFunction:
+      - events:
+          - s3:ObjectCreated:*
+        filterPrefix: ""
+        filterSuffix: ".pdf"
+        lambdaFunctionArn: {{ include "serverless-pdf-chat.arn" (dict "service" "lambda" "region" .Values.aws.region "account" .Values.aws.accountId "resource" "function:" (include "serverless-pdf-chat.fullname" .) "-" $functionName) }}
+  providerConfigRef:
+    name: {{ .Values.aws.providerConfigName }}
