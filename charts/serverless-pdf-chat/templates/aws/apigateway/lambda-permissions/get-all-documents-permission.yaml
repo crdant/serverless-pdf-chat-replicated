@@ -14,5 +14,8 @@ spec:
         function: {{ include "serverless-pdf-chat.fullname" . }}-get-all-documents
     principal: apigateway.amazonaws.com
     sourceArn: "arn:aws:execute-api:{{ .Values.aws.region }}:{{ .Values.aws.accountId }}:*/*"
+    tags:
+      Name: {{ include "serverless-pdf-chat.fullname" . }}-get-all-documents-permission
+      {{- include "serverless-pdf-chat.tags" . | nindent 6 }}
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
