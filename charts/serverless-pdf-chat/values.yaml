@@ -6,7 +6,6 @@ global:
   environment: "dev"
 
 images:
-  registry: "{{ .Values.aws.accountId }}.dkr.ecr.{{ .Values.aws.region }}.amazonaws.com"  # ECR registry
   repository: "serverless-pdf-chat"  # Repository name in ECR
   tag: null  # Will use Chart.AppVersion if null
   pullPolicy: "IfNotPresent"
@@ -21,6 +20,7 @@ frontend:
   enabled: true
   image:
     registry: null  # If null, will use global images.registry
+    # null this out to use the default repository - AI!
     repository: "serverless-pdf-chat-frontend"
     tag: null  # Will use Chart.AppVersion if null
     pullPolicy: "IfNotPresent"
