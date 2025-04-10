@@ -133,6 +133,7 @@ Generate the SQS embedding queue name
 Generate the frontend image reference
 */}}
 {{- define "serverless-pdf-chat.frontendImage" -}}
+# the registry should default to the pattern {aws.accountId}.dkr.ecr.{aws.region}.amazonaws.com - AI!
 {{- $registry := .Values.frontend.image.registry | default .Values.images.registry -}}
 {{- $repository := .Values.frontend.image.repository -}}
 {{- $tag := .Values.frontend.image.tag | default .Chart.AppVersion -}}
