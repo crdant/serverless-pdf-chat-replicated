@@ -33,7 +33,7 @@ DOCKER_REPO ?= serverless-pdf-chat
 
 # Cache Git information
 GIT_REMOTE := $(shell git remote get-url origin 2>/dev/null || echo "https://github.com/example/repo")
-GIT_HTTPS_URL := $(shell echo "$(GIT_REMOTE)" | sed -E 's|git@([^:]+):|https://\1/|g' | sed -E 's|\.git$$||' || echo "https://github.com/example/repo")
+GIT_HTTPS_URL := $(shell echo "$(GIT_REMOTE)" | sed -E 's|git@([^:]+):|https://\1/|g' | sed -E 's|\.git$$||g' || echo "https://github.com/example/repo")
 GIT_REVISION := $(shell git rev-parse HEAD 2>/dev/null || echo "unknown")
 
 # Use the chart appVersion as the default Docker tag
