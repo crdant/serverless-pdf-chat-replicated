@@ -46,7 +46,7 @@ DOCKERDIR := $(PROJECTDIR)/docker
 DOCKER_IMAGES := $(shell find $(DOCKERDIR) -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
 
 # Group all .PHONY targets
-.PHONY: charts manifests images ecr-login clean lint release $(addprefix docker-build-,$(DOCKER_IMAGES)) $(addprefix docker-push-,$(DOCKER_IMAGES)) $(addprefix create-ecr-repo-,$(DOCKER_IMAGES)) test-phony create-ecr-repo-frontend-direct
+.PHONY: charts manifests images ecr-login clean lint release 
 
 # ECR login target
 ecr-login:
@@ -64,13 +64,6 @@ create-ecr-repo-frontend-direct:
 	aws ecr create-repository --repository-name $(DOCKER_REPO)/frontend --region $(AWS_REGION) --no-cli-pager
 
 # ECR repository creation target
-create-ecr-repo-%:
-	@echo "Creating ECR repository for $*..."
-	@echo "DOCKER_REPO = $(DOCKER_REPO)"
-	@echo "AWS_REGION = $(AWS_REGION)"
-	aws ecr describe-repositories --repository-names $(DOCKER_REPO)/$* --region $(AWS_REGION) --no-cli-pager && \
-	echo "Repository $(DOCKER_REPO)/$* already exists" || \
-	aws ecr create-repository --repository-name $(DOCKER_REPO)/$* --region $(AWS_REGION) --no-cli-pager
 
 define make-manifest-target
 $(BUILDDIR)/$(notdir $1): $1 | $$(BUILDDIR)
@@ -89,8 +82,14 @@ endef
 $(foreach element,$(CHARTS),$(eval $(call make-chart-target,$(element))))
 
 # Define Docker build and push targets dynamically
-define make-docker-target
-docker-build-$1: create-ecr-repo-$1
+define make-image-target
+.PHONY: image-build-$1 image-push-$1 create-ecr-repo-$1
+create-ecr-repo-$1:
+	aws ecr describe-repositories --repository-names $(DOCKER_REPO)/$1 --region $(AWS_REGION) --no-cli-pager && \
+	echo "Repository $(DOCKER_REPO)/$1 already exists" || \
+	aws ecr create-repository --repository-name $(DOCKER_REPO)/$1 --region $(AWS_REGION) --no-cli-pager
+
+image-build-$1: create-ecr-repo-$1
 	@echo "Building Docker image: $1 with tag $(DOCKER_TAG)"
 	$(DOCKER_CMD) build \
 		--label org.opencontainers.image.source="$(GIT_HTTPS_URL)" \
@@ -104,16 +103,16 @@ docker-build-$1: create-ecr-repo-$1
 		-f $(DOCKERDIR)/$1/Dockerfile $(DOCKERDIR)/$1
 	@echo "Tagged image with $(DOCKER_TAG), $(MINOR_VERSION), and $(MAJOR_VERSION)"
 
-docker-push-$1: docker-build-$1 ecr-login
+image-push-$1: image-build-$1 ecr-login
 	@echo "Pushing Docker image: $1 with tags $(DOCKER_TAG), $(MINOR_VERSION), and $(MAJOR_VERSION)"
 	$(DOCKER_CMD) push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG)
 	$(DOCKER_CMD) push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MINOR_VERSION)
 	$(DOCKER_CMD) push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MAJOR_VERSION)
 
 # Add each image to the images target dependencies
-images:: docker-push-$1
+images:: image-push-$1
 endef
-$(foreach image,$(DOCKER_IMAGES),$(eval $(call make-docker-target,$(image))))
+$(foreach image,$(DOCKER_IMAGES),$(eval $(call make-image-target,$(image))))
 
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
