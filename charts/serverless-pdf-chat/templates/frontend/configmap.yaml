@@ -1,0 +1,14 @@
+{{- if .Values.frontend.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "serverless-pdf-chat.fullname" . }}-frontend-config
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+    app.kubernetes.io/component: frontend
+data:
+  apiEndpoint: {{ .Values.frontend.config.apiEndpoint | default (printf "https://%s/%s" .Values.aws.apigateway.api.name .Values.aws.apigateway.stage.name) | quote }}
+  region: {{ .Values.frontend.config.region | default .Values.application.config.region | quote }}
+  userPoolId: {{ .Values.frontend.config.userPoolId | default .Values.aws.cognito.userPool.name | quote }}
+  userPoolClientId: {{ .Values.frontend.config.userPoolClientId | default .Values.aws.cognito.userPoolClient.name | quote }}
+{{- end }}
