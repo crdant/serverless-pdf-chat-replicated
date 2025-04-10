@@ -1,0 +1,102 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: frontendconfigs.serverlesspdfchat.shortrib.io
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "5"  # Run after wait-ready-job (weight 0)
+spec:
+  group: serverlesspdfchat.shortrib.io
+  names:
+    kind: FrontendConfig
+    plural: frontendconfigs
+  claimNames:
+    kind: FrontendConfigClaim
+    plural: frontendconfigclaims
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                region:
+                  type: string
+                  description: "AWS region"
+                providerConfigRef:
+                  type: object
+                  description: "Reference to the provider configuration"
+                  properties:
+                    name:
+                      type: string
+                apiGatewaySelector:
+                  type: object
+                  description: "Selector for the API Gateway API"
+                  properties:
+                    matchLabels:
+                      type: object
+                      additionalProperties:
+                        type: string
+                cognitoUserPoolSelector:
+                  type: object
+                  description: "Selector for the Cognito User Pool"
+                  properties:
+                    matchLabels:
+                      type: object
+                      additionalProperties:
+                        type: string
+                cognitoUserPoolClientSelector:
+                  type: object
+                  description: "Selector for the Cognito User Pool Client"
+                  properties:
+                    matchLabels:
+                      type: object
+                      additionalProperties:
+                        type: string
+                configMapName:
+                  type: string
+                  description: "Name for the generated ConfigMap"
+              required:
+                - region
+                - apiGatewaySelector
+                - cognitoUserPoolSelector
+                - cognitoUserPoolClientSelector
+                - configMapName
+            status:
+              type: object
+              properties:
+                configMap:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: "Name of the generated ConfigMap"
+                    namespace:
+                      type: string
+                      description: "Namespace of the generated ConfigMap"
+                apiGateway:
+                  type: object
+                  properties:
+                    endpoint:
+                      type: string
+                      description: "API Gateway endpoint URL"
+                cognito:
+                  type: object
+                  properties:
+                    userPool:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: "Cognito User Pool ID"
+                    userPoolClient:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: "Cognito User Pool Client ID"
+              x-kubernetes-preserve-unknown-fields: true
