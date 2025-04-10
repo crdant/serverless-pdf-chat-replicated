@@ -17,7 +17,7 @@ spec:
     integrationUriSelector:
       matchControllerRef: true
       matchLabels:
-        function: {{ include "serverless-pdf-chat.fullname" . }}-generate-presigned-url-function
+        function: {{ include "serverless-pdf-chat.fullname" . }}-generate-presigned-url
     payloadFormatVersion: "2.0"
     connectionType: INTERNET
   providerConfigRef:

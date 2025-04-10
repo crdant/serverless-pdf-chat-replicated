@@ -11,7 +11,7 @@ spec:
     functionNameSelector:
       matchLabels:
         {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
-        function: {{ include "serverless-pdf-chat.fullname" . }}-generate-presigned-url-function
+        function: {{ include "serverless-pdf-chat.fullname" . }}-generate-presigned-url
     principal: apigateway.amazonaws.com
     sourceArn: "arn:aws:execute-api:{{ .Values.aws.region }}:{{ .Values.aws.accountId }}:*/*"
   providerConfigRef:

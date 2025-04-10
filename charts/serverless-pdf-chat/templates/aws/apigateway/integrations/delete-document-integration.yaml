@@ -17,7 +17,7 @@ spec:
     integrationUriSelector:
       matchControllerRef: true
       matchLabels:
-        function: {{ include "serverless-pdf-chat.fullname" . }}-delete-document-function
+        function: {{ include "serverless-pdf-chat.fullname" . }}-delete-document
     payloadFormatVersion: "2.0"
     connectionType: INTERNET
   providerConfigRef:

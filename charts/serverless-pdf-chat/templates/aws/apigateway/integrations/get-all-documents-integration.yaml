@@ -17,7 +17,7 @@ spec:
     integrationUriSelector:
       matchControllerRef: true
       matchLabels:
-        function: {{ include "serverless-pdf-chat.fullname" . }}-get-all-documents-function
+        function: {{ include "serverless-pdf-chat.fullname" . }}-get-all-documents
     payloadFormatVersion: "2.0"
     connectionType: INTERNET
   providerConfigRef:
