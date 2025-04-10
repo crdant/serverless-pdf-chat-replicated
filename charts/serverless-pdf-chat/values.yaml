@@ -70,8 +70,7 @@ aws:
   region: "us-west-2"
   accountId: "123456789012"  # This should be replaced with the actual AWS account ID
   providerConfigName: "default"
-  accessKeyId: ""  # AWS access key ID for ECR authentication
-  secretAccessKey: ""  # AWS secret access key for ECR authentication
+  ecrAccessToken: ""  # ECR access token for authentication
   s3:
     corsEnabled: true
     versioning: true

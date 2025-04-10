@@ -52,6 +52,9 @@ DOCKER_IMAGES := $(shell find $(DOCKERDIR) -mindepth 1 -maxdepth 1 -type d -exec
 ecr-login:
 	@echo "Logging in to Amazon ECR..."
 	@aws ecr get-login-password --region $(AWS_REGION) | $(DOCKER_CMD) login --username AWS --password-stdin $(DOCKER_REGISTRY)
+	@echo "ECR access token generated. You can use this token in your Helm values:"
+	@echo "aws:"
+	@echo "  ecrAccessToken: \"$(shell aws ecr get-login-password --region $(AWS_REGION))\""
 
 # Test phony target
 test-phony:

@@ -152,7 +152,7 @@ Generate ECR auth config for Docker pull secrets
 */}}
 {{- define "serverless-pdf-chat.ecrAuthConfig" -}}
 {{- $registry := include "serverless-pdf-chat.frontendRegistry" . -}}
-{{- $auth := printf "%s:%s" .Values.aws.accessKeyId .Values.aws.secretAccessKey | b64enc -}}
-{{- $config := dict "auths" (dict $registry (dict "username" .Values.aws.accessKeyId "password" .Values.aws.secretAccessKey "auth" $auth)) -}}
+{{- $auth := printf "AWS:%s" .Values.aws.ecrAccessToken | b64enc -}}
+{{- $config := dict "auths" (dict $registry (dict "username" "AWS" "password" .Values.aws.ecrAccessToken "auth" $auth)) -}}
 {{- $config | toJson | b64enc -}}
 {{- end -}}
