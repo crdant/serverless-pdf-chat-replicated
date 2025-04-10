@@ -8,6 +8,7 @@ metadata:
   name: {{ include "serverless-pdf-chat.fullname" . }}-{{ .functionName }}
   labels:
     {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+    function: {{ include "serverless-pdf-chat.fullname" . }}-{{ .functionName }}
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
