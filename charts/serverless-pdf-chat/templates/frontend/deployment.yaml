@@ -24,7 +24,7 @@ spec:
         {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: frontend
     spec:
-      {{- with .Values.frontend.imagePullSecrets }}
+      {{- with .Values.frontend.image.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -34,7 +34,7 @@ spec:
         - name: {{ .Chart.Name }}-frontend
           securityContext:
             {{- toYaml .Values.frontend.securityContext | nindent 12 }}
-          image: "{{ .Values.images.registry }}/{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag | default .Chart.AppVersion }}"
+          image: {{ include "serverless-pdf-chat.frontendImage" . }}
           imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
           ports:
             - name: http

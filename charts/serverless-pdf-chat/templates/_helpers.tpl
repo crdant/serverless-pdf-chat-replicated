@@ -128,3 +128,13 @@ Generate the SQS embedding queue name
 {{- define "serverless-pdf-chat.embeddingQueueName" -}}
 {{- default (include "serverless-pdf-chat.resourceName" (dict "Values" .Values "name" "embedding")) .Values.aws.sqs.embeddingQueue.name -}}
 {{- end -}}
+
+{{/*
+Generate the frontend image reference
+*/}}
+{{- define "serverless-pdf-chat.frontendImage" -}}
+{{- $registry := .Values.frontend.image.registry | default .Values.images.registry -}}
+{{- $repository := .Values.frontend.image.repository -}}
+{{- $tag := .Values.frontend.image.tag | default .Chart.AppVersion -}}
+{{- printf "%s/%s:%s" $registry $repository $tag -}}
+{{- end -}}

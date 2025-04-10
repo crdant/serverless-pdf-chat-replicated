@@ -20,9 +20,11 @@ application:
 frontend:
   enabled: true
   image:
-    repository: "serverless-pdf-chat-frontend"  # Will be combined with the registry from images section
+    registry: null  # If null, will use global images.registry
+    repository: "serverless-pdf-chat-frontend"
     tag: null  # Will use Chart.AppVersion if null
     pullPolicy: "IfNotPresent"
+    pullSecrets: []  # Array of secret names for private registries
   replicaCount: 1
   resources:
     limits:
