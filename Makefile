@@ -32,9 +32,9 @@ DOCKER_REGISTRY ?= $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com
 DOCKER_REPO ?= serverless-pdf-chat
 
 # Cache Git information
-GIT_REMOTE := $(shell git remote get-url origin)
-GIT_HTTPS_URL := $(shell echo "$(GIT_REMOTE)" | sed -E 's|git@([^:]+):|https://\1/|g' | sed -E 's|\.git$$||')
-GIT_REVISION := $(shell git rev-parse HEAD)
+GIT_REMOTE := $(shell git remote get-url origin 2>/dev/null || echo "https://github.com/example/repo")
+GIT_HTTPS_URL := $(shell echo "$(GIT_REMOTE)" | sed -E 's|git@([^:]+):|https://\1/|g' | sed -E 's|\.git$$||' || echo "https://github.com/example/repo")
+GIT_REVISION := $(shell git rev-parse HEAD 2>/dev/null || echo "unknown")
 
 # Use the chart appVersion as the default Docker tag
 APP_VERSION := $(shell yq .appVersion $(CHARTDIR)/serverless-pdf-chat/Chart.yaml)
@@ -51,7 +51,7 @@ DOCKER_IMAGES := $(shell find $(DOCKERDIR) -mindepth 1 -maxdepth 1 -type d -exec
 # ECR login target
 ecr-login:
 	@echo "Logging in to Amazon ECR..."
-	aws ecr get-login-password --region $(AWS_REGION) | $(DOCKER_CMD) login --username AWS --password-stdin $(DOCKER_REGISTRY)
+	@aws ecr get-login-password --region $(AWS_REGION) | $(DOCKER_CMD) login --username AWS --password-stdin $(DOCKER_REGISTRY)
 
 # Test phony target
 test-phony:
