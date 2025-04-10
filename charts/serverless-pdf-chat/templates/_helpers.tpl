@@ -134,6 +134,7 @@ Generate the frontend image reference
 */}}
 {{- define "serverless-pdf-chat.frontendImage" -}}
 {{- $registry := .Values.frontend.image.registry | default (printf "%s.dkr.ecr.%s.amazonaws.com" .Values.aws.accountId .Values.aws.region) -}}
+# repository should default to ${chartName}/frontend - AI!
 {{- $repository := .Values.frontend.image.repository -}}
 {{- $tag := .Values.frontend.image.tag | default .Chart.AppVersion -}}
 {{- printf "%s/%s:%s" $registry $repository $tag -}}
