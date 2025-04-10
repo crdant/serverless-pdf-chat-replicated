@@ -167,6 +167,16 @@
           "description": "Name of the AWS provider configuration to use",
           "default": "default"
         },
+        "accessKeyId": {
+          "type": "string",
+          "description": "AWS access key ID for ECR authentication",
+          "default": ""
+        },
+        "secretAccessKey": {
+          "type": "string",
+          "description": "AWS secret access key for ECR authentication",
+          "default": ""
+        },
         "s3": {
           "type": "object",
           "properties": {
