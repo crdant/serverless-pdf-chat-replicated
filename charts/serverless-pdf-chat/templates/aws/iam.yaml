@@ -93,8 +93,5 @@ spec:
           }
         ]
       }
-    tags:
-      Name: {{ include "serverless-pdf-chat.fullname" . }}-lambda-policy
-      {{- include "serverless-pdf-chat.tags" . | nindent 6 }}
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
