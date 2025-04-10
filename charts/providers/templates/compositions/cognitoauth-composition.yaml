@@ -124,12 +124,10 @@ spec:
           fromFieldPath: "status.atProvider.id"
           toFieldPath: "status.userPoolClient.id"
       readinessChecks:
-        - type: MatchFields
-          matchFields:
-            - path: status.atProvider.id
-              required: true
-            - path: status.atProvider.endpoint
-              required: true
+        - type: NonEmpty
+          fieldPath: status.atProvider.id
+        - type: NonEmpty
+          fieldPath: status.atProvider.endpoint
       
     # Authorizer
     - name: authorizer
@@ -199,7 +197,5 @@ spec:
           policy:
             fromFieldPath: Required
       readinessChecks:
-        - type: MatchFields
-          matchFields:
-            - path: status.atProvider.id
-              required: true
+        - type: NonEmpty
+          fieldPath: status.atProvider.id
