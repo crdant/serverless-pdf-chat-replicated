@@ -13,9 +13,10 @@ spec:
         {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
         api: {{ include "serverless-pdf-chat.fullname" . }}-api
     integrationType: AWS_PROXY
+    integrationMethod: POST
     integrationUriSelector:
+      matchControllerRef: true
       matchLabels:
-        {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
         function: {{ include "serverless-pdf-chat.fullname" . }}-delete-document-function
     payloadFormatVersion: "2.0"
     connectionType: INTERNET
