@@ -23,7 +23,12 @@ frontend:
     repository: null  # If null, will use "{{ .Values.images.repository }}/frontend"
     tag: null  # Will use Chart.AppVersion if null
     pullPolicy: "IfNotPresent"
-    pullSecrets: []  # Array of secret names for private registries
+    pullSecrets: []  # Array of existing secret names for private registries
+    pullSecretData: []  # Data for creating pull secrets
+    # Example:
+    # pullSecretData:
+    # - name: my-registry-secret
+    #   dockerconfigjson: <base64-encoded-docker-config>
   replicaCount: 1
   resources:
     limits:
