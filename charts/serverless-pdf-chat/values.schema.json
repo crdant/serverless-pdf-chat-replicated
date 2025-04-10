@@ -756,25 +756,6 @@
               "items": {
                 "type": "string"
               }
-            },
-            "pullSecretData": {
-              "type": "array",
-              "description": "Data for creating pull secrets",
-              "default": [],
-              "items": {
-                "type": "object",
-                "required": ["name", "dockerconfigjson"],
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "Name of the pull secret"
-                  },
-                  "dockerconfigjson": {
-                    "type": "string",
-                    "description": "Base64-encoded Docker config JSON"
-                  }
-                }
-              }
             }
           }
         },
