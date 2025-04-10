@@ -108,6 +108,13 @@ $(BUILDDIR):
 clean:
 	rm -rf $(BUILDDIR)
 
+debug:
+	@echo "DOCKER_IMAGES = $(DOCKER_IMAGES)"
+	@echo "PHONY targets for create-ecr-repo = $(addprefix create-ecr-repo-,$(DOCKER_IMAGES))"
+	@echo "DOCKERDIR = $(DOCKERDIR)"
+	@echo "Find command output:"
+	@find $(DOCKERDIR) -mindepth 1 -maxdepth 1 -type d -exec basename {} \;
+
 lint: $(RELEASE_FILES) 
 	replicated release lint --yaml-dir $(BUILDDIR)
 
