@@ -78,7 +78,7 @@ spec:
           toFieldPath: "status.configMap.namespace"
           
         # Get API Gateway endpoint from selector and set in status
-        - type: Combine
+        - type: CombineFromComposite
           combine:
             variables:
               - fromFieldPath: "spec.apiGatewaySelector"
@@ -95,7 +95,7 @@ spec:
           toFieldPath: "spec.forProvider.manifest.data.apiEndpoint"
         
         # Get Cognito User Pool ID from selector and set in status
-        - type: Combine
+        - type: CombineFromComposite
           combine:
             variables:
               - fromFieldPath: "spec.cognitoUserPoolSelector"
@@ -112,7 +112,7 @@ spec:
           toFieldPath: "spec.forProvider.manifest.data.userPoolId"
         
         # Get Cognito User Pool Client ID from selector and set in status
-        - type: Combine
+        - type: CombineFromComposite
           combine:
             variables:
               - fromFieldPath: "spec.cognitoUserPoolClientSelector"
