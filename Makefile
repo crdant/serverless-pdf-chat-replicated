@@ -46,17 +46,30 @@ DOCKERDIR := $(PROJECTDIR)/docker
 DOCKER_IMAGES := $(shell find $(DOCKERDIR) -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
 
 # Group all .PHONY targets
-.PHONY: charts manifests images ecr-login clean lint release $(addprefix docker-build-,$(DOCKER_IMAGES)) $(addprefix docker-push-,$(DOCKER_IMAGES)) $(addprefix create-ecr-repo-,$(DOCKER_IMAGES))
+.PHONY: charts manifests images ecr-login clean lint release $(addprefix docker-build-,$(DOCKER_IMAGES)) $(addprefix docker-push-,$(DOCKER_IMAGES)) $(addprefix create-ecr-repo-,$(DOCKER_IMAGES)) test-phony create-ecr-repo-frontend-direct
 
 # ECR login target
 ecr-login:
 	@echo "Logging in to Amazon ECR..."
 	aws ecr get-login-password --region $(AWS_REGION) | $(DOCKER_CMD) login --username AWS --password-stdin $(DOCKER_REGISTRY)
 
+# Test phony target
+test-phony:
+	@echo "This is a test phony target"
+
+# Direct ECR repository creation for frontend
+create-ecr-repo-frontend-direct:
+	@echo "Creating ECR repository for frontend directly..."
+	aws ecr describe-repositories --repository-names $(DOCKER_REPO)/frontend --region $(AWS_REGION) --no-cli-pager || \
+	aws ecr create-repository --repository-name $(DOCKER_REPO)/frontend --region $(AWS_REGION) --no-cli-pager
+
 # ECR repository creation target
 create-ecr-repo-%:
 	@echo "Creating ECR repository for $*..."
-	aws ecr describe-repositories --repository-names $(DOCKER_REPO)/$* --region $(AWS_REGION) --no-cli-pager || \
+	@echo "DOCKER_REPO = $(DOCKER_REPO)"
+	@echo "AWS_REGION = $(AWS_REGION)"
+	aws ecr describe-repositories --repository-names $(DOCKER_REPO)/$* --region $(AWS_REGION) --no-cli-pager && \
+	echo "Repository $(DOCKER_REPO)/$* already exists" || \
 	aws ecr create-repository --repository-name $(DOCKER_REPO)/$* --region $(AWS_REGION) --no-cli-pager
 
 define make-manifest-target
