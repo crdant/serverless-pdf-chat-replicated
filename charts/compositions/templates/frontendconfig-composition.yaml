@@ -48,7 +48,7 @@ spec:
         # Apply the selector as labels for filtering
         - type: FromCompositeFieldPath
           fromFieldPath: "spec.apiGatewaySelector.matchLabels"
-          toFieldPath: "metadata.labels"
+          toFieldPath: "spec.forProvider.apiIdSelector.matchLabels"
           policy:
             mergeOptions:
               keepMapValues: true
@@ -90,8 +90,13 @@ spec:
           toFieldPath: "spec.forProvider.manifest.data.region"
         
         # Set the API endpoint from the API Gateway lookup
-        - type: FromCompositeFieldPath
-          fromFieldPath: "resources[apigateway-lookup].status.atProvider.apiEndpoint"
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "resources[apigateway-lookup].status.atProvider.apiEndpoint"
+            strategy: string
+            string:
+              fmt: "%s"
           toFieldPath: "spec.forProvider.manifest.data.apiEndpoint"
           policy:
             fromFieldPath: Optional
@@ -128,8 +133,6 @@ spec:
         - type: ToCompositeFieldPath
           fromFieldPath: "resources[apigateway-lookup].status.atProvider.apiEndpoint"
           toFieldPath: "status.apiEndpoint"
-          policy:
-            fromFieldPath: Optional
       readinessChecks:
         - type: MatchCondition
           matchCondition:
