@@ -1,0 +1,80 @@
+aws:
+  # AWS region where resources will be provisioned
+  region: "us-west-2"
+  # Name of the provider configuration
+  providerConfigName: "default"
+  # Default deployment runtime configuration
+  defaultDeploymentConfig:
+    # Resource limits for provider controllers
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+    # Security context for provider controllers
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 65532
+      runAsGroup: 65532
+  # Authentication settings for AWS
+  authentication:
+    # Method to authenticate with AWS (secret, irsa, or ec2)
+    method: "secret"
+    # Secret configuration when using secret authentication method
+    secret:
+      # Name of the secret containing AWS credentials
+      name: "aws-credentials"
+      # Namespace where the secret is located
+      namespace: "crossplane-system"
+      # Keys in the secret for AWS credentials
+      keys:
+        # Key for AWS access key ID
+        accessKeyId: "aws_access_key_id"
+        # Key for AWS secret access key
+        secretAccessKey: "aws_secret_access_key"
+  # AWS provider configurations
+  providers:
+    # Registry for all providers
+    registry: "xpkg.upbound.io/upbound"
+    iam:
+      package: "provider-aws-iam"
+      version: "v1.21.1"
+      controllerConfig: {}
+    s3:
+      package: "provider-aws-s3"
+      version: "v1.21.1"
+      controllerConfig: {}
+    dynamodb:
+      package: "provider-aws-dynamodb"
+      version: "v1.21.1"
+      controllerConfig: {}
+    lambda:
+      package: "provider-aws-lambda"
+      version: "v1.21.1"
+      controllerConfig: {}
+    sqs:
+      package: "provider-aws-sqs"
+      version: "v1.21.1"
+      controllerConfig: {}
+    apigatewayv2:
+      package: "provider-aws-apigatewayv2"
+      version: "v1.21.1"
+      controllerConfig: {}
+    cognitoidp:
+      package: "provider-aws-cognitoidp"
+      version: "v1.21.1"
+      controllerConfig: {}
+    bedrock:
+      package: "provider-aws-bedrock"
+      version: "v1.21.1"
+      controllerConfig: {}
+    cloudfront:
+      package: "provider-aws-cloudfront"
+      version: "v1.21.1"
+      controllerConfig: {}
+    secretsmanager:
+      package: "provider-aws-secretsmanager"
+      version: "v1.21.1"
+      controllerConfig: {}
