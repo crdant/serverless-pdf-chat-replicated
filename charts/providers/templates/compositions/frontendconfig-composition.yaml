@@ -34,3 +34,46 @@ spec:
                 userPoolClientId: "example-client-id"
           providerConfigRef:
             name: default
+      patches:
+        # Set the ConfigMap name from the spec
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.configMapName"
+          toFieldPath: "spec.forProvider.manifest.metadata.name"
+        
+        # Set the region
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.region"
+          toFieldPath: "spec.forProvider.manifest.data.region"
+        
+        # Patch the provider config name
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.providerConfigRef.name"
+          toFieldPath: "spec.providerConfigRef.name"
+          policy:
+            fromFieldPath: Optional
+        
+        # Patch labels from the composite resource
+        - type: FromCompositeFieldPath
+          fromFieldPath: "metadata.labels"
+          toFieldPath: "metadata.labels"
+          policy:
+            mergeOptions:
+              keepMapValues: true
+        
+        # Patch labels to the ConfigMap
+        - type: FromCompositeFieldPath
+          fromFieldPath: "metadata.labels"
+          toFieldPath: "spec.forProvider.manifest.metadata.labels"
+          policy:
+            mergeOptions:
+              keepMapValues: true
+        
+        # Store the ConfigMap reference in status
+        - type: ToCompositeFieldPath
+          fromFieldPath: "spec.forProvider.manifest.metadata.name"
+          toFieldPath: "status.configMapName"
+      readinessChecks:
+        - type: MatchCondition
+          matchCondition:
+            type: Ready
+            status: "True"
