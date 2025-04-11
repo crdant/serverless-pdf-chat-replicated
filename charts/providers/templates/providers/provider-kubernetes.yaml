@@ -3,7 +3,7 @@ kind: Provider
 metadata:
   name: {{ include "providers.fullname" . }}-kubernetes
 spec:
-  package: "crossplane/provider-kubernetes:v0.17.2"
+  package: "xpkg.upbound.io/upbound/provider-kubernetes:v0.17.2"
   packagePullPolicy: IfNotPresent
   revisionActivationPolicy: Automatic
   revisionHistoryLimit: 1
