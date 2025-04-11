@@ -14,7 +14,7 @@ spec:
   resources:
     - name: configmap
       base:
-        apiVersion: kubernetes.crossplane.io/v1alpha1
+        apiVersion: kubernetes.crossplane.io/v1alpha2
         kind: Object
         metadata:
           labels: {}
@@ -28,9 +28,9 @@ spec:
                 labels: {}
               data:
                 region: ""
-                apiEndpoint: ""
-                userPoolId: ""
-                userPoolClientId: ""
+                apiEndpoint: "https://example.com/api"
+                userPoolId: "us-west-2_example"
+                userPoolClientId: "example-client-id"
           providerConfigRef:
             name: default
       patches:
@@ -70,60 +70,4 @@ spec:
         # Store the ConfigMap reference in status
         - type: ToCompositeFieldPath
           fromFieldPath: "spec.forProvider.manifest.metadata.name"
-          toFieldPath: "status.configMap.name"
-        
-        # Store the ConfigMap namespace in status
-        - type: ToCompositeFieldPath
-          fromFieldPath: "status.atProvider.manifest.metadata.namespace"
-          toFieldPath: "status.configMap.namespace"
-          
-        # Get API Gateway endpoint from selector and set in status
-        - type: CombineFromComposite
-          combine:
-            variables:
-              - fromFieldPath: "spec.apiGatewaySelector"
-            strategy: string
-            string:
-              fmt: "%s"
-          toFieldPath: "status.apiGateway.endpoint"
-          policy:
-            fromFieldPath: Required
-        
-        # Set API Gateway endpoint in the ConfigMap
-        - type: FromCompositeFieldPath
-          fromFieldPath: "status.apiGateway.endpoint"
-          toFieldPath: "spec.forProvider.manifest.data.apiEndpoint"
-        
-        # Get Cognito User Pool ID from selector and set in status
-        - type: CombineFromComposite
-          combine:
-            variables:
-              - fromFieldPath: "spec.cognitoUserPoolSelector"
-            strategy: string
-            string:
-              fmt: "%s"
-          toFieldPath: "status.cognito.userPool.id"
-          policy:
-            fromFieldPath: Required
-        
-        # Set Cognito User Pool ID in the ConfigMap
-        - type: FromCompositeFieldPath
-          fromFieldPath: "status.cognito.userPool.id"
-          toFieldPath: "spec.forProvider.manifest.data.userPoolId"
-        
-        # Get Cognito User Pool Client ID from selector and set in status
-        - type: CombineFromComposite
-          combine:
-            variables:
-              - fromFieldPath: "spec.cognitoUserPoolClientSelector"
-            strategy: string
-            string:
-              fmt: "%s"
-          toFieldPath: "status.cognito.userPoolClient.id"
-          policy:
-            fromFieldPath: Required
-        
-        # Set Cognito User Pool Client ID in the ConfigMap
-        - type: FromCompositeFieldPath
-          fromFieldPath: "status.cognito.userPoolClient.id"
-          toFieldPath: "spec.forProvider.manifest.data.userPoolClientId"
+          toFieldPath: "status.configMapName"
