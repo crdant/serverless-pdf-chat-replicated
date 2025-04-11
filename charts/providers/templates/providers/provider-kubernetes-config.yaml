@@ -2,6 +2,10 @@ apiVersion: kubernetes.crossplane.io/v1alpha1
 kind: ProviderConfig
 metadata:
   name: default
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "1"  # Same as AWS provider config
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   credentials:
     source: InjectedIdentity
