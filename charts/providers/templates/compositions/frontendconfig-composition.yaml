@@ -25,6 +25,7 @@ spec:
               kind: ConfigMap
               metadata:
                 name: ""
+                namespace: "pdf-chat"
                 labels: {}
               data:
                 region: ""
