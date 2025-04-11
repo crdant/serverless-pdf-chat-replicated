@@ -69,34 +69,7 @@ spec:
             status:
               type: object
               properties:
-                configMap:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                      description: "Name of the generated ConfigMap"
-                    namespace:
-                      type: string
-                      description: "Namespace of the generated ConfigMap"
-                apiGateway:
-                  type: object
-                  properties:
-                    endpoint:
-                      type: string
-                      description: "API Gateway endpoint URL"
-                cognito:
-                  type: object
-                  properties:
-                    userPool:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          description: "Cognito User Pool ID"
-                    userPoolClient:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          description: "Cognito User Pool Client ID"
+                configMapName:
+                  type: string
+                  description: "Name of the generated ConfigMap"
               x-kubernetes-preserve-unknown-fields: true
