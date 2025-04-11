@@ -1,12 +1,6 @@
 Thank you for installing {{ .Chart.Name }}.
 
-AWS Crossplane providers have been successfully installed in your cluster.
-
-PROVIDER CONFIGURATION:
------------------------
-A ProviderConfig named "{{ .Values.aws.providerConfigName }}" has been created, 
-configured to use AWS credentials from the secret "{{ include "providers.secretName" . }}" 
-in the "{{ include "providers.secretNamespace" . }}" namespace.
+Crossplane providers have been successfully installed in your cluster.
 
 INSTALLED PROVIDERS:
 -------------------
@@ -15,29 +9,14 @@ INSTALLED PROVIDERS:
 - AWS {{ $key }} (version: {{ $value.version }})
 {{- end }}
 {{- end }}
+- Kubernetes (version: {{ .Values.kubernetes.provider.version }})
 
 NEXT STEPS:
 ----------
-1. You can now create AWS resources using Crossplane Custom Resources.
-   Example:
-
-   ```yaml
-   apiVersion: s3.aws.upbound.io/v1beta1
-   kind: Bucket
-   metadata:
-     name: my-example-bucket
-   spec:
-     forProvider:
-       region: {{ .Values.aws.region }}
-     providerConfigRef:
-       name: {{ .Values.aws.providerConfigName }}
-   ```
+1. Install the provider configurations chart to configure these providers.
 
 2. Check that all providers are properly installed:
    kubectl get providers
-
-3. Verify the provider configuration:
-   kubectl get providerconfig {{ .Values.aws.providerConfigName }}
 
 TROUBLESHOOTING:
 ---------------
@@ -51,6 +30,3 @@ If you encounter issues with the providers:
 
 3. Check provider controller logs:
    kubectl logs -n crossplane-system <provider-pod-name>
-
-4. Verify AWS credentials are correctly configured in the secret:
-   kubectl get secret {{ include "providers.secretName" . }} -n {{ include "providers.secretNamespace" . }}

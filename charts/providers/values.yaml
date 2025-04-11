@@ -1,8 +1,10 @@
+# Default values for crossplane-providers chart
+nameOverride: ""
+fullnameOverride: ""
+
 aws:
   # AWS region where resources will be provisioned
   region: "us-west-2"
-  # Name of the provider configuration
-  providerConfigName: "default"
   # Default deployment runtime configuration
   defaultDeploymentConfig:
     # Resource limits for provider controllers
@@ -18,22 +20,6 @@ aws:
       runAsNonRoot: true
       runAsUser: 65532
       runAsGroup: 65532
-  # Authentication settings for AWS
-  authentication:
-    # Method to authenticate with AWS (secret, irsa, or ec2)
-    method: "secret"
-    # Secret configuration when using secret authentication method
-    secret:
-      # Name of the secret containing AWS credentials
-      name: "aws-credentials"
-      # Namespace where the secret is located
-      namespace: "crossplane-system"
-      # Keys in the secret for AWS credentials
-      keys:
-        # Key for AWS access key ID
-        accessKeyId: "aws_access_key_id"
-        # Key for AWS secret access key
-        secretAccessKey: "aws_secret_access_key"
   # AWS provider configurations
   providers:
     # Registry for all providers
@@ -78,3 +64,8 @@ aws:
       package: "provider-aws-secretsmanager"
       version: "v1.21.1"
       controllerConfig: {}
+
+kubernetes:
+  provider:
+    version: "v0.17.2"
+    registry: "xpkg.upbound.io/upbound"

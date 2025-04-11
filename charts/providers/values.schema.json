@@ -2,6 +2,14 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the name of the chart"
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override the full name of the chart"
+    },
     "aws": {
       "type": "object",
       "properties": {
@@ -9,11 +17,6 @@
           "type": "string",
           "description": "AWS region where resources will be provisioned",
           "default": "us-west-2"
-        },
-        "providerConfigName": {
-          "type": "string",
-          "description": "Name of the provider configuration",
-          "default": "default"
         },
         "defaultDeploymentConfig": {
           "type": "object",
@@ -70,47 +73,6 @@
                   "type": "integer",
                   "description": "Group ID to run provider controllers",
                   "default": 65532
-                }
-              }
-            }
-          }
-        },
-        "authentication": {
-          "type": "object",
-          "properties": {
-            "method": {
-              "type": "string",
-              "description": "Method to authenticate with AWS (secret, irsa, or ec2)",
-              "enum": ["secret", "irsa", "ec2"],
-              "default": "secret"
-            },
-            "secret": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "description": "Name of the secret containing AWS credentials",
-                  "default": "aws-credentials"
-                },
-                "namespace": {
-                  "type": "string",
-                  "description": "Namespace where the secret is located",
-                  "default": "crossplane-system"
-                },
-                "keys": {
-                  "type": "object",
-                  "properties": {
-                    "accessKeyId": {
-                      "type": "string",
-                      "description": "Key for AWS access key ID",
-                      "default": "aws_access_key_id"
-                    },
-                    "secretAccessKey": {
-                      "type": "string",
-                      "description": "Key for AWS secret access key",
-                      "default": "aws_secret_access_key"
-                    }
-                  }
                 }
               }
             }
@@ -313,6 +275,26 @@
                   "description": "Controller configuration for the Secrets Manager provider"
                 }
               }
+            }
+          }
+        }
+      }
+    },
+    "kubernetes": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "object",
+          "properties": {
+            "version": {
+              "type": "string",
+              "description": "Version of the Kubernetes provider",
+              "default": "v0.17.2"
+            },
+            "registry": {
+              "type": "string",
+              "description": "Registry for the Kubernetes provider",
+              "default": "xpkg.upbound.io/upbound"
             }
           }
         }
