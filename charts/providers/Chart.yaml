@@ -2,5 +2,5 @@ apiVersion: v2
 name: providers
 description: A Helm chart for AWS Crossplane providers used in the Serverless PDF Chat application
 type: application
-version: 0.7.1  # Bumped from 0.7.0 to 0.7.1 for fixing FrontendConfig Composition
+version: 0.8.0  # Bumped from 0.7.1 to 0.8.0 for adding Kubernetes provider
 appVersion: "1.0.0"
