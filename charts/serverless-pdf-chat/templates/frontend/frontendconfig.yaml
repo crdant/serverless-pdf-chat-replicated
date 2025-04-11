@@ -12,15 +12,15 @@ spec:
     name: {{ .Values.aws.providerConfigName }}
   apiGatewaySelector:
     matchLabels:
+      api: {{ include "serverless-pdf-chat.fullname" . }}-api
       app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/component: apigateway
   cognitoUserPoolSelector:
     matchLabels:
+      crossplane.io/composite: {{ include "serverless-pdf-chat.fullname" . }}-cognitoauth
       app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/component: cognito-userpool
   cognitoUserPoolClientSelector:
     matchLabels:
+      crossplane.io/composite: {{ include "serverless-pdf-chat.fullname" . }}-cognitoauth
       app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/component: cognito-userpoolclient
   configMapName: {{ include "serverless-pdf-chat.fullname" . }}-frontend-config
 {{- end }}
