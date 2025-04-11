@@ -1,7 +1,11 @@
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: provider-kubernetes
+  name: {{ include "providers.fullname" . }}-kubernetes
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "1"  # Same as AWS provider config
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   package: "crossplane/provider-kubernetes:v0.17.2"
   packagePullPolicy: IfNotPresent
