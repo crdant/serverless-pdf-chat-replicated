@@ -23,7 +23,7 @@ spec:
         - |
           echo "Waiting for all providers to be ready..."
           
-          # Wait for all providers to be ready
+          # Wait for all AWS providers to be ready
           {{- range $key, $value := .Values.aws.providers }}
           {{- if ne $key "registry" }}
           echo "Waiting for provider {{ include "providers.fullname" $ }}-aws-{{ $key }} to be ready..."
@@ -34,6 +34,14 @@ spec:
           fi
           {{- end }}
           {{- end }}
+          
+          # Wait for Kubernetes provider to be ready
+          echo "Waiting for provider {{ include "providers.fullname" $ }}-kubernetes to be ready..."
+          kubectl wait --for=condition=Healthy provider.pkg.crossplane.io/{{ include "providers.fullname" $ }}-kubernetes --timeout=300s
+          if [ $? -ne 0 ]; then
+            echo "Provider {{ include "providers.fullname" $ }}-kubernetes failed to become ready within timeout"
+            exit 1
+          fi
           
           echo "All providers are ready!"
 ---
