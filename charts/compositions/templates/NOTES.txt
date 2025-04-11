@@ -1,0 +1,60 @@
+Thank you for installing {{ .Chart.Name }}.
+
+INSTALLED COMPOSITIONS:
+----------------------
+The following Composite Resource Definitions (XRDs) and Compositions have been installed:
+
+- CognitoAuth XRD and Composition
+- FrontendConfig XRD and Composition
+
+USAGE:
+------
+You can now create instances of these composite resources:
+
+1. CognitoAuth example:
+   ```yaml
+   apiVersion: serverlesspdfchat.shortrib.io/v1alpha1
+   kind: CognitoAuth
+   metadata:
+     name: example-auth
+   spec:
+     region: {{ .Values.aws.region }}
+     providerConfigRef:
+       name: {{ .Values.aws.providerConfigName }}
+     apiIdSelector:
+       matchLabels:
+         api: example-api
+     userPoolName: example-user-pool
+     userPoolClientName: example-client
+     authorizerName: example-authorizer
+   ```
+
+2. FrontendConfig example:
+   ```yaml
+   apiVersion: serverlesspdfchat.shortrib.io/v1alpha1
+   kind: FrontendConfig
+   metadata:
+     name: example-frontend-config
+   spec:
+     region: {{ .Values.aws.region }}
+     providerConfigRef:
+       name: {{ .Values.aws.providerConfigName }}
+     apiGatewaySelector:
+       matchLabels:
+         api: example-api
+     cognitoUserPoolSelector:
+       matchLabels:
+         crossplane.io/composite: example-auth
+     cognitoUserPoolClientSelector:
+       matchLabels:
+         crossplane.io/composite: example-auth
+     configMapName: frontend-config
+   ```
+
+VERIFICATION:
+------------
+To verify the installation, run:
+  kubectl get xrd,composition
+
+To check the status of your composite resources:
+  kubectl get cognitoauth,frontendconfig
