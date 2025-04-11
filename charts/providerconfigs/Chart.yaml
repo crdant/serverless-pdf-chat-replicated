@@ -2,5 +2,5 @@ apiVersion: v2
 name: providerconfigs
 description: A Helm chart for configuring Crossplane providers with AWS and Kubernetes credentials
 type: application
-version: 0.1.0  # Starting with 0.1.0 for the new chart
+version: 0.1.1  # Bumped from 0.1.0 to 0.1.1
 appVersion: "1.0.0"
