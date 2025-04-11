@@ -17,11 +17,21 @@ spec:
       base:
         apiVersion: apigatewayv2.aws.upbound.io/v1beta1
         kind: API
+        metadata:
+          annotations:
+            crossplane.io/external-create: "false"
+            crossplane.io/external-delete: "false"
         spec:
           forProvider:
             region: ""
+            # Add required fields with dummy values
+            name: "lookup-only"
+            protocolType: "HTTP"
           providerConfigRef:
             name: default
+          # Add management policies to prevent creation/deletion
+          managementPolicies:
+            - Observe
       patches:
         # Set the region
         - type: FromCompositeFieldPath
