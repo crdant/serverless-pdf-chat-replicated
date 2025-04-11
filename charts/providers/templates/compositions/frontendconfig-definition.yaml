@@ -72,4 +72,7 @@ spec:
                 configMapName:
                   type: string
                   description: "Name of the generated ConfigMap"
+                apiEndpoint:
+                  type: string
+                  description: "API Gateway endpoint URL"
               x-kubernetes-preserve-unknown-fields: true

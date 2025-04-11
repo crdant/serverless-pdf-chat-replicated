@@ -12,6 +12,40 @@ spec:
     apiVersion: serverlesspdfchat.shortrib.io/v1alpha1
     kind: FrontendConfig
   resources:
+    # First, add a resource to look up the API Gateway
+    - name: apigateway-lookup
+      base:
+        apiVersion: apigatewayv2.aws.upbound.io/v1beta1
+        kind: API
+        spec:
+          forProvider:
+            region: ""
+          providerConfigRef:
+            name: default
+      patches:
+        # Set the region
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.region"
+          toFieldPath: "spec.forProvider.region"
+        
+        # Set the provider config name
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.providerConfigRef.name"
+          toFieldPath: "spec.providerConfigRef.name"
+          policy:
+            fromFieldPath: Optional
+        
+        # Apply the selector as labels for filtering
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.apiGatewaySelector.matchLabels"
+          toFieldPath: "metadata.labels"
+          policy:
+            mergeOptions:
+              keepMapValues: true
+      readinessChecks:
+        - type: None  # We're just using this for lookup, not creation
+    
+    # Now, the ConfigMap resource
     - name: configmap
       base:
         apiVersion: kubernetes.crossplane.io/v1alpha2
@@ -29,7 +63,7 @@ spec:
                 labels: {}
               data:
                 region: ""
-                apiEndpoint: "https://example.com/api"
+                apiEndpoint: ""  # Will be set dynamically now
                 userPoolId: "us-west-2_example"
                 userPoolClientId: "example-client-id"
           providerConfigRef:
@@ -44,6 +78,13 @@ spec:
         - type: FromCompositeFieldPath
           fromFieldPath: "spec.region"
           toFieldPath: "spec.forProvider.manifest.data.region"
+        
+        # Set the API endpoint from the API Gateway lookup
+        - type: FromCompositeFieldPath
+          fromFieldPath: "resources[apigateway-lookup].status.atProvider.apiEndpoint"
+          toFieldPath: "spec.forProvider.manifest.data.apiEndpoint"
+          policy:
+            fromFieldPath: Optional
         
         # Patch the provider config name
         - type: FromCompositeFieldPath
@@ -72,6 +113,13 @@ spec:
         - type: ToCompositeFieldPath
           fromFieldPath: "spec.forProvider.manifest.metadata.name"
           toFieldPath: "status.configMapName"
+        
+        # Store the API endpoint in status
+        - type: ToCompositeFieldPath
+          fromFieldPath: "resources[apigateway-lookup].status.atProvider.apiEndpoint"
+          toFieldPath: "status.apiEndpoint"
+          policy:
+            fromFieldPath: Optional
       readinessChecks:
         - type: MatchCondition
           matchCondition:
