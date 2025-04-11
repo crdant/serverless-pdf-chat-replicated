@@ -7,3 +7,4 @@ metadata:
 spec:
   credentials:
     source: {{ .Values.kubernetes.authentication.source }}
+  # No region field for Kubernetes provider
