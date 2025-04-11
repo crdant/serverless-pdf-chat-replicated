@@ -1,6 +1,6 @@
 apiVersion: v2
-name: providers
-description: A Helm chart for AWS Crossplane providers used in the Serverless PDF Chat application
+name: composite-resources
+description: A Helm chart for Crossplane Composite Resource Definitions and Compositions
 type: application
-version: 0.8.8  # Bumped from 0.8.7 to 0.8.8 for fixing API Gateway lookup in FrontendConfig composition
+version: 0.1.0
 appVersion: "1.0.0"
