@@ -1,0 +1,26 @@
+{{- if .Values.frontend.enabled }}
+apiVersion: serverlesspdfchat.shortrib.io/v1alpha1
+kind: FrontendConfig
+metadata:
+  name: {{ include "serverless-pdf-chat.fullname" . }}
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+    app.kubernetes.io/component: frontend
+spec:
+  region: {{ .Values.application.config.region }}
+  providerConfigRef:
+    name: {{ .Values.aws.providerConfigName }}
+  apiGatewaySelector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: apigateway
+  cognitoUserPoolSelector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: cognito-userpool
+  cognitoUserPoolClientSelector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: cognito-userpoolclient
+  configMapName: {{ include "serverless-pdf-chat.fullname" . }}-frontend-config
+{{- end }}
