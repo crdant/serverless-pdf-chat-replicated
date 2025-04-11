@@ -1,7 +1,9 @@
 apiVersion: kubernetes.crossplane.io/v1alpha1
 kind: ProviderConfig
 metadata:
-  name: default
+  name: {{ .Values.kubernetes.providerConfigName }}
+  labels:
+    {{- include "providerconfigs.labels" . | nindent 4 }}
 spec:
   credentials:
-    source: InjectedIdentity
+    source: {{ .Values.kubernetes.authentication.source }}

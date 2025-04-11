@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "providers.name" -}}
+{{- define "providerconfigs.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "providers.fullname" -}}
+{{- define "providerconfigs.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "providers.chart" -}}
+{{- define "providerconfigs.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "providers.labels" -}}
-helm.sh/chart: {{ include "providers.chart" . }}
-{{ include "providers.selectorLabels" . }}
+{{- define "providerconfigs.labels" -}}
+helm.sh/chart: {{ include "providerconfigs.chart" . }}
+{{ include "providerconfigs.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,43 +45,28 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "providers.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "providers.name" . }}
+{{- define "providerconfigs.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "providerconfigs.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Get the credentials secret name
 */}}
-{{- define "providers.secretName" -}}
+{{- define "providerconfigs.secretName" -}}
 {{- .Values.aws.authentication.secret.name }}
 {{- end }}
 
 {{/*
 Get the credentials secret namespace
 */}}
-{{- define "providers.secretNamespace" -}}
+{{- define "providerconfigs.secretNamespace" -}}
 {{- .Values.aws.authentication.secret.namespace }}
 {{- end }}
 
 {{/*
 Get the credentials secret key
 */}}
-{{- define "providers.secretKey" -}}
+{{- define "providerconfigs.secretKey" -}}
 {{- "creds" }}
-{{- end }}
-
-{{/*
-Get the runtime config name
-*/}}
-{{- define "providers.runtimeConfigName" -}}
-default
-{{- end }}
-
-{{/*
-Get the provider package URL
-*/}}
-{{- define "providers.packageUrl" -}}
-{{- $provider := index .Values.aws.providers .providerName -}}
-{{- printf "%s/%s:%s" .Values.aws.providers.registry $provider.package $provider.version -}}
 {{- end }}

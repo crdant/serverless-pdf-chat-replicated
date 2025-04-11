@@ -2,13 +2,15 @@ apiVersion: aws.upbound.io/v1beta1
 kind: ProviderConfig
 metadata:
   name: {{ .Values.aws.providerConfigName }}
+  labels:
+    {{- include "providerconfigs.labels" . | nindent 4 }}
 spec:
   credentials:
     source: {{ .Values.aws.authentication.method | title }}
     {{- if eq .Values.aws.authentication.method "secret" }}
     secretRef:
-      namespace: {{ include "providers.secretNamespace" . }}
-      name: {{ include "providers.secretName" . }}
-      key: {{ include "providers.secretKey" . }}
+      namespace: {{ include "providerconfigs.secretNamespace" . }}
+      name: {{ include "providerconfigs.secretName" . }}
+      key: {{ include "providerconfigs.secretKey" . }}
     {{- end }}
   region: {{ .Values.aws.region }}
