@@ -24,8 +24,10 @@ spec:
         spec:
           forProvider:
             region: ""
-            # Add required fields with dummy values
-            name: "lookup-only"
+            # Use nameSelector instead of a dummy name
+            nameSelector:
+              matchLabels:
+                api: serverless-pdf-chat-api
             protocolType: "HTTP"
           providerConfigRef:
             name: default
