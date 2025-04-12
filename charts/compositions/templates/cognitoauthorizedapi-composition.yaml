@@ -81,6 +81,17 @@ spec:
           policy:
             mergeOptions:
               keepMapValues: true
+        # Add Authorizer label for route selection
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "metadata.name"
+            strategy: string
+            string:
+              fmt: "%s-authorizer"
+          toFieldPath: "metadata.labels.Authorizer"
+          policy:
+            fromFieldPath: Optional
         # Store API endpoint in status
         - type: ToCompositeFieldPath
           fromFieldPath: "status.atProvider.apiEndpoint"
