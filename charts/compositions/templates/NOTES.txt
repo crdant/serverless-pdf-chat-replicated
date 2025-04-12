@@ -2,77 +2,36 @@ Thank you for installing {{ .Chart.Name }}.
 
 INSTALLED COMPOSITIONS:
 ----------------------
-The following Composite Resource Definitions (XRDs) and Compositions have been installed:
+The following Composite Resource Definition (XRD) and Composition have been installed:
 
-- CognitoAuth XRD and Composition
-- FrontendConfig XRD and Composition
 - CognitoAuthorizedAPI XRD and Composition
 
 USAGE:
 ------
-You can now create instances of these composite resources:
+You can now create instances of this composite resource:
 
-1. CognitoAuth example:
-   ```yaml
-   apiVersion: serverlesspdfchat.shortrib.io/v1alpha1
-   kind: CognitoAuth
-   metadata:
-     name: example-auth
-   spec:
-     region: {{ .Values.aws.region }}
-     providerConfigRef:
-       name: {{ .Values.aws.providerConfigName }}
-     apiIdSelector:
-       matchLabels:
-         api: example-api
-     userPoolName: example-user-pool
-     userPoolClientName: example-client
-     authorizerName: example-authorizer
-   ```
-
-2. FrontendConfig example:
-   ```yaml
-   apiVersion: serverlesspdfchat.shortrib.io/v1alpha1
-   kind: FrontendConfig
-   metadata:
-     name: example-frontend-config
-   spec:
-     region: {{ .Values.aws.region }}
-     providerConfigRef:
-       name: {{ .Values.aws.providerConfigName }}
-     apiGatewaySelector:
-       matchLabels:
-         api: example-api
-     cognitoUserPoolSelector:
-       matchLabels:
-         crossplane.io/composite: example-auth
-     cognitoUserPoolClientSelector:
-       matchLabels:
-         crossplane.io/composite: example-auth
-     configMapName: frontend-config
-   ```
-
-3. CognitoAuthorizedAPI example (recommended):
-   ```yaml
-   apiVersion: serverlesspdfchat.shortrib.io/v1alpha1
-   kind: CognitoAuthorizedAPI
-   metadata:
-     name: serverless-pdf-chat
-     labels:
-       app.kubernetes.io/instance: serverless-pdf-chat
-       app.kubernetes.io/name: serverless-pdf-chat
-   spec:
-     region: {{ .Values.aws.region }}
-     providerConfigRef:
-       name: {{ .Values.aws.providerConfigName }}
-     configMapNamespace: pdf-chat
-     # Optional prefix/suffix for resource names
-     namePrefix: ""
-     nameSuffix: ""
-     tags:
-       Application: pdf-chat
-       Environment: dev
-   ```
+CognitoAuthorizedAPI example:
+```yaml
+apiVersion: serverlesspdfchat.shortrib.io/v1alpha1
+kind: CognitoAuthorizedAPI
+metadata:
+  name: serverless-pdf-chat
+  labels:
+    app.kubernetes.io/instance: serverless-pdf-chat
+    app.kubernetes.io/name: serverless-pdf-chat
+spec:
+  region: {{ .Values.aws.region }}
+  providerConfigRef:
+    name: {{ .Values.aws.providerConfigName }}
+  # Optional namespace for the ConfigMap (defaults to the resource's namespace)
+  configMapNamespace: pdf-chat
+  # Optional prefix/suffix for resource names
+  namePrefix: ""
+  nameSuffix: ""
+  tags:
+    Application: pdf-chat
+    Environment: dev
+```
 
 VERIFICATION:
 ------------
@@ -80,4 +39,4 @@ To verify the installation, run:
   kubectl get xrd,composition
 
 To check the status of your composite resources:
-  kubectl get cognitoauth,frontendconfig
+  kubectl get cognitoauthorizedapi
