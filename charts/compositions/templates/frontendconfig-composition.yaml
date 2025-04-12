@@ -48,7 +48,7 @@ spec:
         # Apply the selector as labels for filtering
         - type: FromCompositeFieldPath
           fromFieldPath: "spec.apiGatewaySelector.matchLabels"
-          toFieldPath: "spec.forProvider.apiIdSelector.matchLabels"
+          toFieldPath: "metadata.labels"
           policy:
             mergeOptions:
               keepMapValues: true
