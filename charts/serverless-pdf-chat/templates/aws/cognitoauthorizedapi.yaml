@@ -1,0 +1,17 @@
+apiVersion: serverlesspdfchat.shortrib.io/v1alpha1
+kind: CognitoAuthorizedAPI
+metadata:
+  name: {{ include "serverless-pdf-chat.fullname" . }}
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+spec:
+  region: {{ .Values.aws.region }}
+  providerConfigRef:
+    name: {{ .Values.aws.providerConfigName }}
+  configMapNamespace: {{ .Release.Namespace }}
+  tags:
+    {{- include "serverless-pdf-chat.commonTags" . | nindent 4 }}
+    {{- with .Values.tags }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
