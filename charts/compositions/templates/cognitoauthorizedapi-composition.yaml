@@ -48,7 +48,11 @@ spec:
               - fromFieldPath: "spec.nameSuffix"
                 policy:
                   fromFieldPath: Optional
-              - value: "-api"
+              - fromFieldPath: "metadata.name"
+                transforms:
+                  - type: string
+                    string:
+                      fmt: "-api"
             strategy: string
             string:
               fmt: "%s%s%s%s"
@@ -133,7 +137,11 @@ spec:
               - fromFieldPath: "spec.nameSuffix"
                 policy:
                   fromFieldPath: Optional
-              - value: "-user-pool"
+              - fromFieldPath: "metadata.name"
+                transforms:
+                  - type: string
+                    string:
+                      fmt: "-user-pool"
             strategy: string
             string:
               fmt: "%s%s%s%s"
@@ -194,7 +202,11 @@ spec:
               - fromFieldPath: "spec.nameSuffix"
                 policy:
                   fromFieldPath: Optional
-              - value: "-client"
+              - fromFieldPath: "metadata.name"
+                transforms:
+                  - type: string
+                    string:
+                      fmt: "-client"
             strategy: string
             string:
               fmt: "%s%s%s%s"
@@ -263,7 +275,11 @@ spec:
               - fromFieldPath: "spec.nameSuffix"
                 policy:
                   fromFieldPath: Optional
-              - value: "-authorizer"
+              - fromFieldPath: "metadata.name"
+                transforms:
+                  - type: string
+                    string:
+                      fmt: "-authorizer"
             strategy: string
             string:
               fmt: "%s%s%s%s"
@@ -348,7 +364,11 @@ spec:
               - fromFieldPath: "spec.nameSuffix"
                 policy:
                   fromFieldPath: Optional
-              - value: "-frontend-config"
+              - fromFieldPath: "metadata.name"
+                transforms:
+                  - type: string
+                    string:
+                      fmt: "-frontend-config"
             strategy: string
             string:
               fmt: "%s%s%s%s"
