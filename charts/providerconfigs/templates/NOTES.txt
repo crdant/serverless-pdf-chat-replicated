@@ -1,0 +1,36 @@
+Thank you for installing {{ .Chart.Name }}.
+
+PROVIDER CONFIGURATIONS:
+-----------------------
+The following provider configurations have been installed:
+
+- AWS Provider Configuration: {{ .Values.aws.providerConfigName }}
+  Region: {{ .Values.aws.region }}
+  Authentication Method: {{ .Values.aws.authentication.method }}
+
+- Kubernetes Provider Configuration: {{ .Values.kubernetes.providerConfigName }}
+  Authentication Source: {{ .Values.kubernetes.authentication.source }}
+
+{{- if eq .Values.aws.authentication.method "secret" }}
+A Kubernetes Secret has been created:
+  Name: {{ include "providerconfigs.secretName" . }}
+  Namespace: {{ include "providerconfigs.secretNamespace" . }}
+{{- end }}
+
+USAGE:
+------
+These provider configurations are used by Crossplane providers to authenticate with the respective cloud providers.
+
+The AWS provider configuration is used by the serverless-pdf-chat chart to provision AWS resources.
+The Kubernetes provider configuration is used for in-cluster resource management.
+
+VERIFICATION:
+------------
+To verify the installation, run:
+  kubectl get providerconfig
+
+To check the AWS provider configuration:
+  kubectl get providerconfig.aws.upbound.io {{ .Values.aws.providerConfigName }}
+
+To check the Kubernetes provider configuration:
+  kubectl get providerconfig.kubernetes.crossplane.io {{ .Values.kubernetes.providerConfigName }}
