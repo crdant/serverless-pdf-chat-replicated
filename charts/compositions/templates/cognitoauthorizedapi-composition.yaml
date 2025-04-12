@@ -48,8 +48,7 @@ spec:
               - fromFieldPath: "spec.nameSuffix"
                 policy:
                   fromFieldPath: Optional
-              - fromFieldPath: "literal"
-                value: "-api"
+              - value: "-api"
             strategy: string
             string:
               fmt: "%s%s%s%s"
@@ -134,8 +133,7 @@ spec:
               - fromFieldPath: "spec.nameSuffix"
                 policy:
                   fromFieldPath: Optional
-              - fromFieldPath: "literal"
-                value: "-user-pool"
+              - value: "-user-pool"
             strategy: string
             string:
               fmt: "%s%s%s%s"
@@ -196,8 +194,7 @@ spec:
               - fromFieldPath: "spec.nameSuffix"
                 policy:
                   fromFieldPath: Optional
-              - fromFieldPath: "literal"
-                value: "-client"
+              - value: "-client"
             strategy: string
             string:
               fmt: "%s%s%s%s"
@@ -266,8 +263,7 @@ spec:
               - fromFieldPath: "spec.nameSuffix"
                 policy:
                   fromFieldPath: Optional
-              - fromFieldPath: "literal"
-                value: "-authorizer"
+              - value: "-authorizer"
             strategy: string
             string:
               fmt: "%s%s%s%s"
@@ -352,8 +348,7 @@ spec:
               - fromFieldPath: "spec.nameSuffix"
                 policy:
                   fromFieldPath: Optional
-              - fromFieldPath: "literal"
-                value: "-frontend-config"
+              - value: "-frontend-config"
             strategy: string
             string:
               fmt: "%s%s%s%s"
