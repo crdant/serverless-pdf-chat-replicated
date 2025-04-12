@@ -82,7 +82,6 @@ spec:
             mergeOptions:
               keepMapValues: true
         # Add Authorizer label for route selection
-        # this doesn't seem to be applied, I only see the labels from the previous patch - AI!
         - type: CombineFromComposite
           combine:
             variables:
@@ -90,7 +89,7 @@ spec:
             strategy: string
             string:
               fmt: "%s-cognito-authorizer"
-          toFieldPath: "metadata.labels.authorizer"
+          toFieldPath: "metadata.labels.Authorizer"
           policy:
             fromFieldPath: Optional
         # Store API endpoint in status
