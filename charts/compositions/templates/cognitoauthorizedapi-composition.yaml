@@ -1,0 +1,334 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: cognitoauthorizedapis.serverlesspdfchat.shortrib.io
+  labels:
+    provider: aws
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "10"  # Run after XRD (weight 5)
+spec:
+  compositeTypeRef:
+    apiVersion: serverlesspdfchat.shortrib.io/v1alpha1
+    kind: CognitoAuthorizedAPI
+  resources:
+    # API Gateway
+    - name: apigateway
+      base:
+        apiVersion: apigatewayv2.aws.upbound.io/v1beta1
+        kind: API
+        metadata:
+          labels: {}
+        spec:
+          forProvider:
+            region: ""
+            name: ""
+            protocolType: "HTTP"
+            corsConfiguration:
+              - allowCredentials: false
+                allowHeaders:
+                  - "*"
+                allowMethods:
+                  - "*"
+                allowOrigins:
+                  - "*"
+            routeSelectionExpression: "$request.method $request.path"
+            tags: {}
+          providerConfigRef:
+            name: default
+      patches:
+        # Patch the API Gateway name
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.apiName"
+          toFieldPath: "spec.forProvider.name"
+        # Patch the region
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.region"
+          toFieldPath: "spec.forProvider.region"
+        # Patch the provider config
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.providerConfigRef.name"
+          toFieldPath: "spec.providerConfigRef.name"
+          policy:
+            fromFieldPath: Optional
+        # Patch tags
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.tags"
+          toFieldPath: "spec.forProvider.tags"
+          policy:
+            mergeOptions:
+              keepMapValues: true
+        # Patch labels
+        - type: FromCompositeFieldPath
+          fromFieldPath: "metadata.labels"
+          toFieldPath: "metadata.labels"
+          policy:
+            mergeOptions:
+              keepMapValues: true
+        # Store API endpoint in status
+        - type: ToCompositeFieldPath
+          fromFieldPath: "status.atProvider.apiEndpoint"
+          toFieldPath: "status.apiEndpoint"
+        # Store API ID in status
+        - type: ToCompositeFieldPath
+          fromFieldPath: "status.atProvider.id"
+          toFieldPath: "status.apiId"
+
+    # User Pool
+    - name: userpool
+      base:
+        apiVersion: cognitoidp.aws.upbound.io/v1beta1
+        kind: UserPool
+        metadata:
+          labels: {}
+        spec:
+          forProvider:
+            region: ""
+            name: ""
+            autoVerifiedAttributes:
+              - email
+            usernameAttributes:
+              - email
+            adminCreateUserConfig:
+              - allowAdminCreateUserOnly: true
+            passwordPolicy:
+              - minimumLength: 8
+                requireLowercase: true
+                requireNumbers: true
+                requireSymbols: true
+                requireUppercase: true
+            tags: {}
+          providerConfigRef:
+            name: default
+      patches:
+        # Patch the User Pool name
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.userPoolName"
+          toFieldPath: "spec.forProvider.name"
+        # Patch the region
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.region"
+          toFieldPath: "spec.forProvider.region"
+        # Patch the provider config
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.providerConfigRef.name"
+          toFieldPath: "spec.providerConfigRef.name"
+          policy:
+            fromFieldPath: Optional
+        # Patch tags
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.tags"
+          toFieldPath: "spec.forProvider.tags"
+          policy:
+            mergeOptions:
+              keepMapValues: true
+        # Patch labels
+        - type: FromCompositeFieldPath
+          fromFieldPath: "metadata.labels"
+          toFieldPath: "metadata.labels"
+          policy:
+            mergeOptions:
+              keepMapValues: true
+        # Store User Pool ID in status
+        - type: ToCompositeFieldPath
+          fromFieldPath: "status.atProvider.id"
+          toFieldPath: "status.userPoolId"
+
+    # User Pool Client
+    - name: userpoolclient
+      base:
+        apiVersion: cognitoidp.aws.upbound.io/v1beta1
+        kind: UserPoolClient
+        metadata:
+          labels: {}
+        spec:
+          forProvider:
+            region: ""
+            name: ""
+            generateSecret: false
+            userPoolId: ""
+          providerConfigRef:
+            name: default
+      patches:
+        # Patch the User Pool Client name
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.userPoolClientName"
+          toFieldPath: "spec.forProvider.name"
+        # Patch the region
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.region"
+          toFieldPath: "spec.forProvider.region"
+        # Patch the provider config
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.providerConfigRef.name"
+          toFieldPath: "spec.providerConfigRef.name"
+          policy:
+            fromFieldPath: Optional
+        # Patch labels
+        - type: FromCompositeFieldPath
+          fromFieldPath: "metadata.labels"
+          toFieldPath: "metadata.labels"
+          policy:
+            mergeOptions:
+              keepMapValues: true
+        # Reference the User Pool ID
+        - type: FromCompositeFieldPath
+          fromFieldPath: "status.userPoolId"
+          toFieldPath: "spec.forProvider.userPoolId"
+          policy:
+            fromFieldPath: Required
+        # Store User Pool Client ID in status
+        - type: ToCompositeFieldPath
+          fromFieldPath: "status.atProvider.id"
+          toFieldPath: "status.userPoolClientId"
+      readinessChecks:
+        - type: None
+        - type: NonEmpty
+          fieldPath: status.atProvider.id
+
+    # Authorizer
+    - name: authorizer
+      base:
+        apiVersion: apigatewayv2.aws.upbound.io/v1beta1
+        kind: Authorizer
+        metadata:
+          labels: {}
+        spec:
+          forProvider:
+            region: ""
+            name: ""
+            apiId: ""
+            authorizerType: JWT
+            identitySources:
+              - "$request.header.Authorization"
+            jwtConfiguration:
+              - audience: []
+                issuer: ""
+          providerConfigRef:
+            name: default
+      patches:
+        # Patch the Authorizer name
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.authorizerName"
+          toFieldPath: "spec.forProvider.name"
+        # Patch the region
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.region"
+          toFieldPath: "spec.forProvider.region"
+        # Patch the provider config
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.providerConfigRef.name"
+          toFieldPath: "spec.providerConfigRef.name"
+          policy:
+            fromFieldPath: Optional
+        # Patch labels
+        - type: FromCompositeFieldPath
+          fromFieldPath: "metadata.labels"
+          toFieldPath: "metadata.labels"
+          policy:
+            mergeOptions:
+              keepMapValues: true
+        # Reference the API ID
+        - type: FromCompositeFieldPath
+          fromFieldPath: "status.apiId"
+          toFieldPath: "spec.forProvider.apiId"
+          policy:
+            fromFieldPath: Required
+        # Reference the User Pool Client ID for the audience
+        - type: FromCompositeFieldPath
+          fromFieldPath: "status.userPoolClientId"
+          toFieldPath: "spec.forProvider.jwtConfiguration[0].audience[0]"
+          policy:
+            fromFieldPath: Required
+        # Construct the issuer URL using the User Pool ID and region
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "status.userPoolId"
+              - fromFieldPath: "spec.region"
+            strategy: string
+            string:
+              fmt: "https://cognito-idp.%s.amazonaws.com/%s"
+          toFieldPath: "spec.forProvider.jwtConfiguration[0].issuer"
+          policy:
+            fromFieldPath: Required
+      readinessChecks:
+        - type: NonEmpty
+          fieldPath: status.atProvider.id
+
+    # ConfigMap
+    - name: configmap
+      base:
+        apiVersion: kubernetes.crossplane.io/v1alpha2
+        kind: Object
+        metadata:
+          labels: {}
+        spec:
+          forProvider:
+            manifest:
+              apiVersion: v1
+              kind: ConfigMap
+              metadata:
+                name: ""
+                namespace: ""
+                labels: {}
+              data:
+                region: ""
+                apiEndpoint: ""
+                userPoolId: ""
+                userPoolClientId: ""
+          providerConfigRef:
+            name: default
+      patches:
+        # Patch the ConfigMap name
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.configMapName"
+          toFieldPath: "spec.forProvider.manifest.metadata.name"
+        # Patch the ConfigMap namespace
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.configMapNamespace"
+          toFieldPath: "spec.forProvider.manifest.metadata.namespace"
+        # Patch the region
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.region"
+          toFieldPath: "spec.forProvider.manifest.data.region"
+        # Patch the API endpoint
+        - type: FromCompositeFieldPath
+          fromFieldPath: "status.apiEndpoint"
+          toFieldPath: "spec.forProvider.manifest.data.apiEndpoint"
+          policy:
+            fromFieldPath: Required
+        # Patch the User Pool ID
+        - type: FromCompositeFieldPath
+          fromFieldPath: "status.userPoolId"
+          toFieldPath: "spec.forProvider.manifest.data.userPoolId"
+          policy:
+            fromFieldPath: Required
+        # Patch the User Pool Client ID
+        - type: FromCompositeFieldPath
+          fromFieldPath: "status.userPoolClientId"
+          toFieldPath: "spec.forProvider.manifest.data.userPoolClientId"
+          policy:
+            fromFieldPath: Required
+        # Patch the provider config
+        - type: FromCompositeFieldPath
+          fromFieldPath: "spec.providerConfigRef.name"
+          toFieldPath: "spec.providerConfigRef.name"
+          policy:
+            fromFieldPath: Optional
+        # Patch labels to the ConfigMap
+        - type: FromCompositeFieldPath
+          fromFieldPath: "metadata.labels"
+          toFieldPath: "spec.forProvider.manifest.metadata.labels"
+          policy:
+            mergeOptions:
+              keepMapValues: true
+        # Store the ConfigMap name in status
+        - type: ToCompositeFieldPath
+          fromFieldPath: "spec.forProvider.manifest.metadata.name"
+          toFieldPath: "status.configMapName"
+      readinessChecks:
+        - type: MatchCondition
+          matchCondition:
+            type: Ready
+            status: "True"

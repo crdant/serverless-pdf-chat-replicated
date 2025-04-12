@@ -1,0 +1,85 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: cognitoauthorizedapis.serverlesspdfchat.shortrib.io
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "5"  # Run after wait-ready-job (weight 0)
+spec:
+  group: serverlesspdfchat.shortrib.io
+  names:
+    kind: CognitoAuthorizedAPI
+    plural: cognitoauthorizedapis
+  claimNames:
+    kind: CognitoAuthorizedAPIClaim
+    plural: cognitoauthorizedapiclaims
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                region:
+                  type: string
+                  description: "AWS region"
+                providerConfigRef:
+                  type: object
+                  description: "Reference to the provider configuration"
+                  properties:
+                    name:
+                      type: string
+                apiName:
+                  type: string
+                  description: "Name of the API Gateway"
+                userPoolName:
+                  type: string
+                  description: "Name of the Cognito User Pool"
+                userPoolClientName:
+                  type: string
+                  description: "Name of the Cognito User Pool Client"
+                authorizerName:
+                  type: string
+                  description: "Name of the API Gateway Authorizer"
+                configMapName:
+                  type: string
+                  description: "Name for the generated ConfigMap"
+                configMapNamespace:
+                  type: string
+                  description: "Namespace for the generated ConfigMap"
+                  default: "pdf-chat"
+                tags:
+                  type: object
+                  description: "Tags to apply to all resources"
+                  additionalProperties:
+                    type: string
+              required:
+                - region
+                - apiName
+                - userPoolName
+                - userPoolClientName
+                - authorizerName
+                - configMapName
+            status:
+              type: object
+              properties:
+                apiEndpoint:
+                  type: string
+                  description: "API Gateway endpoint URL"
+                apiId:
+                  type: string
+                  description: "API Gateway ID"
+                userPoolId:
+                  type: string
+                  description: "ID of the Cognito User Pool"
+                userPoolClientId:
+                  type: string
+                  description: "ID of the Cognito User Pool Client"
+                configMapName:
+                  type: string
+                  description: "Name of the generated ConfigMap"
+              x-kubernetes-preserve-unknown-fields: true

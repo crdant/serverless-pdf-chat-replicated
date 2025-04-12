@@ -6,6 +6,7 @@ The following Composite Resource Definitions (XRDs) and Compositions have been i
 
 - CognitoAuth XRD and Composition
 - FrontendConfig XRD and Composition
+- CognitoAuthorizedAPI XRD and Composition
 
 USAGE:
 ------
@@ -49,6 +50,30 @@ You can now create instances of these composite resources:
        matchLabels:
          crossplane.io/composite: example-auth
      configMapName: frontend-config
+   ```
+
+3. CognitoAuthorizedAPI example (recommended):
+   ```yaml
+   apiVersion: serverlesspdfchat.shortrib.io/v1alpha1
+   kind: CognitoAuthorizedAPI
+   metadata:
+     name: serverless-pdf-chat
+     labels:
+       app.kubernetes.io/instance: serverless-pdf-chat
+       app.kubernetes.io/name: serverless-pdf-chat
+   spec:
+     region: {{ .Values.aws.region }}
+     providerConfigRef:
+       name: {{ .Values.aws.providerConfigName }}
+     apiName: serverless-pdf-chat-api
+     userPoolName: serverless-pdf-chat-user-pool
+     userPoolClientName: serverless-pdf-chat-client
+     authorizerName: serverless-pdf-chat-authorizer
+     configMapName: serverless-pdf-chat-frontend-config
+     configMapNamespace: pdf-chat
+     tags:
+       Application: pdf-chat
+       Environment: dev
    ```
 
 VERIFICATION:
