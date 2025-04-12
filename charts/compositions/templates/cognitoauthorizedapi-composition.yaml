@@ -156,6 +156,10 @@ spec:
         - type: ToCompositeFieldPath
           fromFieldPath: "status.atProvider.id"
           toFieldPath: "status.userPoolId"
+        # Store User Pool endpoint in status
+        - type: ToCompositeFieldPath
+          fromFieldPath: "status.atProvider.endpoint"
+          toFieldPath: "status.userPoolEndpoint"
 
     # User Pool Client
     - name: userpoolclient
@@ -277,15 +281,9 @@ spec:
           toFieldPath: "spec.forProvider.jwtConfiguration[0].audience[0]"
           policy:
             fromFieldPath: Required
-        # Construct the issuer URL using the User Pool ID and region
-        - type: CombineFromComposite
-          combine:
-            variables:
-              - fromFieldPath: "status.userPoolId"
-              - fromFieldPath: "spec.region"
-            strategy: string
-            string:
-              fmt: "https://cognito-idp.%s.amazonaws.com/%s"
+        # Use the User Pool endpoint as the JWT issuer
+        - type: FromCompositeFieldPath
+          fromFieldPath: "status.userPoolEndpoint"
           toFieldPath: "spec.forProvider.jwtConfiguration[0].issuer"
           policy:
             fromFieldPath: Required

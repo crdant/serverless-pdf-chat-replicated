@@ -64,6 +64,9 @@ spec:
                 userPoolId:
                   type: string
                   description: "ID of the Cognito User Pool"
+                userPoolEndpoint:
+                  type: string
+                  description: "Endpoint URL of the Cognito User Pool"
                 userPoolClientId:
                   type: string
                   description: "ID of the Cognito User Pool Client"
