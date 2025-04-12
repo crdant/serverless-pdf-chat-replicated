@@ -281,9 +281,14 @@ spec:
           toFieldPath: "spec.forProvider.jwtConfiguration[0].audience[0]"
           policy:
             fromFieldPath: Required
-        # Use the User Pool endpoint as the JWT issuer
-        - type: FromCompositeFieldPath
-          fromFieldPath: "status.userPoolEndpoint"
+        # Use the User Pool endpoint as the JWT issuer with https:// prefix
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "status.userPoolEndpoint"
+            strategy: string
+            string:
+              fmt: "https://%s"
           toFieldPath: "spec.forProvider.jwtConfiguration[0].issuer"
           policy:
             fromFieldPath: Required
