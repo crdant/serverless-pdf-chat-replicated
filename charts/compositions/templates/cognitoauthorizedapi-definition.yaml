@@ -33,25 +33,18 @@ spec:
                   properties:
                     name:
                       type: string
-                apiName:
-                  type: string
-                  description: "Name of the API Gateway"
-                userPoolName:
-                  type: string
-                  description: "Name of the Cognito User Pool"
-                userPoolClientName:
-                  type: string
-                  description: "Name of the Cognito User Pool Client"
-                authorizerName:
-                  type: string
-                  description: "Name of the API Gateway Authorizer"
-                configMapName:
-                  type: string
-                  description: "Name for the generated ConfigMap"
                 configMapNamespace:
                   type: string
                   description: "Namespace for the generated ConfigMap"
                   default: "pdf-chat"
+                nameSuffix:
+                  type: string
+                  description: "Optional suffix to append to resource names"
+                  default: ""
+                namePrefix:
+                  type: string
+                  description: "Optional prefix to prepend to resource names"
+                  default: ""
                 tags:
                   type: object
                   description: "Tags to apply to all resources"
@@ -59,11 +52,6 @@ spec:
                     type: string
               required:
                 - region
-                - apiName
-                - userPoolName
-                - userPoolClientName
-                - authorizerName
-                - configMapName
             status:
               type: object
               properties:

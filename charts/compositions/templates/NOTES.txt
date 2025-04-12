@@ -65,12 +65,10 @@ You can now create instances of these composite resources:
      region: {{ .Values.aws.region }}
      providerConfigRef:
        name: {{ .Values.aws.providerConfigName }}
-     apiName: serverless-pdf-chat-api
-     userPoolName: serverless-pdf-chat-user-pool
-     userPoolClientName: serverless-pdf-chat-client
-     authorizerName: serverless-pdf-chat-authorizer
-     configMapName: serverless-pdf-chat-frontend-config
      configMapNamespace: pdf-chat
+     # Optional prefix/suffix for resource names
+     namePrefix: ""
+     nameSuffix: ""
      tags:
        Application: pdf-chat
        Environment: dev

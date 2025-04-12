@@ -37,10 +37,32 @@ spec:
           providerConfigRef:
             name: default
       patches:
-        # Patch the API Gateway name
-        - type: FromCompositeFieldPath
-          fromFieldPath: "spec.apiName"
+        # Construct the API Gateway name using the composite's name
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "spec.namePrefix"
+                policy:
+                  fromFieldPath: Optional
+              - fromFieldPath: "metadata.name"
+              - fromFieldPath: "spec.nameSuffix"
+                policy:
+                  fromFieldPath: Optional
+              - fromFieldPath: "literal"
+                value: "-api"
+            strategy: string
+            string:
+              fmt: "%s%s%s%s"
           toFieldPath: "spec.forProvider.name"
+        # Add a label for the API name
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "metadata.name"
+            strategy: string
+            string:
+              fmt: "%s-api"
+          toFieldPath: "metadata.labels.api"
         # Patch the region
         - type: FromCompositeFieldPath
           fromFieldPath: "spec.region"
@@ -101,9 +123,22 @@ spec:
           providerConfigRef:
             name: default
       patches:
-        # Patch the User Pool name
-        - type: FromCompositeFieldPath
-          fromFieldPath: "spec.userPoolName"
+        # Construct the User Pool name using the composite's name
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "spec.namePrefix"
+                policy:
+                  fromFieldPath: Optional
+              - fromFieldPath: "metadata.name"
+              - fromFieldPath: "spec.nameSuffix"
+                policy:
+                  fromFieldPath: Optional
+              - fromFieldPath: "literal"
+                value: "-user-pool"
+            strategy: string
+            string:
+              fmt: "%s%s%s%s"
           toFieldPath: "spec.forProvider.name"
         # Patch the region
         - type: FromCompositeFieldPath
@@ -150,9 +185,22 @@ spec:
           providerConfigRef:
             name: default
       patches:
-        # Patch the User Pool Client name
-        - type: FromCompositeFieldPath
-          fromFieldPath: "spec.userPoolClientName"
+        # Construct the User Pool Client name using the composite's name
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "spec.namePrefix"
+                policy:
+                  fromFieldPath: Optional
+              - fromFieldPath: "metadata.name"
+              - fromFieldPath: "spec.nameSuffix"
+                policy:
+                  fromFieldPath: Optional
+              - fromFieldPath: "literal"
+                value: "-client"
+            strategy: string
+            string:
+              fmt: "%s%s%s%s"
           toFieldPath: "spec.forProvider.name"
         # Patch the region
         - type: FromCompositeFieldPath
@@ -207,9 +255,22 @@ spec:
           providerConfigRef:
             name: default
       patches:
-        # Patch the Authorizer name
-        - type: FromCompositeFieldPath
-          fromFieldPath: "spec.authorizerName"
+        # Construct the Authorizer name using the composite's name
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "spec.namePrefix"
+                policy:
+                  fromFieldPath: Optional
+              - fromFieldPath: "metadata.name"
+              - fromFieldPath: "spec.nameSuffix"
+                policy:
+                  fromFieldPath: Optional
+              - fromFieldPath: "literal"
+                value: "-authorizer"
+            strategy: string
+            string:
+              fmt: "%s%s%s%s"
           toFieldPath: "spec.forProvider.name"
         # Patch the region
         - type: FromCompositeFieldPath
@@ -280,9 +341,22 @@ spec:
           providerConfigRef:
             name: default
       patches:
-        # Patch the ConfigMap name
-        - type: FromCompositeFieldPath
-          fromFieldPath: "spec.configMapName"
+        # Construct the ConfigMap name using the composite's name
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "spec.namePrefix"
+                policy:
+                  fromFieldPath: Optional
+              - fromFieldPath: "metadata.name"
+              - fromFieldPath: "spec.nameSuffix"
+                policy:
+                  fromFieldPath: Optional
+              - fromFieldPath: "literal"
+                value: "-frontend-config"
+            strategy: string
+            string:
+              fmt: "%s%s%s%s"
           toFieldPath: "spec.forProvider.manifest.metadata.name"
         # Patch the ConfigMap namespace
         - type: FromCompositeFieldPath
