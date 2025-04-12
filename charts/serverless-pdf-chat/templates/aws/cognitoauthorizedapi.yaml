@@ -11,7 +11,6 @@ spec:
     name: {{ .Values.aws.providerConfigName }}
   configMapNamespace: {{ .Release.Namespace }}
   tags:
-    {{- include "serverless-pdf-chat.commonTags" . | nindent 4 }}
     {{- with .Values.tags }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
