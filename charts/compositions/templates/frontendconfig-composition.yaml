@@ -24,10 +24,8 @@ spec:
         spec:
           forProvider:
             region: ""
-            # Use nameSelector instead of a dummy name
-            nameSelector:
-              matchLabels:
-                api: serverless-pdf-chat-api
+            # Use the exact name of the API Gateway
+            name: "serverless-pdf-chat-api"  # This should match the name of your API Gateway
             protocolType: "HTTP"
           providerConfigRef:
             name: default
