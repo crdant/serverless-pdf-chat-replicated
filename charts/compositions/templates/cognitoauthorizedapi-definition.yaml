@@ -35,7 +35,7 @@ spec:
                       type: string
                 configMapNamespace:
                   type: string
-                  description: "Namespace for the generated ConfigMap"
+                  description: "Namespace for the generated ConfigMap (defaults to the composite's namespace if not specified)"
                   default: "pdf-chat"
                 nameSuffix:
                   type: string

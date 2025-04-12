@@ -358,10 +358,21 @@ spec:
             string:
               fmt: "%s%s%s%s"
           toFieldPath: "spec.forProvider.manifest.metadata.name"
-        # Patch the ConfigMap namespace
+        # First try to use the composite's namespace for the ConfigMap
+        - type: FromCompositeFieldPath
+          fromFieldPath: "metadata.namespace"
+          toFieldPath: "spec.forProvider.manifest.metadata.namespace"
+          policy:
+            fromFieldPath: Optional
+            # Use configMapNamespace as fallback if namespace is not set
+            mergeOptions:
+              keepMapValues: false
+        # Fall back to configMapNamespace if composite namespace is not available
         - type: FromCompositeFieldPath
           fromFieldPath: "spec.configMapNamespace"
           toFieldPath: "spec.forProvider.manifest.metadata.namespace"
+          policy:
+            fromFieldPath: Optional
         # Patch the region
         - type: FromCompositeFieldPath
           fromFieldPath: "spec.region"
