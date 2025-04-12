@@ -551,6 +551,10 @@
                       "type": "string",
                       "description": "Repository for the function image"
                     },
+                    "tag": {
+                      "type": ["string", "null"],
+                      "description": "Tag for the function image"
+                    },
                     "environment": {
                       "type": "array",
                       "description": "Function-specific environment variables",
