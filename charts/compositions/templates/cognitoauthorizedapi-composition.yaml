@@ -41,13 +41,10 @@ spec:
         - type: CombineFromComposite
           combine:
             variables:
-              - fromFieldPath: "spec.namePrefix"
-              - fromFieldPath: "metadata.name"
-              - fromFieldPath: "spec.nameSuffix"
               - fromFieldPath: "metadata.name"
             strategy: string
             string:
-              fmt: "%s%s%s-api"
+              fmt: "%s-api"
           toFieldPath: "spec.forProvider.name"
           policy:
             fromFieldPath: Optional
@@ -124,13 +121,10 @@ spec:
         - type: CombineFromComposite
           combine:
             variables:
-              - fromFieldPath: "spec.namePrefix"
-              - fromFieldPath: "metadata.name"
-              - fromFieldPath: "spec.nameSuffix"
               - fromFieldPath: "metadata.name"
             strategy: string
             string:
-              fmt: "%s%s%s-user-pool"
+              fmt: "%s-user-pool"
           toFieldPath: "spec.forProvider.name"
           policy:
             fromFieldPath: Optional
@@ -183,13 +177,10 @@ spec:
         - type: CombineFromComposite
           combine:
             variables:
-              - fromFieldPath: "spec.namePrefix"
-              - fromFieldPath: "metadata.name"
-              - fromFieldPath: "spec.nameSuffix"
               - fromFieldPath: "metadata.name"
             strategy: string
             string:
-              fmt: "%s%s%s-client"
+              fmt: "%s-client"
           toFieldPath: "spec.forProvider.name"
           policy:
             fromFieldPath: Optional
@@ -250,13 +241,10 @@ spec:
         - type: CombineFromComposite
           combine:
             variables:
-              - fromFieldPath: "spec.namePrefix"
-              - fromFieldPath: "metadata.name"
-              - fromFieldPath: "spec.nameSuffix"
               - fromFieldPath: "metadata.name"
             strategy: string
             string:
-              fmt: "%s%s%s-authorizer"
+              fmt: "%s-authorizer"
           toFieldPath: "spec.forProvider.name"
           policy:
             fromFieldPath: Optional
@@ -333,13 +321,10 @@ spec:
         - type: CombineFromComposite
           combine:
             variables:
-              - fromFieldPath: "spec.namePrefix"
-              - fromFieldPath: "metadata.name"
-              - fromFieldPath: "spec.nameSuffix"
               - fromFieldPath: "metadata.name"
             strategy: string
             string:
-              fmt: "%s%s%s-frontend-config"
+              fmt: "%s-frontend-config"
           toFieldPath: "spec.forProvider.manifest.metadata.name"
           policy:
             fromFieldPath: Optional
