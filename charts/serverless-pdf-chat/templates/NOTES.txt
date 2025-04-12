@@ -1,0 +1,112 @@
+Thank you for installing {{ .Chart.Name }}.
+
+DEPLOYMENT SUMMARY:
+------------------
+Release Name: {{ .Release.Name }}
+Namespace: {{ .Release.Namespace }}
+Chart Version: {{ .Chart.Version }}
+
+INFRASTRUCTURE COMPONENTS:
+------------------------
+The following AWS resources have been provisioned:
+
+1. API Gateway: {{ include "serverless-pdf-chat.fullname" . }}-api
+   - Stage: {{ .Values.global.environment }}
+
+2. Cognito Authentication:
+   - User Pool: {{ include "serverless-pdf-chat.fullname" . }}-user-pool
+   - User Pool Client: {{ include "serverless-pdf-chat.fullname" . }}-client
+   - Authorizer: {{ include "serverless-pdf-chat.fullname" . }}-cognito-authorizer
+
+3. S3 Bucket:
+   - Name: {{ include "serverless-pdf-chat.bucketName" . }}
+   {{- if .Values.aws.s3.corsEnabled }}
+   - CORS: Enabled
+   {{- end }}
+   {{- if .Values.aws.s3.versioning }}
+   - Versioning: Enabled
+   {{- end }}
+
+4. DynamoDB Tables:
+   - Document Table: {{ include "serverless-pdf-chat.documentTableName" . }}
+   - Memory Table: {{ include "serverless-pdf-chat.memoryTableName" . }}
+
+5. SQS Queue:
+   - Embedding Queue: {{ include "serverless-pdf-chat.embeddingQueueName" . }}
+
+6. Lambda Functions:
+   - Upload Trigger
+   - Generate Presigned URL
+   - Generate Embeddings
+   - Get Document
+   - Get All Documents
+   - Delete Document
+   - Add Conversation
+   - Generate Response
+
+{{- if .Values.frontend.enabled }}
+7. Frontend:
+   - Deployment: {{ include "serverless-pdf-chat.fullname" . }}-frontend
+   - Service: {{ include "serverless-pdf-chat.fullname" . }}-frontend
+   {{- if .Values.frontend.ingress.enabled }}
+   - Ingress: {{ include "serverless-pdf-chat.fullname" . }}-frontend
+   {{- end }}
+{{- end }}
+
+ACCESSING THE APPLICATION:
+------------------------
+{{- if and .Values.frontend.enabled .Values.frontend.ingress.enabled }}
+The frontend application can be accessed at:
+{{- range .Values.frontend.ingress.hosts }}
+  http{{ if $.Values.frontend.ingress.tls }}s{{ end }}://{{ .host }}
+{{- end }}
+{{- else if and .Values.frontend.enabled (eq .Values.frontend.service.type "LoadBalancer") }}
+The frontend application can be accessed via the LoadBalancer service:
+  kubectl get svc -n {{ .Release.Namespace }} {{ include "serverless-pdf-chat.fullname" . }}-frontend -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
+{{- else if and .Values.frontend.enabled (eq .Values.frontend.service.type "ClusterIP") }}
+The frontend application is available within the cluster at:
+  {{ include "serverless-pdf-chat.fullname" . }}-frontend.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.frontend.service.port }}
+
+To access it locally, you can use port-forwarding:
+  kubectl port-forward -n {{ .Release.Namespace }} svc/{{ include "serverless-pdf-chat.fullname" . }}-frontend {{ .Values.frontend.service.port }}:{{ .Values.frontend.service.port }}
+  Then open: http://localhost:{{ .Values.frontend.service.port }}
+{{- end }}
+
+API ENDPOINT:
+-----------
+The API Gateway endpoint is available at:
+  kubectl get configmap -n {{ .Release.Namespace }} {{ include "serverless-pdf-chat.fullname" . }}-frontend-config -o jsonpath='{.data.apiEndpoint}'
+
+AUTHENTICATION:
+-------------
+The application uses Amazon Cognito for authentication.
+User Pool ID: kubectl get configmap -n {{ .Release.Namespace }} {{ include "serverless-pdf-chat.fullname" . }}-frontend-config -o jsonpath='{.data.userPoolId}'
+Client ID: kubectl get configmap -n {{ .Release.Namespace }} {{ include "serverless-pdf-chat.fullname" . }}-frontend-config -o jsonpath='{.data.userPoolClientId}'
+
+MONITORING:
+----------
+To monitor the Lambda functions:
+  AWS CloudWatch Logs: /aws/lambda/{{ include "serverless-pdf-chat.fullname" . }}-*
+
+To check the status of the API Gateway:
+  kubectl describe api.apigatewayv2.aws.upbound.io {{ include "serverless-pdf-chat.fullname" . }}-api
+
+To check the status of the Cognito resources:
+  kubectl describe cognitoauthorizedapi {{ include "serverless-pdf-chat.fullname" . }}
+
+TROUBLESHOOTING:
+--------------
+If you encounter issues:
+
+1. Check the status of the CognitoAuthorizedAPI resource:
+   kubectl describe cognitoauthorizedapi {{ include "serverless-pdf-chat.fullname" . }}
+
+2. Verify the ConfigMap has been populated:
+   kubectl get configmap -n {{ .Release.Namespace }} {{ include "serverless-pdf-chat.fullname" . }}-frontend-config -o yaml
+
+3. Check Lambda function logs in AWS CloudWatch
+
+4. For frontend issues, check the pod logs:
+   kubectl logs -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }},app.kubernetes.io/component=frontend
+
+For more information, please refer to the documentation.
