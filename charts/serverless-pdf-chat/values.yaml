@@ -60,11 +60,6 @@ frontend:
       - secretName: "pdf-chat-tls"
         hosts:
           - "pdf-chat.example.com"
-  config:
-    apiEndpoint: ""  # Will be set based on API Gateway URL
-    region: ""  # Will use application.config.region
-    userPoolId: ""  # Will be set from Cognito outputs
-    userPoolClientId: ""  # Will be set from Cognito outputs
 
 aws:
   region: "us-west-2"
@@ -95,23 +90,6 @@ aws:
       name: null
       visibilityTimeout: 180
       messageRetentionPeriod: 3600
-  
-  cognito:
-    userPool:
-      name: null
-      autoVerifiedAttributes: ["email"]
-      usernameAttributes: ["email"]
-      adminCreateUserConfig:
-        allowAdminCreateUserOnly: true
-      passwordPolicy:
-        minimumLength: 8
-        requireLowercase: true
-        requireNumbers: true
-        requireSymbols: true
-        requireUppercase: true
-    userPoolClient:
-      name: null
-      generateSecret: false
   
   iam:
     roles:
@@ -184,25 +162,6 @@ aws:
         memorySize: 512
         repository: "generate-response"
         tag: null
-  
-  apigateway:
-    api:
-      name: null
-      corsConfiguration:
-        allowOrigins:
-          - "*"
-        allowMethods:
-          - "*"
-        allowHeaders:
-          - "*"
-        allowCredentials: false
-    stage:
-      name: "dev"
-      autoDeploy: true
-    authorizer:
-      name: "CognitoAuthorizer"
-      type: "JWT"
-      identitySource: "$request.header.Authorization"
         
 tags:
   environment: "dev"
