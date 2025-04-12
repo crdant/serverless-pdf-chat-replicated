@@ -9,7 +9,6 @@ spec:
   region: {{ .Values.aws.region }}
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
-  configMapNamespace: {{ .Release.Namespace }}
   tags:
     {{- with .Values.tags }}
     {{- toYaml . | nindent 4 }}
