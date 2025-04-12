@@ -42,21 +42,15 @@ spec:
           combine:
             variables:
               - fromFieldPath: "spec.namePrefix"
-                policy:
-                  fromFieldPath: Optional
               - fromFieldPath: "metadata.name"
               - fromFieldPath: "spec.nameSuffix"
-                policy:
-                  fromFieldPath: Optional
               - fromFieldPath: "metadata.name"
-                transforms:
-                  - type: string
-                    string:
-                      fmt: "-api"
             strategy: string
             string:
-              fmt: "%s%s%s%s"
+              fmt: "%s%s%s-api"
           toFieldPath: "spec.forProvider.name"
+          policy:
+            fromFieldPath: Optional
         # Add a label for the API name
         - type: CombineFromComposite
           combine:
@@ -131,21 +125,15 @@ spec:
           combine:
             variables:
               - fromFieldPath: "spec.namePrefix"
-                policy:
-                  fromFieldPath: Optional
               - fromFieldPath: "metadata.name"
               - fromFieldPath: "spec.nameSuffix"
-                policy:
-                  fromFieldPath: Optional
               - fromFieldPath: "metadata.name"
-                transforms:
-                  - type: string
-                    string:
-                      fmt: "-user-pool"
             strategy: string
             string:
-              fmt: "%s%s%s%s"
+              fmt: "%s%s%s-user-pool"
           toFieldPath: "spec.forProvider.name"
+          policy:
+            fromFieldPath: Optional
         # Patch the region
         - type: FromCompositeFieldPath
           fromFieldPath: "spec.region"
@@ -196,21 +184,15 @@ spec:
           combine:
             variables:
               - fromFieldPath: "spec.namePrefix"
-                policy:
-                  fromFieldPath: Optional
               - fromFieldPath: "metadata.name"
               - fromFieldPath: "spec.nameSuffix"
-                policy:
-                  fromFieldPath: Optional
               - fromFieldPath: "metadata.name"
-                transforms:
-                  - type: string
-                    string:
-                      fmt: "-client"
             strategy: string
             string:
-              fmt: "%s%s%s%s"
+              fmt: "%s%s%s-client"
           toFieldPath: "spec.forProvider.name"
+          policy:
+            fromFieldPath: Optional
         # Patch the region
         - type: FromCompositeFieldPath
           fromFieldPath: "spec.region"
@@ -269,21 +251,15 @@ spec:
           combine:
             variables:
               - fromFieldPath: "spec.namePrefix"
-                policy:
-                  fromFieldPath: Optional
               - fromFieldPath: "metadata.name"
               - fromFieldPath: "spec.nameSuffix"
-                policy:
-                  fromFieldPath: Optional
               - fromFieldPath: "metadata.name"
-                transforms:
-                  - type: string
-                    string:
-                      fmt: "-authorizer"
             strategy: string
             string:
-              fmt: "%s%s%s%s"
+              fmt: "%s%s%s-authorizer"
           toFieldPath: "spec.forProvider.name"
+          policy:
+            fromFieldPath: Optional
         # Patch the region
         - type: FromCompositeFieldPath
           fromFieldPath: "spec.region"
@@ -358,21 +334,15 @@ spec:
           combine:
             variables:
               - fromFieldPath: "spec.namePrefix"
-                policy:
-                  fromFieldPath: Optional
               - fromFieldPath: "metadata.name"
               - fromFieldPath: "spec.nameSuffix"
-                policy:
-                  fromFieldPath: Optional
               - fromFieldPath: "metadata.name"
-                transforms:
-                  - type: string
-                    string:
-                      fmt: "-frontend-config"
             strategy: string
             string:
-              fmt: "%s%s%s%s"
+              fmt: "%s%s%s-frontend-config"
           toFieldPath: "spec.forProvider.manifest.metadata.name"
+          policy:
+            fromFieldPath: Optional
         # First try to use the composite's namespace for the ConfigMap
         - type: FromCompositeFieldPath
           fromFieldPath: "metadata.namespace"
