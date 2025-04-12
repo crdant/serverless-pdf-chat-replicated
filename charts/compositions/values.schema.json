@@ -24,41 +24,6 @@
           "default": "default"
         }
       }
-    },
-    "compositions": {
-      "type": "object",
-      "properties": {
-        "cognitoAuth": {
-          "type": "object",
-          "properties": {
-            "enabled": {
-              "type": "boolean",
-              "description": "Whether to enable the CognitoAuth composition",
-              "default": true
-            }
-          }
-        },
-        "frontendConfig": {
-          "type": "object",
-          "properties": {
-            "enabled": {
-              "type": "boolean",
-              "description": "Whether to enable the FrontendConfig composition",
-              "default": true
-            }
-          }
-        },
-        "cognitoAuthorizedAPI": {
-          "type": "object",
-          "properties": {
-            "enabled": {
-              "type": "boolean",
-              "description": "Whether to enable the CognitoAuthorizedAPI composition",
-              "default": true
-            }
-          }
-        }
-      }
     }
   }
 }
