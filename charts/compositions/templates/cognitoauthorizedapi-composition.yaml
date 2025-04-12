@@ -81,17 +81,6 @@ spec:
           policy:
             mergeOptions:
               keepMapValues: true
-        # Add Authorizer label for route selection
-        - type: CombineFromComposite
-          combine:
-            variables:
-              - fromFieldPath: "metadata.name"
-            strategy: string
-            string:
-              fmt: "%s-cognito-authorizer"
-          toFieldPath: "metadata.labels.Authorizer"
-          policy:
-            fromFieldPath: Optional
         # Store API endpoint in status
         - type: ToCompositeFieldPath
           fromFieldPath: "status.atProvider.apiEndpoint"
@@ -280,6 +269,17 @@ spec:
           policy:
             mergeOptions:
               keepMapValues: true
+        # Add Authorizer label for route selection
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "metadata.name"
+            strategy: string
+            string:
+              fmt: "%s-cognito-authorizer"
+          toFieldPath: "metadata.labels.authorizer"
+          policy:
+            fromFieldPath: Optional
         # Reference the API ID
         - type: FromCompositeFieldPath
           fromFieldPath: "status.apiId"
