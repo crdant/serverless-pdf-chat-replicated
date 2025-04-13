@@ -21,40 +21,35 @@ COPY --from=build /app/dist /usr/share/nginx/html
 
 # Create runtime configuration files
 RUN echo 'window.RUNTIME_CONFIG = {};' > /usr/share/nginx/html/config.js && \
-    echo '
-// This script patches the Amplify configuration at runtime
-(function() {
-  // Wait for Amplify to be loaded
-  const checkAmplify = setInterval(() => {
-    if (window.aws_amplify) {
-      clearInterval(checkAmplify);
-      
-      console.log("Patching Amplify configuration with runtime values");
-      
-      // Override the configuration
-      window.aws_amplify.Amplify.configure({
-        Auth: {
-          region: window.RUNTIME_CONFIG.region,
-          userPoolId: window.RUNTIME_CONFIG.userPoolId,
-          userPoolWebClientId: window.RUNTIME_CONFIG.userPoolClientId
-        },
-        API: {
-          endpoints: [
-            {
-              name: "ServerlessPdfChat",
-              endpoint: window.RUNTIME_CONFIG.apiEndpoint
-            }
-          ]
-        }
-      });
-      
-      console.log("Amplify configuration patched successfully");
-    } else {
-      console.log("Waiting for Amplify to load...");
-    }
-  }, 100);
-})();
-' > /usr/share/nginx/html/amplify-patch.js
+    echo '(function() {\
+  const checkAmplify = setInterval(() => {\
+    if (window.aws_amplify) {\
+      clearInterval(checkAmplify);\
+      \
+      console.log("Patching Amplify configuration with runtime values");\
+      \
+      window.aws_amplify.Amplify.configure({\
+        Auth: {\
+          region: window.RUNTIME_CONFIG.region,\
+          userPoolId: window.RUNTIME_CONFIG.userPoolId,\
+          userPoolWebClientId: window.RUNTIME_CONFIG.userPoolClientId\
+        },\
+        API: {\
+          endpoints: [\
+            {\
+              name: "ServerlessPdfChat",\
+              endpoint: window.RUNTIME_CONFIG.apiEndpoint\
+            }\
+          ]\
+        }\
+      });\
+      \
+      console.log("Amplify configuration patched successfully");\
+    } else {\
+      console.log("Waiting for Amplify to load...");\
+    }\
+  }, 100);\
+})();' > /usr/share/nginx/html/amplify-patch.js
 
 # Create entrypoint script
 RUN echo '#!/bin/sh\n\
