@@ -79,9 +79,9 @@ echo "  User Pool Client ID: ${VITE_USER_POOL_CLIENT_ID}"\n\
 \n\
 # Start nginx\n\
 exec nginx -g "daemon off;"\n\
-' > /docker-entrypoint.d/09-patch-index.sh
+' > /docker-entrypoint.d/90-patch-index.sh
 
-RUN chmod +x /docker-entrypoint.d/09-patch-index.sh
+RUN chmod +x /docker-entrypoint.d/90-patch-index.sh
 
 # Create nginx configuration for SPA support
 RUN echo 'server { \
