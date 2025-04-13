@@ -9,6 +9,13 @@ RUN apk add --no-cache git && \
     cp -r /tmp/repo/frontend/* /app/ && \
     rm -rf /tmp/repo
 
+# Patch the App.tsx file to use runtime configuration
+RUN sed -i 's/import\.meta\.env\.VITE_USER_POOL_ID/window.RUNTIME_CONFIG.userPoolId/g' src/App.tsx && \
+    sed -i 's/import\.meta\.env\.VITE_USER_POOL_CLIENT_ID/window.RUNTIME_CONFIG.userPoolClientId/g' src/App.tsx && \
+    sed -i 's/import\.meta\.env\.VITE_API_ENDPOINT/window.RUNTIME_CONFIG.apiEndpoint/g' src/App.tsx && \
+    sed -i 's/import\.meta\.env\.VITE_API_REGION/window.RUNTIME_CONFIG.region/g' src/App.tsx && \
+    cat src/App.tsx | grep RUNTIME_CONFIG
+
 # Install dependencies and build
 RUN npm ci && \
     npm run build
@@ -19,37 +26,8 @@ FROM nginx:alpine
 # Copy the build output from the build stage
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Create runtime configuration files
-RUN echo 'window.RUNTIME_CONFIG = {};' > /usr/share/nginx/html/config.js && \
-    echo $'(function() {\n\
-  const checkAmplify = setInterval(() => {\n\
-    if (window.aws_amplify) {\n\
-      clearInterval(checkAmplify);\n\
-      \n\
-      console.log("Patching Amplify configuration with runtime values");\n\
-      \n\
-      window.aws_amplify.Amplify.configure({\n\
-        Auth: {\n\
-          region: window.RUNTIME_CONFIG.region,\n\
-          userPoolId: window.RUNTIME_CONFIG.userPoolId,\n\
-          userPoolWebClientId: window.RUNTIME_CONFIG.userPoolClientId\n\
-        },\n\
-        API: {\n\
-          endpoints: [\n\
-            {\n\
-              name: "ServerlessPdfChat",\n\
-              endpoint: window.RUNTIME_CONFIG.apiEndpoint\n\
-            }\n\
-          ]\n\
-        }\n\
-      });\n\
-      \n\
-      console.log("Amplify configuration patched successfully");\n\
-    } else {\n\
-      console.log("Waiting for Amplify to load...");\n\
-    }\n\
-  }, 100);\n\
-})();' > /usr/share/nginx/html/amplify-patch.js
+# Create runtime configuration file
+RUN echo 'window.RUNTIME_CONFIG = {};' > /usr/share/nginx/html/config.js
 
 # Create entrypoint script
 RUN mkdir -p /docker-entrypoint.d && \
@@ -66,9 +44,8 @@ window.RUNTIME_CONFIG = {\n\
 console.log("Runtime configuration loaded:", window.RUNTIME_CONFIG);\n\
 EOFJS\n\
 \n\
-# Modify index.html to include our runtime scripts\n\
+# Modify index.html to include our runtime scripts if not already present\n\
 if ! grep -q "config.js" /usr/share/nginx/html/index.html; then\n\
-  sed -i "/<head>/a\\  <script src=\\"/amplify-patch.js\\"></script>" /usr/share/nginx/html/index.html\n\
   sed -i "/<head>/a\\  <script src=\\"/config.js\\"></script>" /usr/share/nginx/html/index.html\n\
 fi\n\
 \n\
