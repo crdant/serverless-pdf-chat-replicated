@@ -53,32 +53,31 @@ RUN echo 'window.RUNTIME_CONFIG = {};' > /usr/share/nginx/html/config.js && \
 
 # Create entrypoint script
 RUN mkdir -p /docker-entrypoint.d && \
-    cat > /docker-entrypoint.d/40-patch-config.sh << 'EOF'
-#!/bin/sh
+    echo '#!/bin/sh\
 
-# Generate runtime config from environment variables
-cat > /usr/share/nginx/html/config.js << EOFJS
-window.RUNTIME_CONFIG = {
-  apiEndpoint: "${VITE_API_ENDPOINT}",
-  region: "${VITE_REGION}",
-  userPoolId: "${VITE_USER_POOL_ID}",
-  userPoolClientId: "${VITE_USER_POOL_CLIENT_ID}"
-};
-console.log("Runtime configuration loaded:", window.RUNTIME_CONFIG);
-EOFJS
-
-# Modify index.html to include our runtime scripts
-if ! grep -q "config.js" /usr/share/nginx/html/index.html; then
-  sed -i "/<head>/a\\  <script src=\"/amplify-patch.js\"></script>" /usr/share/nginx/html/index.html
-  sed -i "/<head>/a\\  <script src=\"/config.js\"></script>" /usr/share/nginx/html/index.html
-fi
-
-echo "Container starting with configuration:"
-echo "  API Endpoint: ${VITE_API_ENDPOINT}"
-echo "  Region: ${VITE_REGION}"
-echo "  User Pool ID: ${VITE_USER_POOL_ID}"
-echo "  User Pool Client ID: ${VITE_USER_POOL_CLIENT_ID}"
-EOF
+# Generate runtime config from environment variables\
+cat > /usr/share/nginx/html/config.js << EOFJS\
+window.RUNTIME_CONFIG = {\
+  apiEndpoint: "${VITE_API_ENDPOINT}",\
+  region: "${VITE_REGION}",\
+  userPoolId: "${VITE_USER_POOL_ID}",\
+  userPoolClientId: "${VITE_USER_POOL_CLIENT_ID}"\
+};\
+console.log("Runtime configuration loaded:", window.RUNTIME_CONFIG);\
+EOFJS\
+\
+# Modify index.html to include our runtime scripts\
+if ! grep -q "config.js" /usr/share/nginx/html/index.html; then\
+  sed -i "/<head>/a\\  <script src=\"/amplify-patch.js\"></script>" /usr/share/nginx/html/index.html\
+  sed -i "/<head>/a\\  <script src=\"/config.js\"></script>" /usr/share/nginx/html/index.html\
+fi\
+\
+echo "Container starting with configuration:"\
+echo "  API Endpoint: ${VITE_API_ENDPOINT}"\
+echo "  Region: ${VITE_REGION}"\
+echo "  User Pool ID: ${VITE_USER_POOL_ID}"\
+echo "  User Pool Client ID: ${VITE_USER_POOL_CLIENT_ID}"\
+' > /docker-entrypoint.d/40-patch-config.sh
 
 RUN chmod +x /docker-entrypoint.d/40-patch-config.sh
 
