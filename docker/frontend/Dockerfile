@@ -19,6 +19,75 @@ FROM nginx:alpine
 # Copy the build output from the build stage
 COPY --from=build /app/dist /usr/share/nginx/html
 
+# Create runtime configuration files
+RUN echo 'window.RUNTIME_CONFIG = {};' > /usr/share/nginx/html/config.js && \
+    echo '
+// This script patches the Amplify configuration at runtime
+(function() {
+  // Wait for Amplify to be loaded
+  const checkAmplify = setInterval(() => {
+    if (window.aws_amplify) {
+      clearInterval(checkAmplify);
+      
+      console.log("Patching Amplify configuration with runtime values");
+      
+      // Override the configuration
+      window.aws_amplify.Amplify.configure({
+        Auth: {
+          region: window.RUNTIME_CONFIG.region,
+          userPoolId: window.RUNTIME_CONFIG.userPoolId,
+          userPoolWebClientId: window.RUNTIME_CONFIG.userPoolClientId
+        },
+        API: {
+          endpoints: [
+            {
+              name: "ServerlessPdfChat",
+              endpoint: window.RUNTIME_CONFIG.apiEndpoint
+            }
+          ]
+        }
+      });
+      
+      console.log("Amplify configuration patched successfully");
+    } else {
+      console.log("Waiting for Amplify to load...");
+    }
+  }, 100);
+})();
+' > /usr/share/nginx/html/amplify-patch.js
+
+# Create entrypoint script
+RUN echo '#!/bin/sh\n\
+\n\
+# Generate runtime config from environment variables\n\
+cat > /usr/share/nginx/html/config.js << EOF\n\
+window.RUNTIME_CONFIG = {\n\
+  apiEndpoint: "${VITE_API_ENDPOINT}",\n\
+  region: "${VITE_REGION}",\n\
+  userPoolId: "${VITE_USER_POOL_ID}",\n\
+  userPoolClientId: "${VITE_USER_POOL_CLIENT_ID}"\n\
+};\n\
+console.log("Runtime configuration loaded:", window.RUNTIME_CONFIG);\n\
+EOF\n\
+\n\
+# Modify index.html to include our runtime scripts\n\
+if ! grep -q "config.js" /usr/share/nginx/html/index.html; then\n\
+  sed -i "/<head>/a\\  <script src=\\"/amplify-patch.js\\"></script>" /usr/share/nginx/html/index.html\n\
+  sed -i "/<head>/a\\  <script src=\\"/config.js\\"></script>" /usr/share/nginx/html/index.html\n\
+fi\n\
+\n\
+echo "Container starting with configuration:"\n\
+echo "  API Endpoint: ${VITE_API_ENDPOINT}"\n\
+echo "  Region: ${VITE_REGION}"\n\
+echo "  User Pool ID: ${VITE_USER_POOL_ID}"\n\
+echo "  User Pool Client ID: ${VITE_USER_POOL_CLIENT_ID}"\n\
+\n\
+# Start nginx\n\
+exec nginx -g "daemon off;"\n\
+' > /docker-entrypoint.sh
+
+RUN chmod +x /docker-entrypoint.sh
+
 # Create nginx configuration for SPA support
 RUN echo 'server { \
     listen 80; \
@@ -50,5 +119,5 @@ RUN echo 'server { \
 # Expose port 80
 EXPOSE 80
 
-# Start Nginx server
-CMD ["nginx", "-g", "daemon off;"]
+# Start with our entrypoint script
+ENTRYPOINT ["/docker-entrypoint.sh"]
