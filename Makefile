@@ -95,6 +95,7 @@ create-ecr-repo-$1:
 image-build-$1: create-ecr-repo-$1
 	@echo "Building Docker image: $1 with tag $(DOCKER_TAG)"
 	$(DOCKER_CMD) build \
+    --platform linux/amd64,linux/arm64 \
 		--label org.opencontainers.image.source="$(GIT_HTTPS_URL)" \
 		--label org.opencontainers.image.revision="$(GIT_REVISION)" \
 		--label org.opencontainers.image.version="$(DOCKER_TAG)" \
@@ -108,9 +109,9 @@ image-build-$1: create-ecr-repo-$1
 
 image-push-$1: image-build-$1 ecr-login
 	@echo "Pushing Docker image: $1 with tags $(DOCKER_TAG), $(MINOR_VERSION), and $(MAJOR_VERSION)"
-	$(DOCKER_CMD) push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG)
-	$(DOCKER_CMD) push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MINOR_VERSION)
-	$(DOCKER_CMD) push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MAJOR_VERSION)
+	$(DOCKER_CMD) push --all-platforms $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG)
+	$(DOCKER_CMD) push --all-platforms $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MINOR_VERSION)  
+	$(DOCKER_CMD) push --all-platforms $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MAJOR_VERSION)
 
 # Add each image to the images target dependencies
 images:: image-push-$1
