@@ -2,5 +2,5 @@ apiVersion: v2
 name: compositions
 description: A Helm chart for Crossplane Composite Resource Definitions and Compositions
 type: application
-version: 0.2.13
+version: 0.2.14
 appVersion: "1.0.0"

@@ -21,32 +21,12 @@ spec:
         - /bin/sh
         - -c
         - |
-          echo "Waiting for CognitoAuth XRD to be established as a CRD..."
-          kubectl wait --for=condition=established crd/cognitoauths.serverlesspdfchat.shortrib.io --timeout=300s
-          if [ $? -ne 0 ]; then
-            echo "CognitoAuth XRD failed to become established as a CRD within timeout"
-            exit 1
-          fi
-          
-          echo "Waiting for FrontendConfig XRD to be established as a CRD..."
-          kubectl wait --for=condition=established crd/frontendconfigs.serverlesspdfchat.shortrib.io --timeout=300s
-          if [ $? -ne 0 ]; then
-            echo "FrontendConfig XRD failed to become established as a CRD within timeout"
-            exit 1
-          fi
-          
           echo "Waiting for CognitoAuthorizedAPI XRD to be established as a CRD..."
           kubectl wait --for=condition=established crd/cognitoauthorizedapis.serverlesspdfchat.shortrib.io --timeout=300s
           if [ $? -ne 0 ]; then
             echo "CognitoAuthorizedAPI XRD failed to become established as a CRD within timeout"
             exit 1
           fi
-          
-          echo "Waiting for CognitoAuth Composition to be ready..."
-          kubectl wait --for=jsonpath='{.metadata.name}' composition.apiextensions.crossplane.io/cognitoauths.serverlesspdfchat.shortrib.io --timeout=300s || true
-          
-          echo "Waiting for FrontendConfig Composition to be ready..."
-          kubectl wait --for=jsonpath='{.metadata.name}' composition.apiextensions.crossplane.io/frontendconfigs.serverlesspdfchat.shortrib.io --timeout=300s || true
           
           echo "Waiting for CognitoAuthorizedAPI Composition to be ready..."
           kubectl wait --for=jsonpath='{.metadata.name}' composition.apiextensions.crossplane.io/cognitoauthorizedapis.serverlesspdfchat.shortrib.io --timeout=300s || true
