@@ -9,6 +9,17 @@ RUN apk add --no-cache git && \
     cp -r /tmp/repo/frontend/* /app/ && \
     rm -rf /tmp/repo
 
+# Create a stub for window.RUNTIME_CONFIG in the global scope
+RUN echo 'window.RUNTIME_CONFIG = { \
+  apiEndpoint: "http://localhost:3000", \
+  region: "us-west-2", \
+  userPoolId: "placeholder-user-pool-id", \
+  userPoolClientId: "placeholder-client-id" \
+};' > src/runtime-config.js
+
+# Add the runtime config script to index.html
+RUN sed -i '/<head>/a\    <script src="./runtime-config.js"></script>' index.html
+
 # Patch the App.tsx file to use runtime configuration
 RUN sed -i 's/import\.meta\.env\.VITE_USER_POOL_ID/window.RUNTIME_CONFIG.userPoolId/g' src/App.tsx && \
     sed -i 's/import\.meta\.env\.VITE_USER_POOL_CLIENT_ID/window.RUNTIME_CONFIG.userPoolClientId/g' src/App.tsx && \
@@ -26,15 +37,12 @@ FROM nginx:alpine
 # Copy the build output from the build stage
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Create runtime configuration file
-RUN echo 'window.RUNTIME_CONFIG = {};' > /usr/share/nginx/html/config.js
-
 # Create entrypoint script
 RUN mkdir -p /docker-entrypoint.d && \
     echo $'#!/bin/sh\n\
 \n\
 # Generate runtime config from environment variables\n\
-cat > /usr/share/nginx/html/config.js << EOFJS\n\
+cat > /usr/share/nginx/html/runtime-config.js << EOFJS\n\
 window.RUNTIME_CONFIG = {\n\
   apiEndpoint: "${VITE_API_ENDPOINT}",\n\
   region: "${VITE_REGION}",\n\
@@ -43,11 +51,6 @@ window.RUNTIME_CONFIG = {\n\
 };\n\
 console.log("Runtime configuration loaded:", window.RUNTIME_CONFIG);\n\
 EOFJS\n\
-\n\
-# Modify index.html to include our runtime scripts if not already present\n\
-if ! grep -q "config.js" /usr/share/nginx/html/index.html; then\n\
-  sed -i "/<head>/a\\  <script src=\\"/config.js\\"></script>" /usr/share/nginx/html/index.html\n\
-fi\n\
 \n\
 echo "Container starting with configuration:"\n\
 echo "  API Endpoint: ${VITE_API_ENDPOINT}"\n\
