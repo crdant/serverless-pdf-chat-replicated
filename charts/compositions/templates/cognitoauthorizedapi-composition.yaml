@@ -81,14 +81,9 @@ spec:
           policy:
             mergeOptions:
               keepMapValues: true
-        # Store API endpoint in status with /dev/ appended
-        - type: CombineFromComposite
-          combine:
-            variables:
-              - fromFieldPath: "status.atProvider.apiEndpoint"
-            strategy: string
-            string:
-              fmt: "%s/dev/"
+        # Store API endpoint in status
+        - type: ToCompositeFieldPath
+          fromFieldPath: "status.atProvider.apiEndpoint"
           toFieldPath: "status.apiEndpoint"
         # Store API ID in status
         - type: ToCompositeFieldPath
@@ -366,9 +361,14 @@ spec:
         - type: FromCompositeFieldPath
           fromFieldPath: "spec.region"
           toFieldPath: "spec.forProvider.manifest.data.region"
-        # Patch the API endpoint
-        - type: FromCompositeFieldPath
-          fromFieldPath: "status.apiEndpoint"
+        # Patch the API endpoint with /dev/ appended
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "status.apiEndpoint"
+            strategy: string
+            string:
+              fmt: "%s/dev/"
           toFieldPath: "spec.forProvider.manifest.data.apiEndpoint"
           policy:
             fromFieldPath: Required
