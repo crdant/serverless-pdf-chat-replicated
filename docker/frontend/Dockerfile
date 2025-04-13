@@ -17,6 +17,17 @@ RUN echo 'window.RUNTIME_CONFIG = { \
   userPoolClientId: "placeholder-client-id" \
 };' > src/runtime-config.js
 
+# Add TypeScript declaration for RUNTIME_CONFIG
+RUN mkdir -p src/types && \
+    echo 'interface Window { \
+  RUNTIME_CONFIG: { \
+    apiEndpoint: string; \
+    region: string; \
+    userPoolId: string; \
+    userPoolClientId: string; \
+  } \
+}' > src/types/global.d.ts
+
 # Add the runtime config script to index.html
 RUN sed -i '/<head>/a\    <script src="./runtime-config.js"></script>' index.html
 
