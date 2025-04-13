@@ -21,34 +21,34 @@ COPY --from=build /app/dist /usr/share/nginx/html
 
 # Create runtime configuration files
 RUN echo 'window.RUNTIME_CONFIG = {};' > /usr/share/nginx/html/config.js && \
-    echo '(function() {\
-  const checkAmplify = setInterval(() => {\
-    if (window.aws_amplify) {\
-      clearInterval(checkAmplify);\
-      \
-      console.log("Patching Amplify configuration with runtime values");\
-      \
-      window.aws_amplify.Amplify.configure({\
-        Auth: {\
-          region: window.RUNTIME_CONFIG.region,\
-          userPoolId: window.RUNTIME_CONFIG.userPoolId,\
-          userPoolWebClientId: window.RUNTIME_CONFIG.userPoolClientId\
-        },\
-        API: {\
-          endpoints: [\
-            {\
-              name: "ServerlessPdfChat",\
-              endpoint: window.RUNTIME_CONFIG.apiEndpoint\
-            }\
-          ]\
-        }\
-      });\
-      \
-      console.log("Amplify configuration patched successfully");\
-    } else {\
-      console.log("Waiting for Amplify to load...");\
-    }\
-  }, 100);\
+    echo $'(function() {\n\
+  const checkAmplify = setInterval(() => {\n\
+    if (window.aws_amplify) {\n\
+      clearInterval(checkAmplify);\n\
+      \n\
+      console.log("Patching Amplify configuration with runtime values");\n\
+      \n\
+      window.aws_amplify.Amplify.configure({\n\
+        Auth: {\n\
+          region: window.RUNTIME_CONFIG.region,\n\
+          userPoolId: window.RUNTIME_CONFIG.userPoolId,\n\
+          userPoolWebClientId: window.RUNTIME_CONFIG.userPoolClientId\n\
+        },\n\
+        API: {\n\
+          endpoints: [\n\
+            {\n\
+              name: "ServerlessPdfChat",\n\
+              endpoint: window.RUNTIME_CONFIG.apiEndpoint\n\
+            }\n\
+          ]\n\
+        }\n\
+      });\n\
+      \n\
+      console.log("Amplify configuration patched successfully");\n\
+    } else {\n\
+      console.log("Waiting for Amplify to load...");\n\
+    }\n\
+  }, 100);\n\
 })();' > /usr/share/nginx/html/amplify-patch.js
 
 # Create entrypoint script
