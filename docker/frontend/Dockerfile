@@ -52,7 +52,8 @@ RUN echo 'window.RUNTIME_CONFIG = {};' > /usr/share/nginx/html/config.js && \
 })();' > /usr/share/nginx/html/amplify-patch.js
 
 # Create entrypoint script
-RUN echo '#!/bin/sh\n\
+RUN mkdir -p /docker-entrypoint.d && \
+    echo '#!/bin/sh\n\
 \n\
 # Generate runtime config from environment variables\n\
 cat > /usr/share/nginx/html/config.js << EOF\n\
@@ -76,12 +77,9 @@ echo "  API Endpoint: ${VITE_API_ENDPOINT}"\n\
 echo "  Region: ${VITE_REGION}"\n\
 echo "  User Pool ID: ${VITE_USER_POOL_ID}"\n\
 echo "  User Pool Client ID: ${VITE_USER_POOL_CLIENT_ID}"\n\
-\n\
-# Start nginx\n\
-exec nginx -g "daemon off;"\n\
-' > /docker-entrypoint.d/90-patch-index.sh
+' > /docker-entrypoint.d/40-patch-config.sh
 
-RUN chmod +x /docker-entrypoint.d/90-patch-index.sh
+RUN chmod +x /docker-entrypoint.d/40-patch-config.sh
 
 # Create nginx configuration for SPA support
 RUN echo 'server { \
@@ -113,6 +111,3 @@ RUN echo 'server { \
 
 # Expose port 80
 EXPOSE 80
-
-# Start with our entrypoint script
-ENTRYPOINT ["/docker-entrypoint.sh"]
