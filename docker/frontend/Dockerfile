@@ -111,3 +111,6 @@ RUN echo 'server { \
 
 # Expose port 80
 EXPOSE 80
+
+# Specify the command to run when the container starts
+CMD ["nginx", "-g", "daemon off;"]
