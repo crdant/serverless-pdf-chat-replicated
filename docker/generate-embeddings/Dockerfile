@@ -17,6 +17,9 @@ RUN yum install -y git && \
     yum remove -y git && yum clean all && \
     rm -rf /tmp/repo
 
+# Copy our enhanced main.py to overwrite the original
+COPY main.py ${LAMBDA_TASK_ROOT}/main.py
+
 # Verify the installation
 RUN ls -la ${LAMBDA_TASK_ROOT} && \
     python -c "import sys; print('After installation Python search path:')" && \
