@@ -7,7 +7,7 @@ RUN python -c "import sys; print('Python search path:')" && \
 # Install git and required packages directly to Lambda task root
 RUN yum install -y git && \
     # Install packages directly to Lambda task root to ensure they're in the Python path
-    pip install aws-lambda-powertools boto3 -t ${LAMBDA_TASK_ROOT} && \
+    pip install aws-lambda-powertools boto3 langchain langchain_aws langchain_community faiss-cpu -t ${LAMBDA_TASK_ROOT} && \
     # Clone the repo and copy function code
     git clone https://github.com/aws-samples/serverless-pdf-chat.git /tmp/repo && \
     cp -r /tmp/repo/backend/src/generate_embeddings/* ${LAMBDA_TASK_ROOT}/ && \

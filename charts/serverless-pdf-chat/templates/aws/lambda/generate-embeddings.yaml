@@ -1,6 +1,7 @@
 {{- $functionName := "generate-embeddings" -}}
 {{- $functionCamelCase := "generateEmbeddings" -}}
 {{- $functionConfig := index .Values.aws.lambda.functions $functionCamelCase -}}
+{{- $functionConfig := merge $functionConfig (dict "additionalEnvironment" (list (dict "name" "AWS_REGION" "value" .Values.aws.region))) -}}
 {{- include "serverless-pdf-chat.lambda-function" (dict "Values" .Values "Release" .Release "Chart" .Chart "functionName" $functionName "functionCamelCase" $functionCamelCase "functionConfig" $functionConfig) }}
 
 ---

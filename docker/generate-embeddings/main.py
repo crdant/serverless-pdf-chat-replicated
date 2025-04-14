@@ -11,6 +11,7 @@ from langchain_community.vectorstores import FAISS
 DOCUMENT_TABLE = os.environ["DOCUMENT_TABLE"]
 BUCKET = os.environ["BUCKET"]
 EMBEDDING_MODEL_ID = os.environ["EMBEDDING_MODEL_ID"]
+AWS_REGION = os.environ.get("AWS_REGION", "us-east-1")  # Default to us-east-1 if not set
 
 s3 = boto3.client("s3")
 ddb = boto3.resource("dynamodb")
@@ -61,10 +62,10 @@ def lambda_handler(event, context):
         logger.info(f"Successfully loaded {len(documents)} document chunks from PDF")
         
         # Initialize Bedrock client
-        logger.info(f"Initializing Bedrock client with model ID: {EMBEDDING_MODEL_ID}")
+        logger.info(f"Initializing Bedrock client with model ID: {EMBEDDING_MODEL_ID} in region: {AWS_REGION}")
         bedrock_runtime = boto3.client(
             service_name="bedrock-runtime",
-            region_name="us-east-1",
+            region_name=AWS_REGION,
         )
 
         # Initialize embeddings
@@ -72,7 +73,7 @@ def lambda_handler(event, context):
         embeddings = BedrockEmbeddings(
             model_id=EMBEDDING_MODEL_ID,
             client=bedrock_runtime,
-            region_name="us-east-1",
+            region_name=AWS_REGION,
         )
         
         # Test embedding model
