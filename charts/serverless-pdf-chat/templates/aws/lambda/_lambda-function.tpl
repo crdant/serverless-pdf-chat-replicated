@@ -21,28 +21,31 @@ spec:
     # Use ARM architecture
     architectures:
       - "arm64"
+    # Add Lambda Powertools layer
+    layers:
+      - {{ printf "arn:aws:lambda:%s:017000801446:layer:AWSLambdaPowertoolsPythonV3-python311-arm64:7" .Values.aws.region | quote }}
     # Use the roleArn helper
     role: {{ include "serverless-pdf-chat.roleArn" (dict "account" .Values.aws.accountId "name" (default (printf "%s-lambda-role" (include "serverless-pdf-chat.fullname" .)) .Values.aws.iam.roles.lambdaRole.name)) }}
     
     # Environment variables
     environment:
-      - variables:
-          # Standard environment variables
-          DOCUMENT_BUCKET: {{ include "serverless-pdf-chat.bucketName" . | quote }}
-          DOCUMENT_TABLE: {{ include "serverless-pdf-chat.documentTableName" . | quote }}
-          MEMORY_TABLE: {{ include "serverless-pdf-chat.memoryTableName" . | quote }}
-          EMBEDDING_QUEUE: {{ include "serverless-pdf-chat.embeddingQueueName" . | quote }}
-          EMBEDDING_MODEL_ID: {{ .Values.application.config.embeddingModelId | quote }}
-          MODEL_ID: {{ .Values.application.config.modelId | quote }}
-          REGION: {{ .Values.application.config.region | quote }}
-          # Function-specific environment variables
-          {{- if .functionConfig.environment }}
-          {{- range $env := .functionConfig.environment }}
-          {{- range $key, $value := $env }}
-          {{ $key }}: {{ $value | quote }}
-          {{- end }}
-          {{- end }}
-          {{- end }}
+      variables:
+        # Standard environment variables
+        DOCUMENT_BUCKET: {{ include "serverless-pdf-chat.bucketName" . | quote }}
+        DOCUMENT_TABLE: {{ include "serverless-pdf-chat.documentTableName" . | quote }}
+        MEMORY_TABLE: {{ include "serverless-pdf-chat.memoryTableName" . | quote }}
+        EMBEDDING_QUEUE: {{ include "serverless-pdf-chat.embeddingQueueName" . | quote }}
+        EMBEDDING_MODEL_ID: {{ .Values.application.config.embeddingModelId | quote }}
+        MODEL_ID: {{ .Values.application.config.modelId | quote }}
+        REGION: {{ .Values.application.config.region | quote }}
+        # Function-specific environment variables
+        {{- if .functionConfig.environment }}
+        {{- range $env := .functionConfig.environment }}
+        {{- range $key, $value := $env }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
 {{- end -}}
