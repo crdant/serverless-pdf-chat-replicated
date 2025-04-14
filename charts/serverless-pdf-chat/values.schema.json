@@ -615,6 +615,68 @@
             }
           }
         },
+        "builderImage": {
+          "type": "object",
+          "properties": {
+            "registry": {
+              "type": ["string", "null"],
+              "description": "Container registry for frontend builder image. If null, will use AWS ECR",
+              "default": null
+            },
+            "repository": {
+              "type": ["string", "null"],
+              "description": "Repository name for the frontend builder image. If null, will use images.repository/frontend-builder",
+              "default": null
+            },
+            "tag": {
+              "type": ["string", "null"],
+              "description": "Tag for the frontend builder image. If null, will use Chart.AppVersion",
+              "default": null
+            },
+            "pullPolicy": {
+              "type": "string",
+              "description": "Image pull policy",
+              "default": "IfNotPresent",
+              "enum": ["Always", "IfNotPresent", "Never"]
+            }
+          }
+        },
+        "builderResources": {
+          "type": "object",
+          "description": "Resource limits and requests for the builder container",
+          "properties": {
+            "limits": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string",
+                  "description": "CPU limit",
+                  "default": "1"
+                },
+                "memory": {
+                  "type": "string",
+                  "description": "Memory limit",
+                  "default": "2Gi"
+                }
+              }
+            },
+            "requests": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string",
+                  "description": "CPU request",
+                  "default": "500m"
+                },
+                "memory": {
+                  "type": "string",
+                  "description": "Memory request",
+                  "default": "1Gi"
+                }
+              }
+            }
+          }
+        },
         "replicaCount": {
           "type": "integer",
           "description": "Number of frontend replicas",
