@@ -89,7 +89,10 @@ spec:
             "Action": [
               "bedrock:InvokeModel"
             ],
-            "Resource": "*"
+            "Resource": [
+              "{{ include "serverless-pdf-chat.arn" (dict "service" "bedrock" "region" .Values.aws.region "resource" (printf "foundation-model/%s" .Values.aws.bedrock.embeddingModelId)) }}",
+              "{{ include "serverless-pdf-chat.arn" (dict "service" "bedrock" "region" .Values.aws.region "resource" (printf "foundation-model/%s" .Values.aws.bedrock.modelId)) }}"
+            ]
           }
         ]
       }
