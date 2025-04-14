@@ -107,3 +107,57 @@ EXPOSE 80
 
 # Specify the command to run when the container starts
 CMD ["nginx", "-g", "daemon off;"]
+# Build stage for dependencies
+FROM node:18-alpine AS builder
+
+# Install git
+RUN apk add --no-cache git
+
+# Clone the repository
+RUN git clone https://github.com/aws-samples/serverless-pdf-chat.git /app
+
+# Set working directory
+WORKDIR /app/frontend
+
+# Install dependencies
+RUN npm ci
+
+# Copy our fixed chat.tsx file
+COPY chat.tsx /app/frontend/src/pages/chat.tsx
+
+# Final stage
+FROM nginx:alpine
+
+# Install Node.js
+RUN apk add --no-cache nodejs npm
+
+# Copy the frontend source code and node_modules
+COPY --from=builder /app/frontend /app/frontend
+COPY --from=builder /app/frontend/node_modules /app/frontend/node_modules
+COPY --from=builder /app/frontend/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Create build script in docker-entrypoint.d
+RUN mkdir -p /docker-entrypoint.d
+RUN echo '#!/bin/sh \n\
+echo "Building frontend application with environment variables" \n\
+cd /app/frontend \n\
+\n\
+# Create .env file with the environment variables \n\
+echo "VITE_REGION=$VITE_REGION" > .env \n\
+echo "VITE_API_ENDPOINT=$VITE_API_ENDPOINT" >> .env \n\
+echo "VITE_USER_POOL_ID=$VITE_USER_POOL_ID" >> .env \n\
+echo "VITE_USER_POOL_CLIENT_ID=$VITE_USER_POOL_CLIENT_ID" >> .env \n\
+\n\
+# Build the app \n\
+npm run build \n\
+\n\
+# Copy the built files to nginx html directory \n\
+cp -r dist/* /usr/share/nginx/html/ \n\
+\n\
+echo "Frontend build completed" \n\
+' > /docker-entrypoint.d/40-build-app.sh
+
+RUN chmod +x /docker-entrypoint.d/40-build-app.sh
+
+# Expose port
+EXPOSE 80
