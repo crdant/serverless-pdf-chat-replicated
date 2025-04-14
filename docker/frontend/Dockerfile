@@ -105,3 +105,37 @@ EXPOSE 80
 
 # Specify the command to run when the container starts
 CMD ["nginx", "-g", "daemon off;"]
+FROM node:18-alpine AS builder
+
+# Install git
+RUN apk add --no-cache git
+
+# Clone the repository
+RUN git clone https://github.com/aws-samples/serverless-pdf-chat.git /app
+
+# Set working directory
+WORKDIR /app/frontend
+
+# Install dependencies
+RUN npm ci
+
+# Copy our fixed chat.tsx file
+COPY chat.tsx /app/frontend/src/pages/chat.tsx
+
+# Build the application
+RUN npm run build
+
+# Production stage
+FROM nginx:alpine
+
+# Copy built assets from builder stage
+COPY --from=builder /app/frontend/dist /usr/share/nginx/html
+
+# Copy nginx configuration
+COPY --from=builder /app/frontend/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port
+EXPOSE 80
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
