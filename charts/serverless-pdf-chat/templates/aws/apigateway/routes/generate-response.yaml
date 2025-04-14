@@ -11,7 +11,7 @@ spec:
       matchLabels:
         {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
         api: {{ include "serverless-pdf-chat.fullname" . }}-api
-    routeKey: "POST /{documentid}/{conversationid}"
+    routeKey: "POST /doc/{documentid}/{conversationid}"
     targetSelector:
       matchLabels:
         {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
