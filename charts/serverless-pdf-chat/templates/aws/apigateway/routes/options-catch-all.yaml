@@ -1,0 +1,18 @@
+apiVersion: apigatewayv2.aws.upbound.io/v1beta1
+kind: Route
+metadata:
+  name: {{ include "serverless-pdf-chat.fullname" . }}-options-catch-all-route
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+spec:
+  forProvider:
+    region: {{ .Values.aws.region }}
+    apiIdSelector:
+      matchLabels:
+        {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
+        api: {{ include "serverless-pdf-chat.fullname" . }}-api
+    routeKey: "OPTIONS /{proxy+}"
+    authorizationType: NONE
+    target: "integrations/{{ include "serverless-pdf-chat.fullname" . }}-options-integration"
+  providerConfigRef:
+    name: {{ .Values.aws.providerConfigName }}

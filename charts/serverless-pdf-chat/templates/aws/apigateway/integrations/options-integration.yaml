@@ -1,0 +1,25 @@
+apiVersion: apigatewayv2.aws.upbound.io/v1beta1
+kind: Integration
+metadata:
+  name: {{ include "serverless-pdf-chat.fullname" . }}-options-integration
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+    integration: {{ include "serverless-pdf-chat.fullname" . }}-options-integration
+spec:
+  forProvider:
+    region: {{ .Values.aws.region }}
+    apiIdSelector:
+      matchLabels:
+        {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
+        api: {{ include "serverless-pdf-chat.fullname" . }}-api
+    integrationType: MOCK
+    payloadFormatVersion: "1.0"
+    templateSelectionExpression: "\\$default"
+    requestTemplates:
+      "application/json": "{\"statusCode\": 200}"
+    responseParameters:
+      "200.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+      "200.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS,POST,PUT,DELETE'"
+      "200.response.header.Access-Control-Allow-Origin": "'*'"
+  providerConfigRef:
+    name: {{ .Values.aws.providerConfigName }}
