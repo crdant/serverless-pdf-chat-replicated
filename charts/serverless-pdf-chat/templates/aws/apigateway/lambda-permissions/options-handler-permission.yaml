@@ -18,3 +18,24 @@ spec:
     statementIdPrefix: ""
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
+apiVersion: lambda.aws.upbound.io/v1beta1
+kind: Permission
+metadata:
+  name: {{ include "serverless-pdf-chat.fullname" . }}-options-handler-permission
+  labels:
+    {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+spec:
+  forProvider:
+    region: {{ .Values.aws.region }}
+    action: lambda:InvokeFunction
+    functionNameSelector:
+      matchLabels:
+        {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
+        function: {{ include "serverless-pdf-chat.fullname" . }}-options-handler
+    principal: apigateway.amazonaws.com
+    sourceArn: "arn:aws:execute-api:{{ .Values.aws.region }}:{{ .Values.aws.accountId }}:*/*"
+    tags:
+      Name: {{ include "serverless-pdf-chat.fullname" . }}-options-handler-permission
+      {{- include "serverless-pdf-chat.tags" . | nindent 6 }}
+  providerConfigRef:
+    name: {{ .Values.aws.providerConfigName }}
