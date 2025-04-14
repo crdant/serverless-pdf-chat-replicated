@@ -12,16 +12,10 @@ spec:
       matchLabels:
         {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
         api: {{ include "serverless-pdf-chat.fullname" . }}-api
-    integrationType: MOCK
-    payloadFormatVersion: "1.0"
-    templateSelectionExpression: "\\$default"
-    requestTemplates:
-      "application/json": "{\"statusCode\": 200}"
-    responseParameters:
-      - statusCode: "200"
-        mappings:
-          "response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-          "response.header.Access-Control-Allow-Methods": "'GET,OPTIONS,POST,PUT,DELETE'"
-          "response.header.Access-Control-Allow-Origin": "'*'"
+    integrationType: AWS_PROXY
+    payloadFormatVersion: "2.0"
+    integrationUri: "arn:aws:apigateway:{{ .Values.aws.region }}:lambda:path/2015-03-31/functions/arn:aws:lambda:{{ .Values.aws.region }}:{{ .Values.aws.accountId }}:function:{{ include "serverless-pdf-chat.fullname" . }}-generate-presigned-url/invocations"
+    integrationMethod: POST
+    connectionType: INTERNET
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
