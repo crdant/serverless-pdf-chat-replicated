@@ -33,6 +33,39 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml .Values.frontend.podSecurityContext | nindent 8 }}
+      volumes:
+        - name: app-build
+          emptyDir: {}
+      initContainers:
+        - name: {{ .Chart.Name }}-frontend-builder
+          image: {{ include "serverless-pdf-chat.frontendBuilderImage" . }}
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          env:
+            - name: VITE_API_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "serverless-pdf-chat.fullname" . }}-frontend-config
+                  key: apiEndpoint
+            - name: VITE_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "serverless-pdf-chat.fullname" . }}-frontend-config
+                  key: region
+            - name: VITE_USER_POOL_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "serverless-pdf-chat.fullname" . }}-frontend-config
+                  key: userPoolId
+            - name: VITE_USER_POOL_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "serverless-pdf-chat.fullname" . }}-frontend-config
+                  key: userPoolClientId
+          volumeMounts:
+            - name: app-build
+              mountPath: /output
+          resources:
+            {{- toYaml .Values.frontend.builderResources | nindent 12 }}
       containers:
         - name: {{ .Chart.Name }}-frontend
           securityContext:
@@ -58,27 +91,9 @@ spec:
             periodSeconds: 10
           resources:
             {{- toYaml .Values.frontend.resources | nindent 12 }}
-          env:
-            - name: VITE_API_ENDPOINT
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "serverless-pdf-chat.fullname" . }}-frontend-config
-                  key: apiEndpoint
-            - name: VITE_REGION
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "serverless-pdf-chat.fullname" . }}-frontend-config
-                  key: region
-            - name: VITE_USER_POOL_ID
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "serverless-pdf-chat.fullname" . }}-frontend-config
-                  key: userPoolId
-            - name: VITE_USER_POOL_CLIENT_ID
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "serverless-pdf-chat.fullname" . }}-frontend-config
-                  key: userPoolClientId
+          volumeMounts:
+            - name: app-build
+              mountPath: /usr/share/nginx/html
       {{- with .Values.frontend.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -1,48 +1,4 @@
-# Build stage
-FROM node:18-alpine as build
-
-WORKDIR /app
-
-# Install git for cloning
-RUN apk add --no-cache git && \
-    git clone https://github.com/aws-samples/serverless-pdf-chat.git /tmp/repo && \
-    cp -r /tmp/repo/frontend/* /app/ && \
-    rm -rf /tmp/repo
-
-COPY chat.tsx src/pages/chat.tsx
-
-# Install dependencies and build
-RUN npm ci && \
-    npm run build
-
-# Production stage
 FROM nginx:alpine
-
-# Copy the build output from the build stage
-COPY --from=build /app/dist /usr/share/nginx/html
-
-# Create entrypoint script
-RUN mkdir -p /docker-entrypoint.d && \
-    echo $'#!/bin/sh \n\
-echo "Building frontend application with environment variables" \n\
-cd /app/frontend \n\
-\n\
-# Create .env file with the environment variables \n\
-echo "VITE_REGION=$VITE_REGION" > .env \n\
-echo "VITE_API_ENDPOINT=$VITE_API_ENDPOINT" >> .env \n\
-echo "VITE_USER_POOL_ID=$VITE_USER_POOL_ID" >> .env \n\
-echo "VITE_USER_POOL_CLIENT_ID=$VITE_USER_POOL_CLIENT_ID" >> .env \n\
-\n\
-# Build the app \n\
-npm run build \n\
-\n\
-# Copy the built files to nginx html directory \n\
-cp -r dist/* /usr/share/nginx/html/ \n\
-\n\
-echo "Frontend build completed" \n\
-' > /docker-entrypoint.d/40-build-frontend.sh
-
-RUN chmod +x /docker-entrypoint.d/40-build-frontend.sh
 
 # Create nginx configuration for SPA support
 RUN echo 'server { \
