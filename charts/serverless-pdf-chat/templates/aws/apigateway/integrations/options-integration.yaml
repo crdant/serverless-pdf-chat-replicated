@@ -13,7 +13,7 @@ spec:
         {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
         api: {{ include "serverless-pdf-chat.fullname" . }}-api
     integrationType: AWS_PROXY
-    payloadFormatVersion: "2.0"
+    payloadFormatVersion: "1.0"
     integrationUriSelector:
       matchLabels:
         {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
