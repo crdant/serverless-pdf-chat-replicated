@@ -14,8 +14,9 @@ spec:
         api: {{ include "serverless-pdf-chat.fullname" . }}-api
     integrationType: AWS_PROXY
     payloadFormatVersion: "2.0"
-    integrationUri: "arn:aws:apigateway:{{ .Values.aws.region }}:lambda:path/2015-03-31/functions/arn:aws:lambda:{{ .Values.aws.region }}:{{ .Values.aws.accountId }}:function:{{ include "serverless-pdf-chat.fullname" . }}-generate-presigned-url/invocations"
-    integrationMethod: POST
-    connectionType: INTERNET
+    integrationUriSelector:
+      matchLabels:
+        {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
+        function: {{ include "serverless-pdf-chat.fullname" . }}-options-handler
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
