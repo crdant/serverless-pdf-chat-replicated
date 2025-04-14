@@ -18,8 +18,10 @@ spec:
     requestTemplates:
       "application/json": "{\"statusCode\": 200}"
     responseParameters:
-      "200.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-      "200.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS,POST,PUT,DELETE'"
-      "200.response.header.Access-Control-Allow-Origin": "'*'"
+      - statusCode: "200"
+        mappings:
+          "response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+          "response.header.Access-Control-Allow-Methods": "'GET,OPTIONS,POST,PUT,DELETE'"
+          "response.header.Access-Control-Allow-Origin": "'*'"
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
