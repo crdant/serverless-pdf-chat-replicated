@@ -33,6 +33,7 @@ spec:
           DOCUMENT_TABLE: {{ include "serverless-pdf-chat.documentTableName" . | quote }}
           MEMORY_TABLE: {{ include "serverless-pdf-chat.memoryTableName" . | quote }}
           EMBEDDING_QUEUE: {{ include "serverless-pdf-chat.embeddingQueueName" . | quote }}
+          QUEUE: {{ include "serverless-pdf-chat.embeddingQueueName" . | quote }}
           EMBEDDING_MODEL_ID: {{ .Values.application.config.embeddingModelId | quote }}
           MODEL_ID: {{ .Values.application.config.modelId | quote }}
           REGION: {{ .Values.application.config.region | quote }}
