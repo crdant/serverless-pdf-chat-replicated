@@ -24,4 +24,4 @@ RUN ls -la ${LAMBDA_TASK_ROOT} && \
     python -c "import aws_lambda_powertools; print(f'aws_lambda_powertools location: {aws_lambda_powertools.__file__}')" || echo "Failed to import aws_lambda_powertools"
 
 # Set the handler
-CMD [ "lambda_function.lambda_handler" ]
+CMD [ "main.lambda_handler" ]
