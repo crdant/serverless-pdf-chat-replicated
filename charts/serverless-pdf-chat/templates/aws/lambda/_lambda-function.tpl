@@ -21,9 +21,6 @@ spec:
     # Use ARM architecture
     architectures:
       - "arm64"
-    # Add Lambda Powertools layer
-    layers:
-      - {{ printf "arn:aws:lambda:%s:017000801446:layer:AWSLambdaPowertoolsPythonV3-python311-arm64:7" .Values.aws.region | quote }}
     # Use the roleArn helper
     role: {{ include "serverless-pdf-chat.roleArn" (dict "account" .Values.aws.accountId "name" (default (printf "%s-lambda-role" (include "serverless-pdf-chat.fullname" .)) .Values.aws.iam.roles.lambdaRole.name)) }}
     

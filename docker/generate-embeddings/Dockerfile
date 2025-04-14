@@ -1,7 +1,8 @@
 FROM public.ecr.aws/lambda/python:3.11-arm64
 
-# Install git for cloning
+# Install git for cloning and required packages
 RUN yum install -y git && \
+    pip install aws-lambda-powertools boto3 && \
     git clone https://github.com/aws-samples/serverless-pdf-chat.git /tmp/repo && \
     cp -r /tmp/repo/backend/src/generate_embeddings/* ${LAMBDA_TASK_ROOT}/ && \
     if [ -f "${LAMBDA_TASK_ROOT}/requirements.txt" ]; then pip install -r ${LAMBDA_TASK_ROOT}/requirements.txt; fi && \
