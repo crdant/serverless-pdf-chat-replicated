@@ -29,6 +29,7 @@ spec:
       - variables:
           # Standard environment variables
           DOCUMENT_BUCKET: {{ include "serverless-pdf-chat.bucketName" . | quote }}
+          BUCKET: {{ include "serverless-pdf-chat.bucketName" . | quote }}
           DOCUMENT_TABLE: {{ include "serverless-pdf-chat.documentTableName" . | quote }}
           MEMORY_TABLE: {{ include "serverless-pdf-chat.memoryTableName" . | quote }}
           EMBEDDING_QUEUE: {{ include "serverless-pdf-chat.embeddingQueueName" . | quote }}
