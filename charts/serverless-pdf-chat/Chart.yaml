@@ -3,4 +3,4 @@ name: serverless-pdf-chat
 description: A Helm chart for deploying serverless PDF chat infrastructure
 type: application
 version: 0.13.22  # Bumped from 0.13.21 to 0.13.22
-appVersion: "1.0.12"  # Keeping the app version the same
+appVersion: "1.0.13"  # Bumping from 1.0.12 to 1.0.13
