@@ -9,4 +9,4 @@ RUN yum install -y git && \
     rm -rf /tmp/repo
 
 # Set the handler
-CMD [ "lambda_function.lambda_handler" ]
+CMD [ "main.lambda_handler" ]
