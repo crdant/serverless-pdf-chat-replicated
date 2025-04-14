@@ -29,23 +29,23 @@ spec:
     
     # Environment variables
     environment:
-      variables:
-        # Standard environment variables
-        DOCUMENT_BUCKET: {{ include "serverless-pdf-chat.bucketName" . | quote }}
-        DOCUMENT_TABLE: {{ include "serverless-pdf-chat.documentTableName" . | quote }}
-        MEMORY_TABLE: {{ include "serverless-pdf-chat.memoryTableName" . | quote }}
-        EMBEDDING_QUEUE: {{ include "serverless-pdf-chat.embeddingQueueName" . | quote }}
-        EMBEDDING_MODEL_ID: {{ .Values.application.config.embeddingModelId | quote }}
-        MODEL_ID: {{ .Values.application.config.modelId | quote }}
-        REGION: {{ .Values.application.config.region | quote }}
-        # Function-specific environment variables
-        {{- if .functionConfig.environment }}
-        {{- range $env := .functionConfig.environment }}
-        {{- range $key, $value := $env }}
-        {{ $key }}: {{ $value | quote }}
-        {{- end }}
-        {{- end }}
-        {{- end }}
+      - variables:
+          # Standard environment variables
+          DOCUMENT_BUCKET: {{ include "serverless-pdf-chat.bucketName" . | quote }}
+          DOCUMENT_TABLE: {{ include "serverless-pdf-chat.documentTableName" . | quote }}
+          MEMORY_TABLE: {{ include "serverless-pdf-chat.memoryTableName" . | quote }}
+          EMBEDDING_QUEUE: {{ include "serverless-pdf-chat.embeddingQueueName" . | quote }}
+          EMBEDDING_MODEL_ID: {{ .Values.application.config.embeddingModelId | quote }}
+          MODEL_ID: {{ .Values.application.config.modelId | quote }}
+          REGION: {{ .Values.application.config.region | quote }}
+          # Function-specific environment variables
+          {{- if .functionConfig.environment }}
+          {{- range $env := .functionConfig.environment }}
+          {{- range $key, $value := $env }}
+          {{ $key }}: {{ $value | quote }}
+          {{- end }}
+          {{- end }}
+          {{- end }}
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
 {{- end -}}
