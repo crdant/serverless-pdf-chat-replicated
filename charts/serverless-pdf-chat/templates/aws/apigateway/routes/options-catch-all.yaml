@@ -13,6 +13,9 @@ spec:
         api: {{ include "serverless-pdf-chat.fullname" . }}-api
     routeKey: "OPTIONS /{proxy+}"
     authorizationType: NONE
-    target: "integrations/{{ include "serverless-pdf-chat.fullname" . }}-options-integration"
+    targetSelector:
+      matchLabels:
+        {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
+        integration: {{ include "serverless-pdf-chat.fullname" . }}-options-integration
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
