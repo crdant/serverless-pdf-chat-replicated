@@ -93,6 +93,7 @@ create-ecr-repo-$1:
 	aws ecr create-repository --repository-name $(DOCKER_REPO)/$1 --region $(AWS_REGION) --no-cli-pager
 
 image-build-$1: create-ecr-repo-$1
+	# if we're dealing with a frontend image, we need to build it amd64, otherwise we need to build it arm64 - AI!
 	@echo "Building Docker image: $1 with tag $(DOCKER_TAG)"
 	$(DOCKER_CMD) build \
     --platform linux/amd64,linux/arm64 \
