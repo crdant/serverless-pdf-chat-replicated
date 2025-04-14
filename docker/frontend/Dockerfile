@@ -38,6 +38,8 @@ RUN sed -i 's/import\.meta\.env\.VITE_USER_POOL_ID/window.RUNTIME_CONFIG.userPoo
     sed -i 's/import\.meta\.env\.VITE_API_REGION/window.RUNTIME_CONFIG.region/g' src/App.tsx && \
     cat src/App.tsx | grep RUNTIME_CONFIG
 
+COPY chat.tsx src/pages/chat.tsx
+
 # Install dependencies and build
 RUN npm ci && \
     npm run build
@@ -104,38 +106,4 @@ RUN echo 'server { \
 EXPOSE 80
 
 # Specify the command to run when the container starts
-CMD ["nginx", "-g", "daemon off;"]
-FROM node:18-alpine AS builder
-
-# Install git
-RUN apk add --no-cache git
-
-# Clone the repository
-RUN git clone https://github.com/aws-samples/serverless-pdf-chat.git /app
-
-# Set working directory
-WORKDIR /app/frontend
-
-# Install dependencies
-RUN npm ci
-
-# Copy our fixed chat.tsx file
-COPY chat.tsx /app/frontend/src/pages/chat.tsx
-
-# Build the application
-RUN npm run build
-
-# Production stage
-FROM nginx:alpine
-
-# Copy built assets from builder stage
-COPY --from=builder /app/frontend/dist /usr/share/nginx/html
-
-# Copy nginx configuration
-COPY --from=builder /app/frontend/nginx.conf /etc/nginx/conf.d/default.conf
-
-# Expose port
-EXPOSE 80
-
-# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
