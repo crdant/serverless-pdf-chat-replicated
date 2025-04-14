@@ -18,6 +18,9 @@ spec:
     imageUri: {{ printf "%s.dkr.ecr.%s.amazonaws.com/%s/%s:%s" .Values.aws.accountId .Values.aws.region .Values.images.repository .functionConfig.repository (default (default .Values.images.tag .functionConfig.tag) .Chart.AppVersion) }}
     timeout: {{ default .Values.aws.lambda.timeout .functionConfig.timeout }}
     memorySize: {{ default .Values.aws.lambda.memorySize .functionConfig.memorySize }}
+    # Use ARM architecture
+    architectures:
+      - "arm64"
     # Use the roleArn helper
     role: {{ include "serverless-pdf-chat.roleArn" (dict "account" .Values.aws.accountId "name" (default (printf "%s-lambda-role" (include "serverless-pdf-chat.fullname" .)) .Values.aws.iam.roles.lambdaRole.name)) }}
     
