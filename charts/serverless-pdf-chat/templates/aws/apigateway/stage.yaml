@@ -1,7 +1,7 @@
 apiVersion: apigatewayv2.aws.upbound.io/v1beta1
 kind: Stage
 metadata:
-  name: {{ include "serverless-pdf-chat.fullname" . }}-stage
+  name: {{ .Values.global.environment }}
   labels:
     {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
 spec:
@@ -11,10 +11,9 @@ spec:
       matchLabels:
         {{- include "serverless-pdf-chat.selectorLabels" . | nindent 8 }}
         api: {{ include "serverless-pdf-chat.fullname" . }}-api
-    name: {{ .Values.global.environment }}
     autoDeploy: true
     tags:
-      Name: {{ include "serverless-pdf-chat.fullname" . }}-stage
+      Name: {{ .Values.global.environment }}
       {{- include "serverless-pdf-chat.tags" . | nindent 6 }}
   providerConfigRef:
     name: {{ .Values.aws.providerConfigName }}
