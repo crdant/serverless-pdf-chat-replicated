@@ -5,6 +5,7 @@ metadata:
   name: {{ include "serverless-pdf-chat.bucketName" . }}
   labels:
     {{- include "serverless-pdf-chat.labels" . | nindent 4 }}
+    bucket: {{ include "serverless-pdf-chat.fullname" . }}-bucket
 spec:
   forProvider:
     region: {{ .Values.aws.region }}
