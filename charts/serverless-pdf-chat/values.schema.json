@@ -53,7 +53,7 @@
             "modelId": {
               "type": "string",
               "description": "Bedrock model ID for text generation",
-              "default": "anthropic.claude-3-sonnet-20240229-v1:0"
+              "default": "anthropic.claude-3-7-sonnet-20250219-v1:0"
             },
             "embeddingModelId": {
               "type": "string",
