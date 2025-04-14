@@ -93,26 +93,38 @@ create-ecr-repo-$1:
 	aws ecr create-repository --repository-name $(DOCKER_REPO)/$1 --region $(AWS_REGION) --no-cli-pager
 
 image-build-$1: create-ecr-repo-$1
-	# if we're dealing with a frontend image, we need to build it amd64, otherwise we need to build it arm64 - AI!
 	@echo "Building Docker image: $1 with tag $(DOCKER_TAG)"
-	$(DOCKER_CMD) build \
-    --platform linux/amd64,linux/arm64 \
-		--label org.opencontainers.image.source="$(GIT_HTTPS_URL)" \
-		--label org.opencontainers.image.revision="$(GIT_REVISION)" \
-		--label org.opencontainers.image.version="$(DOCKER_TAG)" \
-		--label org.opencontainers.image.title="$1" \
-		--label org.opencontainers.image.description="Lambda function for serverless-pdf-chat" \
-		-t $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG) \
-		-t $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MINOR_VERSION) \
-		-t $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MAJOR_VERSION) \
-		-f $(DOCKERDIR)/$1/Dockerfile $(DOCKERDIR)/$1
+	$(if $(findstring frontend,$1), \
+		$(DOCKER_CMD) build \
+			--platform linux/amd64 \
+			--label org.opencontainers.image.source="$(GIT_HTTPS_URL)" \
+			--label org.opencontainers.image.revision="$(GIT_REVISION)" \
+			--label org.opencontainers.image.version="$(DOCKER_TAG)" \
+			--label org.opencontainers.image.title="$1" \
+			--label org.opencontainers.image.description="Frontend for serverless-pdf-chat" \
+			-t $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG) \
+			-t $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MINOR_VERSION) \
+			-t $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MAJOR_VERSION) \
+			-f $(DOCKERDIR)/$1/Dockerfile $(DOCKERDIR)/$1, \
+		$(DOCKER_CMD) build \
+			--platform linux/arm64 \
+			--label org.opencontainers.image.source="$(GIT_HTTPS_URL)" \
+			--label org.opencontainers.image.revision="$(GIT_REVISION)" \
+			--label org.opencontainers.image.version="$(DOCKER_TAG)" \
+			--label org.opencontainers.image.title="$1" \
+			--label org.opencontainers.image.description="Lambda function for serverless-pdf-chat" \
+			-t $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG) \
+			-t $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MINOR_VERSION) \
+			-t $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MAJOR_VERSION) \
+			-f $(DOCKERDIR)/$1/Dockerfile $(DOCKERDIR)/$1 \
+	)
 	@echo "Tagged image with $(DOCKER_TAG), $(MINOR_VERSION), and $(MAJOR_VERSION)"
 
 image-push-$1: image-build-$1 ecr-login
 	@echo "Pushing Docker image: $1 with tags $(DOCKER_TAG), $(MINOR_VERSION), and $(MAJOR_VERSION)"
-	$(DOCKER_CMD) push --all-platforms $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG)
-	$(DOCKER_CMD) push --all-platforms $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MINOR_VERSION)  
-	$(DOCKER_CMD) push --all-platforms $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MAJOR_VERSION)
+	$(DOCKER_CMD) push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(DOCKER_TAG)
+	$(DOCKER_CMD) push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MINOR_VERSION)  
+	$(DOCKER_CMD) push $(DOCKER_REGISTRY)/$(DOCKER_REPO)/$1:$(MAJOR_VERSION)
 
 # Add each image to the images target dependencies
 images:: image-push-$1
