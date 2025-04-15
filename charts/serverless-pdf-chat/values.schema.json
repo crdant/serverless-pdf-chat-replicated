@@ -625,7 +625,7 @@
             },
             "repository": {
               "type": ["string", "null"],
-              "description": "Repository name for the frontend builder image. If null, will use images.repository/frontend-builder",
+              "description": "Repository name for the frontend builder image. If null, will use images.repository/builder",
               "default": null
             },
             "tag": {

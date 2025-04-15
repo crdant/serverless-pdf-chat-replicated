@@ -152,7 +152,7 @@ Frontend builder image
 */}}
 {{- define "serverless-pdf-chat.frontendBuilderImage" -}}
 {{- $registry := include "serverless-pdf-chat.frontendRegistry" . -}}
-{{- $repository := .Values.frontend.builderImage.repository | default (printf "%s/frontend-builder" .Values.images.repository) -}}
+{{- $repository := .Values.frontend.builderImage.repository | default (printf "%s/builder" .Values.images.repository) -}}
 {{- $tag := .Values.frontend.builderImage.tag | default .Chart.AppVersion -}}
 {{- printf "%s/%s:%s" $registry $repository $tag -}}
 {{- end -}}

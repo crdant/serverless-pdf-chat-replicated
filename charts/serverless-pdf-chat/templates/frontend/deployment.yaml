@@ -37,7 +37,7 @@ spec:
         - name: app-build
           emptyDir: {}
       initContainers:
-        - name: {{ .Chart.Name }}-frontend-builder
+        - name: {{ .Chart.Name }}-builder
           image: {{ include "serverless-pdf-chat.frontendBuilderImage" . }}
           imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
           env:

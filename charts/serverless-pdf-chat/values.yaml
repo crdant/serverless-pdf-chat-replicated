@@ -26,7 +26,7 @@ frontend:
     pullSecrets: []  # Array of existing secret names for private registries
   builderImage:
     registry: null  # If null, will use global images.registry
-    repository: null  # If null, will use "{{ .Values.images.repository }}/frontend-builder"
+    repository: null  # If null, will use "{{ .Values.images.repository }}/builder"
     tag: null  # Will use Chart.AppVersion if null
     pullPolicy: "IfNotPresent"
   builderResources:
