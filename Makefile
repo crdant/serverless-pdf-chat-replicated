@@ -94,7 +94,7 @@ create-ecr-repo-$1:
 
 image-build-$1: create-ecr-repo-$1
 	@echo "Building Docker image: $1 with tag $(DOCKER_TAG)"
-	$(if $(findstring frontend,$1), \
+	$(if $(or $(findstring frontend,$1),$(findstring builder,$1)), \
 		$(DOCKER_CMD) build \
 			--platform linux/amd64 \
 			--label org.opencontainers.image.source="$(GIT_HTTPS_URL)" \
