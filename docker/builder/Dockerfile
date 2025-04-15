@@ -11,7 +11,7 @@ RUN git clone https://github.com/aws-samples/serverless-pdf-chat.git /tmp/repo &
     rm -rf /tmp/repo
 
 # Copy the modified chat.tsx
-COPY chat.tsx src/pages/chat.tsx
+COPY chat.tsx src/routes/chat.tsx
 
 # Install dependencies
 RUN npm ci

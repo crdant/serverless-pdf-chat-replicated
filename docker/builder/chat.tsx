@@ -46,13 +46,13 @@ const Document: React.FC = () => {
     }).response;
     const newConversation = await response.body.json() as unknown as Conversation;
     fetchData(newConversation.conversationid);
-    navigate(`/doc/${params.documentid}/${newConversation.conversationid}`);
+    navigate(`doc/${params.documentid}/${newConversation.conversationid}`);
     setConversationListStatus("idle");
   };
 
   const switchConversation = (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetButton = e.target as HTMLButtonElement;
-    navigate(`/doc/${params.documentid}/${targetButton.id}`);
+    navigate(`doc/${params.documentid}/${targetButton.id}`);
     fetchData(targetButton.id);
   };
 

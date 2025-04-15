@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 nginx:alpine
+FROM nginx:alpine
 
 # Create nginx configuration for SPA support
 RUN echo 'server { \
