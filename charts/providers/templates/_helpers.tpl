@@ -51,27 +51,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Get the credentials secret name
-*/}}
-{{- define "providers.secretName" -}}
-{{- .Values.aws.authentication.secret.name }}
-{{- end }}
-
-{{/*
-Get the credentials secret namespace
-*/}}
-{{- define "providers.secretNamespace" -}}
-{{- .Values.aws.authentication.secret.namespace }}
-{{- end }}
-
-{{/*
-Get the credentials secret key
-*/}}
-{{- define "providers.secretKey" -}}
-{{- "creds" }}
-{{- end }}
-
-{{/*
 Get the runtime config name
 */}}
 {{- define "providers.runtimeConfigName" -}}
