@@ -21,7 +21,7 @@ spec:
       {{- end }}
       containers:
       - name: kubectl
-        image: {{ .Values.jobs.cleanupJob.image.registry }}/{{ .Values.jobs.cleanupJob.image.repository }}:{{ .Values.jobs.cleanupJob.image.tag | default "latest" }}
+        image: {{ include "providers.jobRegistry" (dict "Values" .Values "jobType" "cleanup") }}/{{ .Values.jobs.cleanupJob.image.repository }}:{{ .Values.jobs.cleanupJob.image.tag | default "latest" }}
         {{- if .Values.jobs.cleanupJob.image.pullPolicy }}
         imagePullPolicy: {{ .Values.jobs.cleanupJob.image.pullPolicy }}
         {{- end }}

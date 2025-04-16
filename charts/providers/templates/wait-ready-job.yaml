@@ -22,7 +22,7 @@ spec:
       {{- end }}
       containers:
       - name: kubectl
-        image: {{ .Values.jobs.waitReadyJob.image.registry }}/{{ .Values.jobs.waitReadyJob.image.repository }}:{{ .Values.jobs.waitReadyJob.image.tag | default "latest" }}
+        image: {{ include "providers.jobRegistry" (dict "Values" .Values "jobType" "waitReady") }}/{{ .Values.jobs.waitReadyJob.image.repository }}:{{ .Values.jobs.waitReadyJob.image.tag | default "latest" }}
         imagePullPolicy: {{ .Values.jobs.waitReadyJob.image.pullPolicy | default "IfNotPresent" }}
         {{- with .Values.jobs.waitReadyJob.resources }}
         resources:
