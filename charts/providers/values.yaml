@@ -3,8 +3,6 @@ nameOverride: ""
 fullnameOverride: ""
 
 aws:
-  # AWS region where resources will be provisioned
-  region: "us-west-2"
   # Default deployment runtime configuration
   defaultDeploymentConfig:
     # Resource limits for provider controllers

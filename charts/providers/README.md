@@ -27,8 +27,7 @@ It also installs the Kubernetes provider.
 ## Installation
 
 ```bash
-helm install providers ./charts/providers \
-  --set aws.region=us-west-2
+helm install providers ./charts/providers
 ```
 
 ## Configuration
@@ -37,7 +36,6 @@ The following table lists the configurable parameters of the chart and their def
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `aws.region` | AWS region where resources will be provisioned | `us-west-2` |
 | `aws.defaultDeploymentConfig.resources.limits.cpu` | CPU limit for provider controllers | `500m` |
 | `aws.defaultDeploymentConfig.resources.limits.memory` | Memory limit for provider controllers | `512Mi` |
 | `aws.defaultDeploymentConfig.resources.requests.cpu` | CPU request for provider controllers | `100m` |
