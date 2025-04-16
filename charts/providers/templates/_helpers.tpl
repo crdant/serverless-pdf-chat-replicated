@@ -62,7 +62,8 @@ Get the provider package URL
 */}}
 {{- define "providers.packageUrl" -}}
 {{- $provider := index .Values.aws.providers .providerName -}}
-{{- printf "%s/%s:%s" .Values.aws.providers.registry $provider.package $provider.version -}}
+{{- $registry := .Values.global.images.registry | default .Values.aws.providers.registry -}}
+{{- printf "%s/%s:%s" $registry $provider.package $provider.version -}}
 {{- end }}
 
 {{/*
