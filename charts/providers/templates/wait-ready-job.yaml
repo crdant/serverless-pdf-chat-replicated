@@ -2,6 +2,8 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ include "providers.fullname" . }}-wait-ready
+  labels: {{- include "providers.labels" . | nindent 4 }}
+    app.kubernetes.io/component: cleanup
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "0"  # Run before provider config (weight 1)

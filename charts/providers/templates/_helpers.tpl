@@ -90,3 +90,10 @@ Get the registry for jobs
 {{- .Values.global.images.registry | default "docker.io" -}}
 {{- end -}}
 {{- end }}
+
+{{/*
+Get the registry for Kubernetes provider
+*/}}
+{{- define "providers.kubernetesRegistry" -}}
+{{- .Values.global.images.registry | default .Values.kubernetes.provider.registry -}}
+{{- end }}
