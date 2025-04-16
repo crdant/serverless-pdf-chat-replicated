@@ -8,5 +8,6 @@ metadata:
     {{- include "providers.annotations" . | nindent 4 }}
 spec:
   package: {{ include "providers.packageUrl" (dict "Values" .Values "providerName" "sqs") }}
+  skipDependencyResolution: true
   runtimeConfigRef:
     name: {{ include "providers.runtimeConfigName" . }}
