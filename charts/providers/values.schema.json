@@ -420,51 +420,6 @@
                 }
               }
             },
-            "bedrock": {
-              "type": "object",
-              "properties": {
-                "package": {
-                  "type": "string",
-                  "description": "Package name for the Bedrock provider",
-                  "default": "provider-aws-bedrock"
-                },
-                "version": {
-                  "type": "string",
-                  "description": "Version of the Bedrock provider",
-                  "default": "v1.21.1"
-                }
-              }
-            },
-            "cloudfront": {
-              "type": "object",
-              "properties": {
-                "package": {
-                  "type": "string",
-                  "description": "Package name for the CloudFront provider",
-                  "default": "provider-aws-cloudfront"
-                },
-                "version": {
-                  "type": "string",
-                  "description": "Version of the CloudFront provider",
-                  "default": "v1.21.1"
-                }
-              }
-            },
-            "secretsmanager": {
-              "type": "object",
-              "properties": {
-                "package": {
-                  "type": "string",
-                  "description": "Package name for the Secrets Manager provider",
-                  "default": "provider-aws-secretsmanager"
-                },
-                "version": {
-                  "type": "string",
-                  "description": "Version of the Secrets Manager provider",
-                  "default": "v1.21.1"
-                }
-              }
-            }
           }
         }
       }

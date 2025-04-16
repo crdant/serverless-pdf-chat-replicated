@@ -115,15 +115,6 @@ aws:
     cognitoidp:
       package: "provider-aws-cognitoidp"
       version: "v1.21.1"
-    bedrock:
-      package: "provider-aws-bedrock"
-      version: "v1.21.1"
-    cloudfront:
-      package: "provider-aws-cloudfront"
-      version: "v1.21.1"
-    secretsmanager:
-      package: "provider-aws-secretsmanager"
-      version: "v1.21.1"
 
 kubernetes:
   provider:

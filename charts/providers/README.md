@@ -14,9 +14,6 @@ The chart sets up the following AWS Crossplane providers:
 - SQS
 - API Gateway v2
 - Cognito IDP
-- Bedrock
-- CloudFront
-- Secrets Manager
 
 It also installs the Kubernetes provider.
 

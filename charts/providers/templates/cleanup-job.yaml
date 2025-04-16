@@ -38,7 +38,7 @@ spec:
         - |
           # Delete providers
           {{- range $key, $value := .Values.aws.providers }}
-          {{- if ne $key "registry" }}
+          {{- if and (ne $key "registry") (ne $key "bedrock") (ne $key "cloudfront") (ne $key "secretsmanager") }}
           kubectl delete provider.pkg.crossplane.io {{ include "providers.fullname" $ }}-aws-{{ $key }} --ignore-not-found
           {{- end }}
           {{- end }}
