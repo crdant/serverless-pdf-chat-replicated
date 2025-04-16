@@ -64,3 +64,14 @@ Get the provider package URL
 {{- $provider := index .Values.aws.providers .providerName -}}
 {{- printf "%s/%s:%s" .Values.aws.providers.registry $provider.package $provider.version -}}
 {{- end }}
+
+{{/*
+Get the ServiceAccount name for jobs
+*/}}
+{{- define "providers.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (printf "%s-jobs" (include "providers.fullname" .)) .Values.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}

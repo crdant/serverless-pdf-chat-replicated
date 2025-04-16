@@ -1,8 +1,9 @@
+{{- if .Values.serviceAccount.create }}
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ include "providers.fullname" . }}-jobs
+  name: {{ include "providers.serviceAccountName" . }}
   namespace: {{ .Release.Namespace }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,pre-delete,post-delete
@@ -61,5 +62,6 @@ roleRef:
   name: {{ include "providers.fullname" . }}-jobs
 subjects:
 - kind: ServiceAccount
-  name: {{ include "providers.fullname" . }}-jobs
+  name: {{ include "providers.serviceAccountName" . }}
   namespace: {{ .Release.Namespace }}
+{{- end }}

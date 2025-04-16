@@ -12,7 +12,7 @@ spec:
     metadata:
       name: {{ include "providers.fullname" . }}-wait-ready
     spec:
-      serviceAccountName: {{ include "providers.fullname" . }}-jobs
+      serviceAccountName: {{ include "providers.serviceAccountName" . }}
       restartPolicy: OnFailure
       containers:
       - name: kubectl

@@ -11,7 +11,7 @@ spec:
     metadata:
       name: {{ include "providers.fullname" . }}-cleanup
     spec:
-      serviceAccountName: {{ include "providers.fullname" . }}-jobs
+      serviceAccountName: {{ include "providers.serviceAccountName" . }}
       restartPolicy: Never
       containers:
       - name: kubectl

@@ -37,6 +37,8 @@ The following table lists the configurable parameters of the chart and their def
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
+| `serviceAccount.create` | Whether to create a ServiceAccount | `true` |
+| `serviceAccount.name` | Name of the ServiceAccount to use (if not created) | `""` |
 | `aws.deploymentRuntimeConfig.resources.limits.cpu` | CPU limit for provider controllers | `500m` |
 | `aws.deploymentRuntimeConfig.resources.limits.memory` | Memory limit for provider controllers | `512Mi` |
 | `aws.deploymentRuntimeConfig.resources.requests.cpu` | CPU request for provider controllers | `100m` |

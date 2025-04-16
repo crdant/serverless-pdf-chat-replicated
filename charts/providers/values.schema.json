@@ -2,6 +2,20 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
+    "serviceAccount": {
+      "type": "object",
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Specifies whether a ServiceAccount should be created",
+          "default": true
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the ServiceAccount to use. If not set and create is true, a name is generated."
+        }
+      }
+    },
     "nameOverride": {
       "type": "string",
       "description": "Override the name of the chart"
