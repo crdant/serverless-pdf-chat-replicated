@@ -5,6 +5,8 @@ kind: ServiceAccount
 metadata:
   name: {{ include "providers.serviceAccountName" . }}
   namespace: {{ .Release.Namespace }}
+  labels: {{- include "providers.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rbac
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,pre-delete,post-delete
     "helm.sh/hook-weight": "-5"
@@ -14,6 +16,8 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: {{ include "providers.fullname" . }}-jobs
+  labels: {{- include "providers.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rbac
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,pre-delete,post-delete
     "helm.sh/hook-weight": "-4"
@@ -52,6 +56,8 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: {{ include "providers.fullname" . }}-jobs
+  labels: {{- include "providers.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rbac
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,pre-delete,post-delete
     "helm.sh/hook-weight": "-3"

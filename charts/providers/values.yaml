@@ -10,6 +10,13 @@ global:
 nameOverride: ""
 fullnameOverride: ""
 
+# Common labels
+commonLabels: {}
+# Add your custom labels here
+# team: platform
+# environment: production
+# cost-center: 12345
+  
 # ServiceAccount configuration
 serviceAccount:
   # Specifies whether a ServiceAccount should be created
