@@ -54,7 +54,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Get the runtime config name
 */}}
 {{- define "providers.runtimeConfigName" -}}
-default
+{{ include "providers.fullname" . }}-runtime-config
 {{- end }}
 
 {{/*
