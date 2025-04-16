@@ -1,4 +1,12 @@
 # Default values for crossplane-providers chart
+
+# Global configuration
+global:
+  images:
+    # Global registry configuration. When set, overrides individual registry settings
+    # unless specifically overridden at the component level
+    registry: ""
+
 nameOverride: ""
 fullnameOverride: ""
 
@@ -14,6 +22,7 @@ serviceAccount:
 jobs:
   cleanupJob:
     image:
+      # Can be overridden by global.images.registry
       registry: "docker.io"
       repository: "bitnami/kubectl"
       tag: "latest"
@@ -31,6 +40,7 @@ jobs:
       runAsGroup: 1001
   waitReadyJob:
     image:
+      # Can be overridden by global.images.registry
       registry: "docker.io"
       repository: "bitnami/kubectl"
       tag: "latest"
@@ -65,7 +75,8 @@ aws:
       runAsGroup: 65532
   # AWS provider configurations
   providers:
-    # Registry for all providers
+    # Registry for all providers - can be overridden by global.images.registry
+    # Can be overridden by global.images.registry
     registry: "xpkg.upbound.io/upbound"
     family:
       package: "provider-family-aws"
@@ -104,4 +115,5 @@ aws:
 kubernetes:
   provider:
     version: "v0.17.2"
+    # Can be overridden by global.images.registry
     registry: "xpkg.upbound.io/upbound"

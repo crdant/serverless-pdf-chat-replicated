@@ -37,25 +37,47 @@ The following table lists the configurable parameters of the chart and their def
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
+| `global.images.registry` | Global registry for all images (overrides individual registry settings) | `""` |
 | `serviceAccount.create` | Whether to create a ServiceAccount | `true` |
 | `serviceAccount.name` | Name of the ServiceAccount to use (if not created) | `""` |
 | `aws.deploymentRuntimeConfig.resources.limits.cpu` | CPU limit for provider controllers | `500m` |
 | `aws.deploymentRuntimeConfig.resources.limits.memory` | Memory limit for provider controllers | `512Mi` |
 | `aws.deploymentRuntimeConfig.resources.requests.cpu` | CPU request for provider controllers | `100m` |
 | `aws.deploymentRuntimeConfig.resources.requests.memory` | Memory request for provider controllers | `256Mi` |
-| `aws.providers.registry` | Registry for all providers | `xpkg.upbound.io/upbound` |
+| `aws.providers.registry` | Registry for all providers (overridden by global registry if set) | `xpkg.upbound.io/upbound` |
 | `aws.providers.<provider>.package` | Package name for the provider | Varies by provider |
 | `aws.providers.<provider>.version` | Version of the provider | `v1.21.1` |
 | `kubernetes.provider.version` | Version of the Kubernetes provider | `v0.17.2` |
-| `kubernetes.provider.registry` | Registry for the Kubernetes provider | `xpkg.upbound.io/upbound` |
-| `jobs.cleanup.image.registry` | Registry for cleanup job image | `docker.io` |
+| `kubernetes.provider.registry` | Registry for the Kubernetes provider (overridden by global registry if set) | `xpkg.upbound.io/upbound` |
+| `jobs.cleanup.image.registry` | Registry for cleanup job image (overridden by global registry if set) | `docker.io` |
 | `jobs.cleanup.image.repository` | Repository for cleanup job image | `bitnami/kubectl` |
 | `jobs.cleanup.image.tag` | Tag for cleanup job image | `latest` |
 | `jobs.cleanup.image.pullPolicy` | Pull policy for cleanup job image | `IfNotPresent` |
-| `jobs.waitReady.image.registry` | Registry for wait-ready job image | `docker.io` |
+| `jobs.waitReady.image.registry` | Registry for wait-ready job image (overridden by global registry if set) | `docker.io` |
 | `jobs.waitReady.image.repository` | Repository for wait-ready job image | `bitnami/kubectl` |
 | `jobs.waitReady.image.tag` | Tag for wait-ready job image | `latest` |
 | `jobs.waitReady.image.pullPolicy` | Pull policy for wait-ready job image | `IfNotPresent` |
+
+### Registry Configuration Examples
+
+To use a custom registry for all images:
+
+```yaml
+global:
+  images:
+    registry: custom.registry.example.com
+```
+
+To override specific registries while using global registry for others:
+
+```yaml
+global:
+  images:
+    registry: custom.registry.example.com
+aws:
+  providers:
+    registry: specific.registry.example.com
+```
 
 ## License
 
