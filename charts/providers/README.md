@@ -48,6 +48,14 @@ The following table lists the configurable parameters of the chart and their def
 | `aws.providers.<provider>.version` | Version of the provider | `v1.21.1` |
 | `kubernetes.provider.version` | Version of the Kubernetes provider | `v0.17.2` |
 | `kubernetes.provider.registry` | Registry for the Kubernetes provider | `xpkg.upbound.io/upbound` |
+| `jobs.cleanup.image.registry` | Registry for cleanup job image | `docker.io` |
+| `jobs.cleanup.image.repository` | Repository for cleanup job image | `bitnami/kubectl` |
+| `jobs.cleanup.image.tag` | Tag for cleanup job image | `latest` |
+| `jobs.cleanup.image.pullPolicy` | Pull policy for cleanup job image | `IfNotPresent` |
+| `jobs.waitReady.image.registry` | Registry for wait-ready job image | `docker.io` |
+| `jobs.waitReady.image.repository` | Repository for wait-ready job image | `bitnami/kubectl` |
+| `jobs.waitReady.image.tag` | Tag for wait-ready job image | `latest` |
+| `jobs.waitReady.image.pullPolicy` | Pull policy for wait-ready job image | `IfNotPresent` |
 
 ## License
 

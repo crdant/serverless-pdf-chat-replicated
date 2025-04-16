@@ -15,7 +15,10 @@ spec:
       restartPolicy: Never
       containers:
       - name: kubectl
-        image: bitnami/kubectl:latest
+        image: {{ .Values.jobs.cleanup.image.registry }}/{{ .Values.jobs.cleanup.image.repository }}:{{ .Values.jobs.cleanup.image.tag | default "latest" }}
+        {{- if .Values.jobs.cleanup.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.jobs.cleanup.image.pullPolicy }}
+        {{- end }}
         command:
         - /bin/sh
         - -c

@@ -2,6 +2,73 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
+    "jobs": {
+      "type": "object",
+      "properties": {
+        "cleanup": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": "object",
+              "properties": {
+                "registry": {
+                  "type": "string",
+                  "description": "Registry for the cleanup job image",
+                  "default": "docker.io"
+                },
+                "repository": {
+                  "type": "string",
+                  "description": "Repository for the cleanup job image",
+                  "default": "bitnami/kubectl"
+                },
+                "tag": {
+                  "type": "string",
+                  "description": "Tag for the cleanup job image",
+                  "default": "latest"
+                },
+                "pullPolicy": {
+                  "type": "string",
+                  "description": "Image pull policy for the cleanup job",
+                  "default": "IfNotPresent",
+                  "enum": ["Always", "IfNotPresent", "Never"]
+                }
+              }
+            }
+          }
+        },
+        "waitReady": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": "object",
+              "properties": {
+                "registry": {
+                  "type": "string",
+                  "description": "Registry for the wait-ready job image",
+                  "default": "docker.io"
+                },
+                "repository": {
+                  "type": "string",
+                  "description": "Repository for the wait-ready job image",
+                  "default": "bitnami/kubectl"
+                },
+                "tag": {
+                  "type": "string",
+                  "description": "Tag for the wait-ready job image",
+                  "default": "latest"
+                },
+                "pullPolicy": {
+                  "type": "string",
+                  "description": "Image pull policy for the wait-ready job",
+                  "default": "IfNotPresent",
+                  "enum": ["Always", "IfNotPresent", "Never"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "serviceAccount": {
       "type": "object",
       "properties": {

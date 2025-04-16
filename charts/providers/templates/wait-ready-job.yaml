@@ -16,7 +16,8 @@ spec:
       restartPolicy: OnFailure
       containers:
       - name: kubectl
-        image: bitnami/kubectl:latest
+        image: {{ .Values.jobs.waitReady.image.registry }}/{{ .Values.jobs.waitReady.image.repository }}:{{ .Values.jobs.waitReady.image.tag | default "latest" }}
+        imagePullPolicy: {{ .Values.jobs.waitReady.image.pullPolicy | default "IfNotPresent" }}
         command:
         - /bin/sh
         - -c
