@@ -24,6 +24,13 @@
       "type": "string",
       "description": "Override the full name of the chart"
     },
+    "commonLabels": {
+      "type": "object",
+      "description": "Common labels to add to all resources",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
     "serviceAccount": {
       "type": "object",
       "properties": {

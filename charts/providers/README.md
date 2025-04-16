@@ -38,6 +38,7 @@ The following table lists the configurable parameters of the chart and their def
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `global.images.registry` | Global registry for all images (overrides individual registry settings) | `""` |
+| `commonLabels` | Common labels to add to all resources | `{}` |
 | `serviceAccount.create` | Whether to create a ServiceAccount | `true` |
 | `serviceAccount.name` | Name of the ServiceAccount to use (if not created) | `""` |
 | `aws.deploymentRuntimeConfig.resources.limits.cpu` | CPU limit for provider controllers | `500m` |
@@ -49,14 +50,28 @@ The following table lists the configurable parameters of the chart and their def
 | `aws.providers.<provider>.version` | Version of the provider | `v1.21.1` |
 | `kubernetes.provider.version` | Version of the Kubernetes provider | `v0.17.2` |
 | `kubernetes.provider.registry` | Registry for the Kubernetes provider (overridden by global registry if set) | `xpkg.upbound.io/upbound` |
-| `jobs.cleanup.image.registry` | Registry for cleanup job image (overridden by global registry if set) | `docker.io` |
-| `jobs.cleanup.image.repository` | Repository for cleanup job image | `bitnami/kubectl` |
-| `jobs.cleanup.image.tag` | Tag for cleanup job image | `latest` |
-| `jobs.cleanup.image.pullPolicy` | Pull policy for cleanup job image | `IfNotPresent` |
-| `jobs.waitReady.image.registry` | Registry for wait-ready job image (overridden by global registry if set) | `docker.io` |
-| `jobs.waitReady.image.repository` | Repository for wait-ready job image | `bitnami/kubectl` |
-| `jobs.waitReady.image.tag` | Tag for wait-ready job image | `latest` |
-| `jobs.waitReady.image.pullPolicy` | Pull policy for wait-ready job image | `IfNotPresent` |
+| `jobs.cleanupJob.image.registry` | Registry for cleanup job image (overridden by global registry if set) | `docker.io` |
+| `jobs.cleanupJob.image.repository` | Repository for cleanup job image | `bitnami/kubectl` |
+| `jobs.cleanupJob.image.tag` | Tag for cleanup job image | `latest` |
+| `jobs.cleanupJob.image.pullPolicy` | Pull policy for cleanup job image | `IfNotPresent` |
+| `jobs.cleanupJob.resources.limits.cpu` | CPU limit for cleanup job | `200m` |
+| `jobs.cleanupJob.resources.limits.memory` | Memory limit for cleanup job | `256Mi` |
+| `jobs.cleanupJob.resources.requests.cpu` | CPU request for cleanup job | `100m` |
+| `jobs.cleanupJob.resources.requests.memory` | Memory request for cleanup job | `128Mi` |
+| `jobs.cleanupJob.securityContext.runAsNonRoot` | Run cleanup job as non-root | `true` |
+| `jobs.cleanupJob.securityContext.runAsUser` | User ID to run cleanup job | `1001` |
+| `jobs.cleanupJob.securityContext.runAsGroup` | Group ID to run cleanup job | `1001` |
+| `jobs.waitReadyJob.image.registry` | Registry for wait-ready job image (overridden by global registry if set) | `docker.io` |
+| `jobs.waitReadyJob.image.repository` | Repository for wait-ready job image | `bitnami/kubectl` |
+| `jobs.waitReadyJob.image.tag` | Tag for wait-ready job image | `latest` |
+| `jobs.waitReadyJob.image.pullPolicy` | Pull policy for wait-ready job image | `IfNotPresent` |
+| `jobs.waitReadyJob.resources.limits.cpu` | CPU limit for wait-ready job | `200m` |
+| `jobs.waitReadyJob.resources.limits.memory` | Memory limit for wait-ready job | `256Mi` |
+| `jobs.waitReadyJob.resources.requests.cpu` | CPU request for wait-ready job | `100m` |
+| `jobs.waitReadyJob.resources.requests.memory` | Memory request for wait-ready job | `128Mi` |
+| `jobs.waitReadyJob.securityContext.runAsNonRoot` | Run wait-ready job as non-root | `true` |
+| `jobs.waitReadyJob.securityContext.runAsUser` | User ID to run wait-ready job | `1001` |
+| `jobs.waitReadyJob.securityContext.runAsGroup` | Group ID to run wait-ready job | `1001` |
 
 ### Registry Configuration Examples
 
