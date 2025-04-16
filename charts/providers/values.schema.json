@@ -93,10 +93,6 @@
                   "type": "string",
                   "description": "Version of the IAM provider",
                   "default": "v1.21.1"
-                },
-                "controllerConfig": {
-                  "type": "object",
-                  "description": "Controller configuration for the IAM provider"
                 }
               }
             },
@@ -112,10 +108,6 @@
                   "type": "string",
                   "description": "Version of the S3 provider",
                   "default": "v1.21.1"
-                },
-                "controllerConfig": {
-                  "type": "object",
-                  "description": "Controller configuration for the S3 provider"
                 }
               }
             },
@@ -131,10 +123,6 @@
                   "type": "string",
                   "description": "Version of the DynamoDB provider",
                   "default": "v1.21.1"
-                },
-                "controllerConfig": {
-                  "type": "object",
-                  "description": "Controller configuration for the DynamoDB provider"
                 }
               }
             },
@@ -150,10 +138,6 @@
                   "type": "string",
                   "description": "Version of the Lambda provider",
                   "default": "v1.21.1"
-                },
-                "controllerConfig": {
-                  "type": "object",
-                  "description": "Controller configuration for the Lambda provider"
                 }
               }
             },
@@ -169,10 +153,6 @@
                   "type": "string",
                   "description": "Version of the SQS provider",
                   "default": "v1.21.1"
-                },
-                "controllerConfig": {
-                  "type": "object",
-                  "description": "Controller configuration for the SQS provider"
                 }
               }
             },
@@ -188,10 +168,6 @@
                   "type": "string",
                   "description": "Version of the API Gateway v2 provider",
                   "default": "v1.21.1"
-                },
-                "controllerConfig": {
-                  "type": "object",
-                  "description": "Controller configuration for the API Gateway v2 provider"
                 }
               }
             },
@@ -207,10 +183,6 @@
                   "type": "string",
                   "description": "Version of the Cognito IDP provider",
                   "default": "v1.21.1"
-                },
-                "controllerConfig": {
-                  "type": "object",
-                  "description": "Controller configuration for the Cognito IDP provider"
                 }
               }
             },
@@ -226,10 +198,6 @@
                   "type": "string",
                   "description": "Version of the Bedrock provider",
                   "default": "v1.21.1"
-                },
-                "controllerConfig": {
-                  "type": "object",
-                  "description": "Controller configuration for the Bedrock provider"
                 }
               }
             },
@@ -245,10 +213,6 @@
                   "type": "string",
                   "description": "Version of the CloudFront provider",
                   "default": "v1.21.1"
-                },
-                "controllerConfig": {
-                  "type": "object",
-                  "description": "Controller configuration for the CloudFront provider"
                 }
               }
             },
@@ -264,10 +228,6 @@
                   "type": "string",
                   "description": "Version of the Secrets Manager provider",
                   "default": "v1.21.1"
-                },
-                "controllerConfig": {
-                  "type": "object",
-                  "description": "Controller configuration for the Secrets Manager provider"
                 }
               }
             }
