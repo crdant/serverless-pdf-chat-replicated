@@ -14,10 +14,20 @@ spec:
     spec:
       serviceAccountName: {{ include "providers.serviceAccountName" . }}
       restartPolicy: OnFailure
+      {{- with .Values.jobs.waitReadyJob.securityContext }}
+      securityContext:
+        runAsNonRoot: {{ .runAsNonRoot }}
+        runAsUser: {{ .runAsUser }}
+        runAsGroup: {{ .runAsGroup }}
+      {{- end }}
       containers:
       - name: kubectl
-        image: {{ .Values.jobs.waitReady.image.registry }}/{{ .Values.jobs.waitReady.image.repository }}:{{ .Values.jobs.waitReady.image.tag | default "latest" }}
-        imagePullPolicy: {{ .Values.jobs.waitReady.image.pullPolicy | default "IfNotPresent" }}
+        image: {{ .Values.jobs.waitReadyJob.image.registry }}/{{ .Values.jobs.waitReadyJob.image.repository }}:{{ .Values.jobs.waitReadyJob.image.tag | default "latest" }}
+        imagePullPolicy: {{ .Values.jobs.waitReadyJob.image.pullPolicy | default "IfNotPresent" }}
+        {{- with .Values.jobs.waitReadyJob.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         command:
         - /bin/sh
         - -c

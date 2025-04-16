@@ -13,11 +13,21 @@ spec:
     spec:
       serviceAccountName: {{ include "providers.serviceAccountName" . }}
       restartPolicy: Never
+      {{- with .Values.jobs.cleanupJob.securityContext }}
+      securityContext:
+        runAsNonRoot: {{ .runAsNonRoot }}
+        runAsUser: {{ .runAsUser }}
+        runAsGroup: {{ .runAsGroup }}
+      {{- end }}
       containers:
       - name: kubectl
-        image: {{ .Values.jobs.cleanup.image.registry }}/{{ .Values.jobs.cleanup.image.repository }}:{{ .Values.jobs.cleanup.image.tag | default "latest" }}
-        {{- if .Values.jobs.cleanup.image.pullPolicy }}
-        imagePullPolicy: {{ .Values.jobs.cleanup.image.pullPolicy }}
+        image: {{ .Values.jobs.cleanupJob.image.registry }}/{{ .Values.jobs.cleanupJob.image.repository }}:{{ .Values.jobs.cleanupJob.image.tag | default "latest" }}
+        {{- if .Values.jobs.cleanupJob.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.jobs.cleanupJob.image.pullPolicy }}
+        {{- end }}
+        {{- with .Values.jobs.cleanupJob.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
         {{- end }}
         command:
         - /bin/sh

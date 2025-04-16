@@ -2,10 +2,46 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
+    "global": {
+      "type": "object",
+      "properties": {
+        "images": {
+          "type": "object",
+          "properties": {
+            "registry": {
+              "type": "string",
+              "description": "Global registry configuration. When set, overrides individual registry settings unless specifically overridden at the component level"
+            }
+          }
+        }
+      }
+    },
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the name of the chart"
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override the full name of the chart"
+    },
+    "serviceAccount": {
+      "type": "object",
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Specifies whether a ServiceAccount should be created",
+          "default": true
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the ServiceAccount to use. If not set and create is true, a name is generated."
+        }
+      }
+    },
     "jobs": {
       "type": "object",
       "properties": {
-        "cleanup": {
+        "cleanupJob": {
           "type": "object",
           "properties": {
             "image": {
@@ -33,10 +69,65 @@
                   "enum": ["Always", "IfNotPresent", "Never"]
                 }
               }
+            },
+            "resources": {
+              "type": "object",
+              "properties": {
+                "limits": {
+                  "type": "object",
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "description": "CPU limit for cleanup job",
+                      "default": "200m"
+                    },
+                    "memory": {
+                      "type": "string",
+                      "description": "Memory limit for cleanup job",
+                      "default": "256Mi"
+                    }
+                  }
+                },
+                "requests": {
+                  "type": "object",
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "description": "CPU request for cleanup job",
+                      "default": "100m"
+                    },
+                    "memory": {
+                      "type": "string",
+                      "description": "Memory request for cleanup job",
+                      "default": "128Mi"
+                    }
+                  }
+                }
+              }
+            },
+            "securityContext": {
+              "type": "object",
+              "properties": {
+                "runAsNonRoot": {
+                  "type": "boolean",
+                  "description": "Run cleanup job as non-root",
+                  "default": true
+                },
+                "runAsUser": {
+                  "type": "integer",
+                  "description": "User ID to run cleanup job",
+                  "default": 1001
+                },
+                "runAsGroup": {
+                  "type": "integer",
+                  "description": "Group ID to run cleanup job",
+                  "default": 1001
+                }
+              }
             }
           }
         },
-        "waitReady": {
+        "waitReadyJob": {
           "type": "object",
           "properties": {
             "image": {
@@ -64,32 +155,65 @@
                   "enum": ["Always", "IfNotPresent", "Never"]
                 }
               }
+            },
+            "resources": {
+              "type": "object",
+              "properties": {
+                "limits": {
+                  "type": "object",
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "description": "CPU limit for wait-ready job",
+                      "default": "200m"
+                    },
+                    "memory": {
+                      "type": "string",
+                      "description": "Memory limit for wait-ready job",
+                      "default": "256Mi"
+                    }
+                  }
+                },
+                "requests": {
+                  "type": "object",
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "description": "CPU request for wait-ready job",
+                      "default": "100m"
+                    },
+                    "memory": {
+                      "type": "string",
+                      "description": "Memory request for wait-ready job",
+                      "default": "128Mi"
+                    }
+                  }
+                }
+              }
+            },
+            "securityContext": {
+              "type": "object",
+              "properties": {
+                "runAsNonRoot": {
+                  "type": "boolean",
+                  "description": "Run wait-ready job as non-root",
+                  "default": true
+                },
+                "runAsUser": {
+                  "type": "integer",
+                  "description": "User ID to run wait-ready job",
+                  "default": 1001
+                },
+                "runAsGroup": {
+                  "type": "integer",
+                  "description": "Group ID to run wait-ready job",
+                  "default": 1001
+                }
+              }
             }
           }
         }
       }
-    },
-    "serviceAccount": {
-      "type": "object",
-      "properties": {
-        "create": {
-          "type": "boolean",
-          "description": "Specifies whether a ServiceAccount should be created",
-          "default": true
-        },
-        "name": {
-          "type": "string",
-          "description": "The name of the ServiceAccount to use. If not set and create is true, a name is generated."
-        }
-      }
-    },
-    "nameOverride": {
-      "type": "string",
-      "description": "Override the name of the chart"
-    },
-    "fullnameOverride": {
-      "type": "string",
-      "description": "Override the full name of the chart"
     },
     "aws": {
       "type": "object",
