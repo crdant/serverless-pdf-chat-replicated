@@ -5,8 +5,7 @@ metadata:
   labels:
     {{- include "providers.labels" . | nindent 4 }}
 spec:
-  # use the helper here - AI!
-  package: "{{ .Values.kubernetes.provider.registry }}/provider-kubernetes:{{ .Values.kubernetes.provider.version }}"
+  package: "{{ include "providers.kubernetesRegistry" . }}/provider-kubernetes:{{ .Values.kubernetes.provider.version }}"
   packagePullPolicy: IfNotPresent
   revisionActivationPolicy: Automatic
   revisionHistoryLimit: 1
