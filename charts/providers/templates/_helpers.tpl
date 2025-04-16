@@ -76,3 +76,11 @@ Get the ServiceAccount name for jobs
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Get the registry for jobs
+*/}}
+{{- define "providers.jobRegistry" -}}
+# based on which job we are using, the value for the registry will differ, can you make that happen? - AI!
+{{- .Values.global.images.registry | default .Values.jobs.registry -}}
+{{- end }}
