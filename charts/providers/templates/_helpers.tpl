@@ -48,6 +48,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
+Common annotations
+*/}}
+{{- define "providers.annotations" -}}
+{{- if .Values.commonAnnotations }}
+{{- range $key, $value := .Values.commonAnnotations }}
+{{ $key }}: {{ $value | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
 Selector labels
 */}}
 {{- define "providers.selectorLabels" -}}

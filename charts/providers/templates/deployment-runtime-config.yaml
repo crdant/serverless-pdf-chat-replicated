@@ -4,6 +4,8 @@ metadata:
   name: {{ include "providers.runtimeConfigName" . }}
   labels:
     {{- include "providers.labels" . | nindent 4 }}
+  annotations:
+    {{- include "providers.annotations" . | nindent 4 }}
 spec:
   deploymentTemplate:
     metadata:

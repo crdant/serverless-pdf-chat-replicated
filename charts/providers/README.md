@@ -39,6 +39,7 @@ The following table lists the configurable parameters of the chart and their def
 |-----------|-------------|---------|
 | `global.images.registry` | Global registry for all images (overrides individual registry settings) | `""` |
 | `commonLabels` | Common labels to add to all resources | `{}` |
+| `commonAnnotations` | Common annotations to add to all resources | `{}` |
 | `serviceAccount.create` | Whether to create a ServiceAccount | `true` |
 | `serviceAccount.name` | Name of the ServiceAccount to use (if not created) | `""` |
 | `aws.deploymentRuntimeConfig.resources.limits.cpu` | CPU limit for provider controllers | `500m` |

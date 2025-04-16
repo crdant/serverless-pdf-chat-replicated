@@ -4,6 +4,8 @@ metadata:
   name: {{ include "providers.fullname" . }}-aws-cognitoidp
   labels:
     {{- include "providers.labels" . | nindent 4 }}
+  annotations:
+    {{- include "providers.annotations" . | nindent 4 }}
 spec:
   package: {{ include "providers.packageUrl" (dict "Values" .Values "providerName" "cognitoidp") }}
   runtimeConfigRef:

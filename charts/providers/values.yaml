@@ -16,6 +16,12 @@ commonLabels: {}
 # team: platform
 # environment: production
 # cost-center: 12345
+
+# Common annotations
+commonAnnotations: {}
+# Add your custom annotations here
+# app.kubernetes.io/part-of: platform
+# app.kubernetes.io/documentation: https://example.com/docs
   
 # ServiceAccount configuration
 serviceAccount:

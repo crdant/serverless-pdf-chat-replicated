@@ -31,6 +31,13 @@
         "type": "string"
       }
     },
+    "commonAnnotations": {
+      "type": "object",
+      "description": "Common annotations to add to all resources",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
     "serviceAccount": {
       "type": "object",
       "properties": {

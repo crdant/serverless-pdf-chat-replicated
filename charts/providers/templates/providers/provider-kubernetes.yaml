@@ -4,6 +4,8 @@ metadata:
   name: {{ include "providers.fullname" . }}-kubernetes
   labels:
     {{- include "providers.labels" . | nindent 4 }}
+  annotations:
+    {{- include "providers.annotations" . | nindent 4 }}
 spec:
   package: "{{ include "providers.kubernetesRegistry" . }}/provider-kubernetes:{{ .Values.kubernetes.provider.version }}"
   packagePullPolicy: IfNotPresent
