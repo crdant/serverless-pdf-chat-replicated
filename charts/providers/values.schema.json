@@ -13,7 +13,7 @@
     "aws": {
       "type": "object",
       "properties": {
-        "defaultDeploymentConfig": {
+        "deploymentRuntimeConfig": {
           "type": "object",
           "properties": {
             "resources": {

@@ -36,10 +36,10 @@ The following table lists the configurable parameters of the chart and their def
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `aws.defaultDeploymentConfig.resources.limits.cpu` | CPU limit for provider controllers | `500m` |
-| `aws.defaultDeploymentConfig.resources.limits.memory` | Memory limit for provider controllers | `512Mi` |
-| `aws.defaultDeploymentConfig.resources.requests.cpu` | CPU request for provider controllers | `100m` |
-| `aws.defaultDeploymentConfig.resources.requests.memory` | Memory request for provider controllers | `256Mi` |
+| `aws.deploymentRuntimeConfig.resources.limits.cpu` | CPU limit for provider controllers | `500m` |
+| `aws.deploymentRuntimeConfig.resources.limits.memory` | Memory limit for provider controllers | `512Mi` |
+| `aws.deploymentRuntimeConfig.resources.requests.cpu` | CPU request for provider controllers | `100m` |
+| `aws.deploymentRuntimeConfig.resources.requests.memory` | Memory request for provider controllers | `256Mi` |
 | `aws.providers.registry` | Registry for all providers | `xpkg.upbound.io/upbound` |
 | `aws.providers.<provider>.package` | Package name for the provider | Varies by provider |
 | `aws.providers.<provider>.version` | Version of the provider | `v1.21.1` |

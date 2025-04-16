@@ -3,8 +3,8 @@ nameOverride: ""
 fullnameOverride: ""
 
 aws:
-  # Default deployment runtime configuration
-  defaultDeploymentConfig:
+  # Deployment runtime configuration
+  deploymentRuntimeConfig:
     # Resource limits for provider controllers
     resources:
       limits:

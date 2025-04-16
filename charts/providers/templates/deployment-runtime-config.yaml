@@ -17,18 +17,18 @@ spec:
             {{- include "providers.labels" . | nindent 12 }}
         spec:
           securityContext:
-            runAsNonRoot: {{ .Values.aws.defaultDeploymentConfig.securityContext.runAsNonRoot }}
-            runAsUser: {{ .Values.aws.defaultDeploymentConfig.securityContext.runAsUser }}
-            runAsGroup: {{ .Values.aws.defaultDeploymentConfig.securityContext.runAsGroup }}
+            runAsNonRoot: {{ .Values.aws.deploymentRuntimeConfig.securityContext.runAsNonRoot }}
+            runAsUser: {{ .Values.aws.deploymentRuntimeConfig.securityContext.runAsUser }}
+            runAsGroup: {{ .Values.aws.deploymentRuntimeConfig.securityContext.runAsGroup }}
           containers:
             - name: package-runtime
               resources:
                 limits:
-                  cpu: {{ .Values.aws.defaultDeploymentConfig.resources.limits.cpu }}
-                  memory: {{ .Values.aws.defaultDeploymentConfig.resources.limits.memory }}
+                  cpu: {{ .Values.aws.deploymentRuntimeConfig.resources.limits.cpu }}
+                  memory: {{ .Values.aws.deploymentRuntimeConfig.resources.limits.memory }}
                 requests:
-                  cpu: {{ .Values.aws.defaultDeploymentConfig.resources.requests.cpu }}
-                  memory: {{ .Values.aws.defaultDeploymentConfig.resources.requests.memory }}
+                  cpu: {{ .Values.aws.deploymentRuntimeConfig.resources.requests.cpu }}
+                  memory: {{ .Values.aws.deploymentRuntimeConfig.resources.requests.memory }}
   serviceAccountTemplate:
     metadata:
       labels:

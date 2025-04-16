@@ -14,10 +14,10 @@ INSTALLED PROVIDERS:
 DEPLOYMENT CONFIGURATION:
 -----------------------
 All providers use the runtime configuration: {{ include "providers.runtimeConfigName" . }}
-- CPU Limits: {{ .Values.aws.defaultDeploymentConfig.resources.limits.cpu }}
-- Memory Limits: {{ .Values.aws.defaultDeploymentConfig.resources.limits.memory }}
-- CPU Requests: {{ .Values.aws.defaultDeploymentConfig.resources.requests.cpu }}
-- Memory Requests: {{ .Values.aws.defaultDeploymentConfig.resources.requests.memory }}
+- CPU Limits: {{ .Values.aws.deploymentRuntimeConfig.resources.limits.cpu }}
+- Memory Limits: {{ .Values.aws.deploymentRuntimeConfig.resources.limits.memory }}
+- CPU Requests: {{ .Values.aws.deploymentRuntimeConfig.resources.requests.cpu }}
+- Memory Requests: {{ .Values.aws.deploymentRuntimeConfig.resources.requests.memory }}
 
 NEXT STEPS:
 ----------
