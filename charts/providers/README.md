@@ -6,6 +6,7 @@ This Helm chart installs AWS Crossplane providers for the Serverless PDF Chat ap
 
 The chart sets up the following AWS Crossplane providers:
 
+- AWS Family
 - IAM
 - S3
 - DynamoDB
