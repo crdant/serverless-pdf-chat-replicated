@@ -8,7 +8,7 @@ metadata:
   labels: {{- include "providers.labels" . | nindent 4 }}
     app.kubernetes.io/component: rbac
   annotations:
-    "helm.sh/hook": pre-install,pre-upgrade,post-install,post-upgrade,pre-delete,post-delete
+    "helm.sh/hook": pre-install,pre-upgrade,pre-delete,post-delete
     "helm.sh/hook-weight": "-10"
     "helm.sh/hook-delete-policy": before-hook-creation
     {{- include "providers.annotations" . | nindent 4 }}
@@ -22,7 +22,7 @@ metadata:
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,pre-delete,post-delete
     "helm.sh/hook-weight": "-4"
-    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook-delete-policy": before-hook-creation
     {{- include "providers.annotations" . | nindent 4 }}
 rules:
 - apiGroups:
@@ -62,7 +62,7 @@ metadata:
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,pre-delete,post-delete
     "helm.sh/hook-weight": "-3"
-    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook-delete-policy": before-hook-creation
     {{- include "providers.annotations" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
