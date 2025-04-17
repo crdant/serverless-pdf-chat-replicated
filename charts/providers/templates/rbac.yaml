@@ -28,8 +28,7 @@ rules:
 - apiGroups:
   - aws.upbound.io
   resources:
-  - providers
-  - providerconfigs
+  - "*"
   verbs:
   - get
   - list
@@ -47,9 +46,7 @@ rules:
 - apiGroups:
   - pkg.crossplane.io
   resources:
-  - providers
-  - provider
-  - providers.pkg.crossplane.io
+  - "*"
   verbs:
   - get
   - list
