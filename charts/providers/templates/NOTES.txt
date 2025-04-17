@@ -45,3 +45,6 @@ If you encounter issues with the providers:
 
 4. Check the wait-ready job logs:
    kubectl logs job/{{ include "providers.fullname" . }}-wait-ready
+
+Note: To clean up providers when uninstalling, you may need to manually delete them:
+   kubectl delete providers.pkg.crossplane.io -l app.kubernetes.io/instance={{ .Release.Name }}

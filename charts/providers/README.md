@@ -48,17 +48,6 @@ The following table lists the configurable parameters of the chart and their def
 | `aws.providers.<provider>.version` | Version of the provider | `v1.21.1` |
 | `kubernetes.provider.version` | Version of the Kubernetes provider | `v0.17.2` |
 | `kubernetes.provider.registry` | Registry for the Kubernetes provider (overridden by global registry if set) | `xpkg.upbound.io/upbound` |
-| `jobs.cleanupJob.image.registry` | Registry for cleanup job image (overridden by global registry if set) | `docker.io` |
-| `jobs.cleanupJob.image.repository` | Repository for cleanup job image | `bitnami/kubectl` |
-| `jobs.cleanupJob.image.tag` | Tag for cleanup job image | `latest` |
-| `jobs.cleanupJob.image.pullPolicy` | Pull policy for cleanup job image | `IfNotPresent` |
-| `jobs.cleanupJob.resources.limits.cpu` | CPU limit for cleanup job | `200m` |
-| `jobs.cleanupJob.resources.limits.memory` | Memory limit for cleanup job | `256Mi` |
-| `jobs.cleanupJob.resources.requests.cpu` | CPU request for cleanup job | `100m` |
-| `jobs.cleanupJob.resources.requests.memory` | Memory request for cleanup job | `128Mi` |
-| `jobs.cleanupJob.securityContext.runAsNonRoot` | Run cleanup job as non-root | `true` |
-| `jobs.cleanupJob.securityContext.runAsUser` | User ID to run cleanup job | `1001` |
-| `jobs.cleanupJob.securityContext.runAsGroup` | Group ID to run cleanup job | `1001` |
 | `jobs.waitReadyJob.image.registry` | Registry for wait-ready job image (overridden by global registry if set) | `docker.io` |
 | `jobs.waitReadyJob.image.repository` | Repository for wait-ready job image | `bitnami/kubectl` |
 | `jobs.waitReadyJob.image.tag` | Tag for wait-ready job image | `latest` |

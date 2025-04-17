@@ -97,14 +97,7 @@ Get the ServiceAccount name for jobs
 Get the registry for jobs
 */}}
 {{- define "providers.jobRegistry" -}}
-{{- $jobType := .jobType -}}
-{{- if eq $jobType "cleanup" -}}
-{{- .Values.global.images.registry | default .Values.jobs.cleanupJob.image.registry -}}
-{{- else if eq $jobType "waitReady" -}}
 {{- .Values.global.images.registry | default .Values.jobs.waitReadyJob.image.registry -}}
-{{- else -}}
-{{- .Values.global.images.registry | default "docker.io" -}}
-{{- end -}}
 {{- end }}
 
 {{/*
