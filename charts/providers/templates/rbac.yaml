@@ -48,6 +48,8 @@ rules:
   - pkg.crossplane.io
   resources:
   - providers
+  - provider
+  - providers.pkg.crossplane.io
   verbs:
   - get
   - list
