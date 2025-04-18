@@ -6,7 +6,7 @@ spec:
   # chart identifies a matching chart from a .tgz
   chart:
     name: compositions
-    chartVersion: 0.2.16
+    chartVersion: 0.3.0
   weight: -10
 
   helmUpgradeFlags:
