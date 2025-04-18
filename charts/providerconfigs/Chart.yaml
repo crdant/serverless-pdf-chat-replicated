@@ -3,4 +3,4 @@ name: providerconfigs
 description: A Helm chart for configuring Crossplane providers with AWS and Kubernetes credentials
 type: application
 version: 0.2.2  # Bumped from 0.2.1 to 0.2.2
-appVersion: "1.0.0"
+appVersion: "1.0.20"
