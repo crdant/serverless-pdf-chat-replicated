@@ -20,7 +20,7 @@ spec:
         {{- include "providers.labels" . | nindent 8 }}
         app.kubernetes.io/component: wait-for-compositions
     spec:
-      serviceAccountName: {{ include "providers.serviceAccountName" . }}-wait-compositions
+      serviceAccountName: {{ include "providers.serviceAccountName" . }}
       restartPolicy: OnFailure
       {{- with .Values.jobs.waitForCompositionsJob.securityContext }}
       securityContext:
@@ -51,60 +51,3 @@ spec:
           kubectl wait --for=jsonpath='{.metadata.name}' composition.apiextensions.crossplane.io/cognitoauthorizedapis.serverlesspdfchat.shortrib.io --timeout=300s || true
           
           echo "All compositions are ready!"
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: {{ include "providers.serviceAccountName" . }}-wait-compositions
-  labels:
-    {{- include "providers.labels" . | nindent 4 }}
-    {{- include "providers.commonLabels" . | nindent 4 }}
-    app.kubernetes.io/component: rbac
-  annotations:
-    "helm.sh/hook": post-install,post-upgrade
-    "helm.sh/hook-weight": "14"
-    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
-    {{- include "providers.commonAnnotations" . | nindent 4 }}
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: {{ include "providers.fullname" . }}-wait-compositions
-  labels:
-    {{- include "providers.labels" . | nindent 4 }}
-    {{- include "providers.commonLabels" . | nindent 4 }}
-    app.kubernetes.io/component: rbac
-  annotations:
-    "helm.sh/hook": post-install,post-upgrade
-    "helm.sh/hook-weight": "14"
-    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
-    {{- include "providers.commonAnnotations" . | nindent 4 }}
-rules:
-- apiGroups: ["apiextensions.k8s.io"]
-  resources: ["customresourcedefinitions"]
-  verbs: ["get", "list", "watch"]
-- apiGroups: ["apiextensions.crossplane.io"]
-  resources: ["compositions", "compositeresourcedefinitions"]
-  verbs: ["get", "list", "watch"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: {{ include "providers.fullname" . }}-wait-compositions
-  labels:
-    {{- include "providers.labels" . | nindent 4 }}
-    {{- include "providers.commonLabels" . | nindent 4 }}
-    app.kubernetes.io/component: rbac
-  annotations:
-    "helm.sh/hook": post-install,post-upgrade
-    "helm.sh/hook-weight": "14"
-    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
-    {{- include "providers.commonAnnotations" . | nindent 4 }}
-subjects:
-- kind: ServiceAccount
-  name: {{ include "providers.serviceAccountName" . }}-wait-compositions
-  namespace: {{ .Release.Namespace }}
-roleRef:
-  kind: ClusterRole
-  name: {{ include "providers.fullname" . }}-wait-compositions
-  apiGroup: rbac.authorization.k8s.io
