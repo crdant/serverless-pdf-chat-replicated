@@ -2,21 +2,40 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ include "providers.fullname" . }}-wait-for-compositions
+  labels:
+    {{- include "providers.labels" . | nindent 4 }}
+    {{- include "providers.commonLabels" . | nindent 4 }}
+    app.kubernetes.io/component: wait-for-compositions
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "15"  # Run after composition (weight 10)
     "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+    {{- include "providers.commonAnnotations" . | nindent 4 }}
 spec:
   backoffLimit: 10
   template:
     metadata:
       name: {{ include "providers.fullname" . }}-wait-for-compositions
+      labels:
+        {{- include "providers.labels" . | nindent 8 }}
+        app.kubernetes.io/component: wait-for-compositions
     spec:
-      serviceAccountName: {{ include "providers.fullname" . }}-wait-compositions
+      serviceAccountName: {{ include "providers.serviceAccountName" . }}-wait-compositions
       restartPolicy: OnFailure
+      {{- with .Values.jobs.waitForCompositionsJob.securityContext }}
+      securityContext:
+        runAsNonRoot: {{ .runAsNonRoot }}
+        runAsUser: {{ .runAsUser }}
+        runAsGroup: {{ .runAsGroup }}
+      {{- end }}
       containers:
       - name: kubectl
-        image: bitnami/kubectl:latest
+        image: {{ include "providers.jobRegistry" . }}/{{ .Values.jobs.waitForCompositionsJob.image.repository }}:{{ .Values.jobs.waitForCompositionsJob.image.tag | default "latest" }}
+        imagePullPolicy: {{ .Values.jobs.waitForCompositionsJob.image.pullPolicy | default "IfNotPresent" }}
+        {{- with .Values.jobs.waitForCompositionsJob.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         command:
         - /bin/sh
         - -c
@@ -36,20 +55,30 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ include "providers.fullname" . }}-wait-compositions
+  name: {{ include "providers.serviceAccountName" . }}-wait-compositions
+  labels:
+    {{- include "providers.labels" . | nindent 4 }}
+    {{- include "providers.commonLabels" . | nindent 4 }}
+    app.kubernetes.io/component: rbac
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "14"
     "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+    {{- include "providers.commonAnnotations" . | nindent 4 }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: {{ include "providers.fullname" . }}-wait-compositions
+  labels:
+    {{- include "providers.labels" . | nindent 4 }}
+    {{- include "providers.commonLabels" . | nindent 4 }}
+    app.kubernetes.io/component: rbac
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "14"
     "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+    {{- include "providers.commonAnnotations" . | nindent 4 }}
 rules:
 - apiGroups: ["apiextensions.k8s.io"]
   resources: ["customresourcedefinitions"]
@@ -62,13 +91,18 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: {{ include "providers.fullname" . }}-wait-compositions
+  labels:
+    {{- include "providers.labels" . | nindent 4 }}
+    {{- include "providers.commonLabels" . | nindent 4 }}
+    app.kubernetes.io/component: rbac
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "14"
     "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+    {{- include "providers.commonAnnotations" . | nindent 4 }}
 subjects:
 - kind: ServiceAccount
-  name: {{ include "providers.fullname" . }}-wait-compositions
+  name: {{ include "providers.serviceAccountName" . }}-wait-compositions
   namespace: {{ .Release.Namespace }}
 roleRef:
   kind: ClusterRole

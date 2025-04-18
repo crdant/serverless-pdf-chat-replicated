@@ -10,3 +10,45 @@ aws:
 # Optional name overrides
 nameOverride: ""
 fullnameOverride: ""
+
+# Common labels
+commonLabels: {}
+# Add your custom labels here
+# team: platform
+# environment: production
+# cost-center: 12345
+
+# Common annotations
+commonAnnotations: {}
+# Add your custom annotations here
+# app.kubernetes.io/part-of: platform
+# app.kubernetes.io/documentation: https://example.com/docs
+
+# ServiceAccount configuration
+serviceAccount:
+  # Specifies whether a ServiceAccount should be created
+  create: true
+  # The name of the ServiceAccount to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# Job configurations
+jobs:
+  waitForCompositionsJob:
+    image:
+      # Can be overridden by global.images.registry
+      registry: "docker.io"
+      repository: "bitnami/kubectl"
+      tag: "latest"
+      pullPolicy: "IfNotPresent"
+    resources:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 1001
+      runAsGroup: 1001

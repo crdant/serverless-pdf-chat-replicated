@@ -51,6 +51,46 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Common labels from values
+*/}}
+{{- define "providers.commonLabels" -}}
+{{- if .Values.commonLabels }}
+{{- range $key, $value := .Values.commonLabels }}
+{{ $key }}: {{ $value | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Common annotations
+*/}}
+{{- define "providers.commonAnnotations" -}}
+{{- if .Values.commonAnnotations }}
+{{- range $key, $value := .Values.commonAnnotations }}
+{{ $key }}: {{ $value | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Get the ServiceAccount name for jobs
+*/}}
+{{- define "providers.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (printf "%s-jobs" (include "providers.fullname" .)) .Values.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}
+
+{{/*
+Get the registry for jobs
+*/}}
+{{- define "providers.jobRegistry" -}}
+{{- .Values.global.images.registry | default .Values.jobs.waitForCompositionsJob.image.registry -}}
+{{- end }}
+
+{{/*
 Get the credentials secret name
 */}}
 {{- define "providers.secretName" -}}

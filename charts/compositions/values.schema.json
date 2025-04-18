@@ -10,6 +10,47 @@
       "type": "string",
       "description": "Override the full name of the chart"
     },
+    "commonLabels": {
+      "type": "object",
+      "description": "Common labels to add to all resources. These labels will be added to all resources created by the chart.",
+      "examples": [
+        {
+          "app.kubernetes.io/part-of": "platform",
+          "environment": "production",
+          "team": "platform-engineering"
+        }
+      ],
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "commonAnnotations": {
+      "type": "object",
+      "description": "Common annotations to add to all resources. These annotations will be added to all resources created by the chart.",
+      "examples": [
+        {
+          "app.kubernetes.io/documentation": "https://example.com/docs",
+          "app.kubernetes.io/managed-by": "helm"
+        }
+      ],
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "serviceAccount": {
+      "type": "object",
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Specifies whether a ServiceAccount should be created",
+          "default": true
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the ServiceAccount to use. If not set and create is true, a name is generated."
+        }
+      }
+    },
     "aws": {
       "type": "object",
       "properties": {
@@ -22,6 +63,97 @@
           "type": "string",
           "description": "Name of the provider configuration",
           "default": "default"
+        }
+      }
+    },
+    "jobs": {
+      "type": "object",
+      "properties": {
+        "waitForCompositionsJob": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": "object",
+              "properties": {
+                "registry": {
+                  "type": "string",
+                  "description": "Registry for the wait-for-compositions job image",
+                  "default": "docker.io"
+                },
+                "repository": {
+                  "type": "string",
+                  "description": "Repository for the wait-for-compositions job image",
+                  "default": "bitnami/kubectl"
+                },
+                "tag": {
+                  "type": "string",
+                  "description": "Tag for the wait-for-compositions job image",
+                  "default": "latest"
+                },
+                "pullPolicy": {
+                  "type": "string",
+                  "description": "Image pull policy for the wait-for-compositions job",
+                  "default": "IfNotPresent",
+                  "enum": ["Always", "IfNotPresent", "Never"]
+                }
+              }
+            },
+            "resources": {
+              "type": "object",
+              "properties": {
+                "limits": {
+                  "type": "object",
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "description": "CPU limit for wait-for-compositions job",
+                      "default": "200m"
+                    },
+                    "memory": {
+                      "type": "string",
+                      "description": "Memory limit for wait-for-compositions job",
+                      "default": "256Mi"
+                    }
+                  }
+                },
+                "requests": {
+                  "type": "object",
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "description": "CPU request for wait-for-compositions job",
+                      "default": "100m"
+                    },
+                    "memory": {
+                      "type": "string",
+                      "description": "Memory request for wait-for-compositions job",
+                      "default": "128Mi"
+                    }
+                  }
+                }
+              }
+            },
+            "securityContext": {
+              "type": "object",
+              "properties": {
+                "runAsNonRoot": {
+                  "type": "boolean",
+                  "description": "Run wait-for-compositions job as non-root",
+                  "default": true
+                },
+                "runAsUser": {
+                  "type": "integer",
+                  "description": "User ID to run wait-for-compositions job",
+                  "default": 1001
+                },
+                "runAsGroup": {
+                  "type": "integer",
+                  "description": "Group ID to run wait-for-compositions job",
+                  "default": 1001
+                }
+              }
+            }
+          }
         }
       }
     }
