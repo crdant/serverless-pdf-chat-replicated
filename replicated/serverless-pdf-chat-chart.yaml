@@ -1,0 +1,32 @@
+apiVersion: kots.io/v1beta2
+kind: HelmChart
+metadata:
+  name: serverless-pdf-chat
+spec:
+  # chart identifies a matching chart from a .tgz
+  chart:
+    name: serverless-pdf-chat
+    chartVersion: 0.13.29
+  namespace: serverless-pdf-chat
+  weight: 0 
+
+  helmUpgradeFlags:
+    - --wait
+ 
+  # values are used in the customer environment, as a pre-render step
+  # these values will be supplied to helm template
+  values: {}
+  optionalValues:
+    - when: '{{repl HasLocalRegistry}}'
+      recursiveMerge: true
+      values: 
+        global:
+          images: 
+            registry: '{{repl LocalRegistryHost}}'
+
+    - when: '{{repl not HasLocalRegistry}}'
+      recursiveMerge: true
+      values: 
+        global:
+          images: 
+            registry: 'images.shortrib.io/proxy/{{repl LicenseFieldValue "appSlug"}}/429114214526.dkr.ecr.us-west-2.amazonaws.com'
