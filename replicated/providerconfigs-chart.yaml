@@ -1,12 +1,13 @@
 apiVersion: kots.io/v1beta2
 kind: HelmChart
 metadata:
-  name: cloud-providers
+  name: providerconfigs
 spec:
   # chart identifies a matching chart from a .tgz
   chart:
     name: providerconfigs
-    chartVersion: 0.2.1
+    chartVersion: 0.2.2
+  namespace: serverless-pdf-chat
   weight: -20
 
   helmUpgradeFlags:

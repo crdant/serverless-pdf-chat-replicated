@@ -1,7 +1,7 @@
 apiVersion: kots.io/v1beta2
 kind: HelmChart
 metadata:
-  name: cloud-providers
+  name: providers
 spec:
   # chart identifies a matching chart from a .tgz
   chart:
