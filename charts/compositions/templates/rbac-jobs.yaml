@@ -4,7 +4,6 @@ metadata:
   name: {{ include "compositions.serviceAccountName" . }}
   labels:
     {{- include "compositions.labels" . | nindent 4 }}
-    {{- include "compositions.commonLabels" . | nindent 4 }}
     app.kubernetes.io/component: rbac
   annotations:
     "helm.sh/hook": post-install,post-upgrade
@@ -18,7 +17,6 @@ metadata:
   name: {{ include "compositions.fullname" . }}-jobs
   labels:
     {{- include "compositions.labels" . | nindent 4 }}
-    {{- include "compositions.commonLabels" . | nindent 4 }}
     app.kubernetes.io/component: rbac
   annotations:
     "helm.sh/hook": post-install,post-upgrade
@@ -39,7 +37,6 @@ metadata:
   name: {{ include "compositions.fullname" . }}-jobs
   labels:
     {{- include "compositions.labels" . | nindent 4 }}
-    {{- include "compositions.commonLabels" . | nindent 4 }}
     app.kubernetes.io/component: rbac
   annotations:
     "helm.sh/hook": post-install,post-upgrade

@@ -40,6 +40,11 @@ helm.sh/chart: {{ include "compositions.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- if .Values.commonLabels }}
+{{- range $key, $value := .Values.commonLabels }}
+{{ $key }}: {{ $value | quote }}
+{{- end }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -50,16 +55,6 @@ app.kubernetes.io/name: {{ include "compositions.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
-{{/*
-Common labels from values
-*/}}
-{{- define "compositions.commonLabels" -}}
-{{- if .Values.commonLabels }}
-{{- range $key, $value := .Values.commonLabels }}
-{{ $key }}: {{ $value | quote }}
-{{- end }}
-{{- end }}
-{{- end }}
 
 {{/*
 Common annotations

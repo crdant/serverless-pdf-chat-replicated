@@ -4,7 +4,6 @@ metadata:
   name: cognitoauthorizedapis.serverlesspdfchat.shortrib.io
   labels:
     {{- include "compositions.labels" . | nindent 4 }}
-    {{- include "compositions.commonLabels" . | nindent 4 }}
     provider: aws
   annotations:
     "helm.sh/hook": post-install,post-upgrade
