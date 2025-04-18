@@ -8,7 +8,7 @@ The chart creates the following resources:
 
 - AWS ProviderConfig - Configures authentication and region for AWS Crossplane providers
 - Kubernetes ProviderConfig - Configures authentication for the Kubernetes Crossplane provider
-- AWS Credentials Secret (optional) - Creates a secret containing AWS credentials when using the secret authentication method
+- AWS Credentials Secret - Creates a secret containing AWS credentials for the secret authentication method
 
 ## Prerequisites
 
@@ -35,7 +35,7 @@ The following table lists the configurable parameters of the chart and their def
 | `commonAnnotations` | Common annotations to add to all resources | `{}` |
 | `aws.region` | AWS region where resources will be provisioned | `us-west-2` |
 | `aws.providerConfigName` | Name of the AWS provider configuration | `default` |
-| `aws.authentication.method` | Method to authenticate with AWS (secret, irsa, or ec2) | `secret` |
+| `aws.authentication.method` | Method to authenticate with AWS (currently only secret is supported) | `secret` |
 | `aws.authentication.secret.name` | Name of the secret containing AWS credentials | `aws-credentials` |
 | `aws.authentication.secret.namespace` | Namespace where the secret is located | `crossplane-system` |
 | `aws.authentication.secret.keys.accessKeyId` | Key for AWS access key ID | `aws_access_key_id` |
@@ -43,17 +43,9 @@ The following table lists the configurable parameters of the chart and their def
 | `kubernetes.providerConfigName` | Name of the Kubernetes provider configuration | `default` |
 | `kubernetes.authentication.source` | Source of credentials for Kubernetes | `InjectedIdentity` |
 
-## Authentication Methods
+## Authentication Method
 
-The chart supports three authentication methods for AWS:
-
-1. **Secret**: Uses a Kubernetes secret containing AWS credentials
-2. **IRSA**: Uses IAM Roles for Service Accounts
-3. **EC2**: Uses the EC2 instance profile
-
-### Using Secret Authentication
-
-When using the `secret` authentication method, the chart will create a secret with your AWS credentials:
+Currently, this chart only supports the `secret` authentication method for AWS. The secret method uses a Kubernetes secret containing AWS credentials:
 
 ```yaml
 aws:
@@ -67,25 +59,7 @@ aws:
         secretAccessKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 ```
 
-### Using IRSA Authentication
-
-When using the `irsa` authentication method, the chart assumes that the Crossplane pods have been configured with an appropriate service account that has been annotated with an IAM role:
-
-```yaml
-aws:
-  authentication:
-    method: irsa
-```
-
-### Using EC2 Authentication
-
-When using the `ec2` authentication method, the chart assumes that the Kubernetes nodes are running on EC2 instances with an appropriate instance profile:
-
-```yaml
-aws:
-  authentication:
-    method: ec2
-```
+Support for other authentication methods (IRSA, EC2) may be added in future versions.
 
 ## Usage with Compositions
 
