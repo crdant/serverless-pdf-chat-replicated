@@ -15,7 +15,7 @@ $(eval CHART_$(1)_VERSION := $(shell yq .version $(CHARTDIR)/$(1)/Chart.yaml))
 endef
 $(foreach chart,$(CHARTS),$(eval $(call cache-chart-version,$(chart))))
 
-VERSION     ?= $(CHART_cloud-resources_VERSION)
+VERSION     ?= $(CHART_serverless-pdf-chat_VERSION)
 CHANNEL     := $(shell git branch --show-current)
 ifeq ($(CHANNEL), main)
 	CHANNEL=Unstable
