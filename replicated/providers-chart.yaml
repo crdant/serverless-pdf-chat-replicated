@@ -6,16 +6,9 @@ spec:
   # chart identifies a matching chart from a .tgz
   chart:
     name: providers
-    chartVersion: 0.1.0
-  weight: -10
+    chartVersion: 0.11.8
+  namespace: serverless-pdf-chat
+  weight: -30
 
   helmUpgradeFlags:
     - --wait
- 
-  # values are used in the customer environment, as a pre-render step
-  # these values will be supplied to helm template
-  values: 
-    providers:
-      aws:
-        waitJob:
-          serviceAccountName: kotsadm

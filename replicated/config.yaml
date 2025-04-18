@@ -5,20 +5,10 @@ metadata:
   name: serverless-pdf-chat
 spec:
   groups:
-    - name: cloud-resources
-      title: Cloud Provider
+    - name: aws
+      title: AWS Configuration
       description: |
       items:
-        - name: cloud
-          title: Cloud
-          help_text: >
-            Select the cloud provider to use
-          type: radio
-          required: true
-          default: aws
-          items:
-            - name: aws
-              title: AWS
         - name: aws_region
           title: AWS Region
           help_text: >
