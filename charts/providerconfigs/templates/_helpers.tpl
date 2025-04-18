@@ -70,3 +70,25 @@ Get the credentials secret key
 {{- define "providerconfigs.secretKey" -}}
 {{- "creds" }}
 {{- end }}
+
+{{/*
+Common labels
+*/}}
+{{- define "providerconfigs.commonLabels" -}}
+{{- if .Values.commonLabels }}
+{{- range $key, $value := .Values.commonLabels }}
+{{ $key }}: {{ $value | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Common annotations
+*/}}
+{{- define "providerconfigs.commonAnnotations" -}}
+{{- if .Values.commonAnnotations }}
+{{- range $key, $value := .Values.commonAnnotations }}
+{{ $key }}: {{ $value | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
