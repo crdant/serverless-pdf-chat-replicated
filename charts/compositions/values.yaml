@@ -1,4 +1,7 @@
 # Default values for compositions chart
+global:
+  images:
+    registry: ""
 
 # AWS configuration
 aws:

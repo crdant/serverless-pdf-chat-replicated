@@ -4,6 +4,8 @@
 global:
   namePrefix: "pdf-chat"
   environment: "dev"
+  images:
+    registry: ""
 
 images:
   repository: "serverless-pdf-chat"  # Repository name in ECR
