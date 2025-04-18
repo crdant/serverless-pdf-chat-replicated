@@ -1,6 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
+  "additionalProperties": false,
+  "required": ["aws", "kubernetes"],
   "properties": {
     "nameOverride": {
       "type": "string",
@@ -12,33 +14,55 @@
     },
     "commonLabels": {
       "type": "object",
-      "description": "Common labels to add to all resources",
+      "description": "Common labels to add to all resources. These labels will be added to all resources created by the chart.",
+      "examples": [
+        {
+          "app.kubernetes.io/part-of": "platform",
+          "environment": "production",
+          "team": "platform-engineering"
+        }
+      ],
       "additionalProperties": {
         "type": "string"
       }
     },
     "commonAnnotations": {
       "type": "object",
-      "description": "Common annotations to add to all resources",
+      "description": "Common annotations to add to all resources. These annotations will be added to all resources created by the chart.",
+      "examples": [
+        {
+          "app.kubernetes.io/documentation": "https://example.com/docs",
+          "app.kubernetes.io/managed-by": "helm"
+        }
+      ],
       "additionalProperties": {
         "type": "string"
       }
     },
     "aws": {
       "type": "object",
+      "required": ["region", "providerConfigName", "authentication"],
+      "additionalProperties": false,
       "properties": {
         "region": {
           "type": "string",
           "description": "AWS region where resources will be provisioned",
-          "default": "us-west-2"
+          "default": "us-west-2",
+          "pattern": "^[a-z]{2}-[a-z]+-\\d{1}$",
+          "examples": ["us-west-2", "eu-west-1", "ap-southeast-1"]
         },
         "providerConfigName": {
           "type": "string",
           "description": "Name of the provider configuration",
-          "default": "default"
+          "default": "default",
+          "minLength": 1,
+          "maxLength": 63,
+          "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$"
         },
         "authentication": {
           "type": "object",
+          "required": ["method"],
+          "additionalProperties": false,
           "properties": {
             "method": {
               "type": "string",
@@ -48,53 +72,85 @@
             },
             "secret": {
               "type": "object",
+              "additionalProperties": false,
+              "required": ["name", "namespace", "keys"],
               "properties": {
                 "name": {
                   "type": "string",
                   "description": "Name of the secret containing AWS credentials",
-                  "default": "aws-credentials"
+                  "default": "aws-credentials",
+                  "minLength": 1,
+                  "maxLength": 253,
+                  "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$"
                 },
                 "namespace": {
                   "type": "string",
                   "description": "Namespace where the secret is located",
-                  "default": "crossplane-system"
+                  "default": "crossplane-system",
+                  "minLength": 1,
+                  "maxLength": 63,
+                  "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
                 },
                 "keys": {
                   "type": "object",
+                  "required": ["accessKeyId", "secretAccessKey"],
+                  "additionalProperties": false,
                   "properties": {
                     "accessKeyId": {
                       "type": "string",
                       "description": "Key for AWS access key ID",
-                      "default": "aws_access_key_id"
+                      "default": "aws_access_key_id",
+                      "minLength": 1
                     },
                     "secretAccessKey": {
                       "type": "string",
                       "description": "Key for AWS secret access key",
-                      "default": "aws_secret_access_key"
+                      "default": "aws_secret_access_key",
+                      "minLength": 1
                     }
                   }
                 }
               }
             }
-          }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "method": { "enum": ["secret"] }
+                }
+              },
+              "then": {
+                "required": ["secret"]
+              }
+            }
+          ]
         }
       }
     },
     "kubernetes": {
       "type": "object",
+      "required": ["providerConfigName", "authentication"],
+      "additionalProperties": false,
       "properties": {
         "providerConfigName": {
           "type": "string",
           "description": "Name of the provider configuration",
-          "default": "default"
+          "default": "default",
+          "minLength": 1,
+          "maxLength": 63,
+          "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$"
         },
         "authentication": {
           "type": "object",
+          "required": ["source"],
+          "additionalProperties": false,
           "properties": {
             "source": {
               "type": "string",
-              "description": "Source of credentials",
-              "default": "InjectedIdentity"
+              "description": "Source of credentials (InjectedIdentity, Secret, etc.)",
+              "default": "InjectedIdentity",
+              "enum": ["InjectedIdentity", "Secret", "ServiceAccount", "None"]
             }
           }
         }
