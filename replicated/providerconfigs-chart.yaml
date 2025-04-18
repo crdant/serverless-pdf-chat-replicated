@@ -1,0 +1,32 @@
+apiVersion: kots.io/v1beta2
+kind: HelmChart
+metadata:
+  name: cloud-providers
+spec:
+  # chart identifies a matching chart from a .tgz
+  chart:
+    name: providerconfigs
+    chartVersion: 0.1.1
+  weight: -20
+
+  helmUpgradeFlags:
+    - --wait
+ 
+  # values are used in the customer environment, as a pre-render step
+  # these values will be supplied to helm template
+  values: 
+    aws:
+      # region where resources will be provisioned
+      region: '{{repl ConfigOption "aws_region" }}'
+      # Authentication settings for AWS
+      authentication:
+        # Method to authenticate with AWS (secret, irsa, or ec2)
+        method: "secret"
+        # Secret configuration when using secret authentication method
+        secret:
+          # Keys in the secret for AWS credentials
+          keys:
+            # Key for AWS access key ID
+            accessKeyId: '{{repl ConfigOption "aws_access_key_id" }}'
+            # Key for AWS secret access key
+            secretAccessKey: '{{repl ConfigOption "aws_secret_access_key" }}'
