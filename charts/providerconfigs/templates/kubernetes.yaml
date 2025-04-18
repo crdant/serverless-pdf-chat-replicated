@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "providerconfigs.labels" . | nindent 4 }}
   annotations:
-    {{- include "providerconfigs.commonAnnotations" . | nindent 4 }}
+    {{- include "providerconfigs.annotations" . | nindent 4 }}
 spec:
   credentials:
     source: {{ .Values.kubernetes.authentication.source }}

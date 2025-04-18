@@ -80,7 +80,7 @@ Get the credentials secret key
 {{/*
 Common annotations
 */}}
-{{- define "providerconfigs.commonAnnotations" -}}
+{{- define "providerconfigs.annotations" -}}
 {{- if .Values.commonAnnotations }}
 {{- range $key, $value := .Values.commonAnnotations }}
 {{ $key }}: {{ $value | quote }}
