@@ -1,4 +1,11 @@
-Thank you for installing {{ .Chart.Name }}.
+Thank you for installing {{ .Chart.Name }} version {{ .Chart.Version }}.
+
+COMPATIBILITY:
+-------------
+This chart is compatible with:
+- Kubernetes versions: 1.19 - 1.27
+- Helm: v3.5+
+- Crossplane: v1.x
 
 INSTALLED COMPOSITIONS:
 ----------------------
@@ -40,3 +47,4 @@ To verify the installation, run:
 
 To check the status of your composite resources:
   kubectl get cognitoauthorizedapi
+
