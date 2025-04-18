@@ -133,7 +133,7 @@ Generate the SQS embedding queue name
 Generate the frontend registry
 */}}
 {{- define "serverless-pdf-chat.frontendRegistry" -}}
-{{- $registry := .Values.frontend.image.registry | default (printf "%s.dkr.ecr.%s.amazonaws.com" .Values.aws.accountId .Values.aws.region) -}}
+{{- $registry := .Values.global.images.registry | default .Values.frontend.image.registry | default (printf "%s.dkr.ecr.%s.amazonaws.com" .Values.aws.accountId .Values.aws.region) -}}
 {{- $registry -}}
 {{- end -}}
 
