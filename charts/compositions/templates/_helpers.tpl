@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "providers.name" -}}
+{{- define "compositions.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "providers.fullname" -}}
+{{- define "compositions.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "providers.chart" -}}
+{{- define "compositions.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "providers.labels" -}}
-helm.sh/chart: {{ include "providers.chart" . }}
-{{ include "providers.selectorLabels" . }}
+{{- define "compositions.labels" -}}
+helm.sh/chart: {{ include "compositions.chart" . }}
+{{ include "compositions.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,15 +45,15 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "providers.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "providers.name" . }}
+{{- define "compositions.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "compositions.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Common labels from values
 */}}
-{{- define "providers.commonLabels" -}}
+{{- define "compositions.commonLabels" -}}
 {{- if .Values.commonLabels }}
 {{- range $key, $value := .Values.commonLabels }}
 {{ $key }}: {{ $value | quote }}
@@ -64,7 +64,7 @@ Common labels from values
 {{/*
 Common annotations
 */}}
-{{- define "providers.commonAnnotations" -}}
+{{- define "compositions.commonAnnotations" -}}
 {{- if .Values.commonAnnotations }}
 {{- range $key, $value := .Values.commonAnnotations }}
 {{ $key }}: {{ $value | quote }}
@@ -75,9 +75,9 @@ Common annotations
 {{/*
 Get the ServiceAccount name for jobs
 */}}
-{{- define "providers.serviceAccountName" -}}
+{{- define "compositions.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (printf "%s-jobs" (include "providers.fullname" .)) .Values.serviceAccount.name }}
+{{- default (printf "%s-jobs" (include "compositions.fullname" .)) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
@@ -86,42 +86,42 @@ Get the ServiceAccount name for jobs
 {{/*
 Get the registry for jobs
 */}}
-{{- define "providers.jobRegistry" -}}
+{{- define "compositions.jobRegistry" -}}
 {{- .Values.global.images.registry | default .Values.jobs.waitForCompositionsJob.image.registry -}}
 {{- end }}
 
 {{/*
 Get the credentials secret name
 */}}
-{{- define "providers.secretName" -}}
+{{- define "compositions.secretName" -}}
 {{- .Values.aws.authentication.secret.name }}
 {{- end }}
 
 {{/*
 Get the credentials secret namespace
 */}}
-{{- define "providers.secretNamespace" -}}
+{{- define "compositions.secretNamespace" -}}
 {{- .Values.aws.authentication.secret.namespace }}
 {{- end }}
 
 {{/*
 Get the credentials secret key
 */}}
-{{- define "providers.secretKey" -}}
+{{- define "compositions.secretKey" -}}
 {{- "creds" }}
 {{- end }}
 
 {{/*
 Get the runtime config name
 */}}
-{{- define "providers.runtimeConfigName" -}}
+{{- define "compositions.runtimeConfigName" -}}
 default
 {{- end }}
 
 {{/*
 Get the provider package URL
 */}}
-{{- define "providers.packageUrl" -}}
+{{- define "compositions.packageUrl" -}}
 {{- $provider := index .Values.aws.providers .providerName -}}
 {{- printf "%s/%s:%s" .Values.aws.providers.registry $provider.package $provider.version -}}
 {{- end }}

@@ -1,26 +1,26 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "providers.fullname" . }}-wait-for-compositions
+  name: {{ include "compositions.fullname" . }}-wait-for-compositions
   labels:
-    {{- include "providers.labels" . | nindent 4 }}
-    {{- include "providers.commonLabels" . | nindent 4 }}
+    {{- include "compositions.labels" . | nindent 4 }}
+    {{- include "compositions.commonLabels" . | nindent 4 }}
     app.kubernetes.io/component: wait-for-compositions
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "15"  # Run after composition (weight 10)
     "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
-    {{- include "providers.commonAnnotations" . | nindent 4 }}
+    {{- include "compositions.commonAnnotations" . | nindent 4 }}
 spec:
   backoffLimit: 10
   template:
     metadata:
-      name: {{ include "providers.fullname" . }}-wait-for-compositions
+      name: {{ include "compositions.fullname" . }}-wait-for-compositions
       labels:
-        {{- include "providers.labels" . | nindent 8 }}
+        {{- include "compositions.labels" . | nindent 8 }}
         app.kubernetes.io/component: wait-for-compositions
     spec:
-      serviceAccountName: {{ include "providers.serviceAccountName" . }}
+      serviceAccountName: {{ include "compositions.serviceAccountName" . }}
       restartPolicy: OnFailure
       {{- with .Values.jobs.waitForCompositionsJob.securityContext }}
       securityContext:
@@ -30,7 +30,7 @@ spec:
       {{- end }}
       containers:
       - name: kubectl
-        image: {{ include "providers.jobRegistry" . }}/{{ .Values.jobs.waitForCompositionsJob.image.repository }}:{{ .Values.jobs.waitForCompositionsJob.image.tag | default "latest" }}
+        image: {{ include "compositions.jobRegistry" . }}/{{ .Values.jobs.waitForCompositionsJob.image.repository }}:{{ .Values.jobs.waitForCompositionsJob.image.tag | default "latest" }}
         imagePullPolicy: {{ .Values.jobs.waitForCompositionsJob.image.pullPolicy | default "IfNotPresent" }}
         {{- with .Values.jobs.waitForCompositionsJob.resources }}
         resources:
