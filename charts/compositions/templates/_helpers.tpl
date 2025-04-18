@@ -59,7 +59,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{/*
 Common annotations
 */}}
-{{- define "compositions.commonAnnotations" -}}
+{{- define "compositions.annotations" -}}
 {{- if .Values.commonAnnotations }}
 {{- range $key, $value := .Values.commonAnnotations }}
 {{ $key }}: {{ $value | quote }}

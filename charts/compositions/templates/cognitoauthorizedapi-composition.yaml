@@ -8,7 +8,7 @@ metadata:
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "10"  # Run after XRD (weight 5)
-    {{- include "compositions.commonAnnotations" . | nindent 4 }}
+    {{- include "compositions.annotations" . | nindent 4 }}
 spec:
   compositeTypeRef:
     apiVersion: serverlesspdfchat.shortrib.io/v1alpha1
