@@ -61,13 +61,13 @@
         },
         "authentication": {
           "type": "object",
-          "required": ["method"],
+          "required": ["method", "secret"],
           "additionalProperties": false,
           "properties": {
             "method": {
               "type": "string",
-              "description": "Method to authenticate with AWS (secret, irsa, or ec2)",
-              "enum": ["secret", "irsa", "ec2"],
+              "description": "Method to authenticate with AWS (currently only secret is supported)",
+              "enum": ["secret"],
               "default": "secret"
             },
             "secret": {
@@ -112,19 +112,7 @@
                 }
               }
             }
-          },
-          "allOf": [
-            {
-              "if": {
-                "properties": {
-                  "method": { "enum": ["secret"] }
-                }
-              },
-              "then": {
-                "required": ["secret"]
-              }
-            }
-          ]
+          }
         }
       }
     },
