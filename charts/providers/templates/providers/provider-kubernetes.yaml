@@ -13,4 +13,4 @@ spec:
   revisionHistoryLimit: 1
   runtimeConfigRef:
     name: {{ include "providers.runtimeConfigName" . }}
-  {{- include "providers.imagePullSecrets" (dict "root" . "scope" "kubernetes") | nindent 2 }}
+  {{- include "providers.packagePullSecrets" (dict "root" . "scope" "kubernetes") | nindent 2 }}

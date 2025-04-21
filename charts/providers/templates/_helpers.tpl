@@ -108,40 +108,39 @@ Get the registry for Kubernetes provider
 {{- end }}
 
 {{/*
-Get image pull secrets with proper precedence
-For AWS providers: global -> aws -> provider-specific
-For Kubernetes provider: global -> kubernetes
-For jobs: global -> jobs
+Get package pull secrets for Crossplane providers with proper precedence
+global.images.pullSecrets takes precedence, then provider-specific pull secrets
 */}}
-{{- define "providers.imagePullSecrets" -}}
+{{- define "providers.packagePullSecrets" -}}
 {{- $pullSecrets := list -}}
-{{- if .scope -}}
-  {{- if eq .scope "aws" -}}
-    {{- if .root.Values.global.images.pullSecrets -}}
-      {{- $pullSecrets = .root.Values.global.images.pullSecrets -}}
-    {{- else if .root.Values.aws.imagePullSecrets -}}
-      {{- $pullSecrets = .root.Values.aws.imagePullSecrets -}}
-    {{- end -}}
-  {{- else if eq .scope "kubernetes" -}}
-    {{- if .root.Values.global.images.pullSecrets -}}
-      {{- $pullSecrets = .root.Values.global.images.pullSecrets -}}
-    {{- else if .root.Values.kubernetes.imagePullSecrets -}}
-      {{- $pullSecrets = .root.Values.kubernetes.imagePullSecrets -}}
-    {{- end -}}
-  {{- else if eq .scope "jobs" -}}
-    {{- if .root.Values.global.images.pullSecrets -}}
-      {{- $pullSecrets = .root.Values.global.images.pullSecrets -}}
-    {{- else if .root.Values.jobs.imagePullSecrets -}}
-      {{- $pullSecrets = .root.Values.jobs.imagePullSecrets -}}
-    {{- end -}}
-  {{- end -}}
-{{- else -}}
+{{- if .root.Values.global.images.pullSecrets -}}
   {{- $pullSecrets = .root.Values.global.images.pullSecrets -}}
+{{- else if and (eq .scope "aws") .root.Values.aws.imagePullSecrets -}}
+  {{- $pullSecrets = .root.Values.aws.imagePullSecrets -}}
+{{- else if and (eq .scope "kubernetes") .root.Values.kubernetes.imagePullSecrets -}}
+  {{- $pullSecrets = .root.Values.kubernetes.imagePullSecrets -}}
 {{- end -}}
 {{- if $pullSecrets -}}
-imagePullSecrets:
+packagePullSecrets:
 {{- range $pullSecrets }}
 - name: {{ . }}
 {{- end }}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Get image pull secrets for Kubernetes resources with proper precedence
+*/}}
+{{- define "providers.imagePullSecrets" -}}
+{{- if .Values.global.images.pullSecrets }}
+imagePullSecrets:
+{{- range .Values.global.images.pullSecrets }}
+- name: {{ . }}
+{{- end }}
+{{- else if .Values.jobs.imagePullSecrets }}
+imagePullSecrets:
+{{- range .Values.jobs.imagePullSecrets }}
+- name: {{ . }}
+{{- end }}
+{{- end }}
 {{- end -}}

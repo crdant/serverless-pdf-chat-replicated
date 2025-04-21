@@ -23,7 +23,7 @@ spec:
         runAsUser: {{ .runAsUser }}
         runAsGroup: {{ .runAsGroup }}
       {{- end }}
-      {{- include "providers.imagePullSecrets" (dict "root" . "scope" "jobs") | nindent 6 }}
+      {{- include "providers.imagePullSecrets" . | nindent 6 }}
       containers:
       - name: kubectl
         image: {{ include "providers.jobRegistry" . }}/{{ .Values.jobs.waitReadyJob.image.repository }}:{{ .Values.jobs.waitReadyJob.image.tag | default "latest" }}
