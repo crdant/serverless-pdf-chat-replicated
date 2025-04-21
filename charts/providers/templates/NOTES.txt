@@ -5,7 +5,7 @@ Crossplane providers have been successfully installed in your cluster.
 INSTALLED PROVIDERS:
 -------------------
 {{- range $key, $value := .Values.aws.providers }}
-{{- if and (ne $key "registry") ($value.version) }}
+{{- if and (ne $key "registry") (ne $key "pullSecrets") (hasKey $value "version") }}
 - AWS {{ $key }} (version: {{ $value.version }})
 {{- end }}
 {{- end }}
