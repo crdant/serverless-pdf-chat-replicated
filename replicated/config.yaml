@@ -9,10 +9,21 @@ spec:
       title: AWS Configuration
       description: |
       items:
+        - name: 
+          title: AWS Account ID
+          help_text: >
+            The AWS account ID for backend resources
+          type: text
+          required: true
+          validation:
+            regex:
+              # update this regex for the format of AWS account IDs (currently it's a copy paste of one that validates hostnames that I've left here for syntax purposes) - AI!
+              pattern: ^(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$
+              message: Please enter the account ID for your AWS account. You can find your account ID in the AWS Management Console.
         - name: aws_region
           title: AWS Region
           help_text: >
-            Select the AWS region to use
+            Select the AWS region to use for the backend
           type: dropdown
           required: true
           default: us-east-1
