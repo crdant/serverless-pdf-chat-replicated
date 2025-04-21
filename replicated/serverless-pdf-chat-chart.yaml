@@ -16,6 +16,10 @@ spec:
   # values are used in the customer environment, as a pre-render step
   # these values will be supplied to helm template
   values: 
+    aws:
+      accountId: '{{repl ConfigOption "aws_account_id" }}'
+      region: '{{repl ConfigOption "aws_region" }}'
+
     global:
       images:
         pullSecrets:
