@@ -113,7 +113,7 @@ global.images.pullSecrets takes precedence, then provider-specific pull secrets
 */}}
 {{- define "providers.packagePullSecrets" -}}
 {{- $pullSecrets := list -}}
-{{- if .root.Values.global.images.pullSecrets -}}
+{{- if and .root.Values.global.images .root.Values.global.images.pullSecrets -}}
   {{- $pullSecrets = .root.Values.global.images.pullSecrets -}}
 {{- else if and (eq .scope "aws") .root.Values.aws.imagePullSecrets -}}
   {{- $pullSecrets = .root.Values.aws.imagePullSecrets -}}
@@ -132,7 +132,7 @@ packagePullSecrets:
 Get image pull secrets for Kubernetes resources with proper precedence
 */}}
 {{- define "providers.imagePullSecrets" -}}
-{{- if .Values.global.images.pullSecrets }}
+{{- if and .Values.global.images .Values.global.images.pullSecrets }}
 imagePullSecrets:
 {{- range .Values.global.images.pullSecrets }}
 - name: {{ . }}
