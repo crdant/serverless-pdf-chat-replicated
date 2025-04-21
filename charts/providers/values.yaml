@@ -6,9 +6,8 @@ global:
     # Global registry configuration. When set, overrides individual registry settings
     # unless specifically overridden at the component level
     registry: ""
-  # Global image pull secrets to use for all deployments
-  imagePullSecrets: []
-  # - name: regcred
+    # Global pull secrets for all images
+    pullSecrets: []
 
 nameOverride: ""
 fullnameOverride: ""

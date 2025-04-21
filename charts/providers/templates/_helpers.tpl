@@ -117,19 +117,31 @@ For jobs: global -> jobs
 {{- $pullSecrets := list -}}
 {{- if .scope -}}
   {{- if eq .scope "aws" -}}
-    {{- $pullSecrets = concat .root.Values.global.imagePullSecrets .root.Values.aws.imagePullSecrets -}}
+    {{- if .root.Values.global.images.pullSecrets -}}
+      {{- $pullSecrets = .root.Values.global.images.pullSecrets -}}
+    {{- else if .root.Values.aws.imagePullSecrets -}}
+      {{- $pullSecrets = .root.Values.aws.imagePullSecrets -}}
+    {{- end -}}
   {{- else if eq .scope "kubernetes" -}}
-    {{- $pullSecrets = concat .root.Values.global.imagePullSecrets .root.Values.kubernetes.imagePullSecrets -}}
+    {{- if .root.Values.global.images.pullSecrets -}}
+      {{- $pullSecrets = .root.Values.global.images.pullSecrets -}}
+    {{- else if .root.Values.kubernetes.imagePullSecrets -}}
+      {{- $pullSecrets = .root.Values.kubernetes.imagePullSecrets -}}
+    {{- end -}}
   {{- else if eq .scope "jobs" -}}
-    {{- $pullSecrets = concat .root.Values.global.imagePullSecrets .root.Values.jobs.imagePullSecrets -}}
+    {{- if .root.Values.global.images.pullSecrets -}}
+      {{- $pullSecrets = .root.Values.global.images.pullSecrets -}}
+    {{- else if .root.Values.jobs.imagePullSecrets -}}
+      {{- $pullSecrets = .root.Values.jobs.imagePullSecrets -}}
+    {{- end -}}
   {{- end -}}
 {{- else -}}
-  {{- $pullSecrets = .root.Values.global.imagePullSecrets -}}
+  {{- $pullSecrets = .root.Values.global.images.pullSecrets -}}
 {{- end -}}
 {{- if $pullSecrets -}}
 imagePullSecrets:
 {{- range $pullSecrets }}
-- name: {{ .name }}
+- name: {{ . }}
 {{- end }}
 {{- end -}}
 {{- end -}}

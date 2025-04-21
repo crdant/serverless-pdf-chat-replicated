@@ -11,18 +11,13 @@
             "registry": {
               "type": "string",
               "description": "Global registry configuration. When set, overrides individual registry settings unless specifically overridden at the component level"
-            }
-          }
-        },
-        "imagePullSecrets": {
-          "type": "array",
-          "description": "Global image pull secrets to use for all deployments",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "Name of the image pull secret"
+            },
+            "pullSecrets": {
+              "type": "array",
+              "description": "Global list of image pull secret names",
+              "default": [],
+              "items": {
+                "type": "string"
               }
             }
           }
