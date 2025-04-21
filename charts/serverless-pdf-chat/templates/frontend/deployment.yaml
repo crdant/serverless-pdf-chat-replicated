@@ -25,8 +25,25 @@ spec:
         app.kubernetes.io/component: frontend
     spec:
       {{- if .Values.aws.ecrAccessToken }}
+      {{- if eq (include "serverless-pdf-chat.frontendRegistry" .) (printf "%s.dkr.ecr.%s.amazonaws.com" .Values.aws.accountId .Values.aws.region) }}
       imagePullSecrets:
         - name: {{ include "serverless-pdf-chat.fullname" . }}-ecr-credentials
+      {{- else if .Values.global.images.pullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.global.images.pullSecrets }}
+        - name: {{ . }}
+        {{- end }}
+      {{- else if .Values.frontend.image.pullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.frontend.image.pullSecrets }}
+        - name: {{ . }}
+        {{- end }}
+      {{- else if .Values.frontend.builderImage.pullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.frontend.builderImage.pullSecrets }}
+        - name: {{ . }}
+        {{- end }}
+      {{- end }}
       {{- else if .Values.global.images.pullSecrets }}
       imagePullSecrets:
         {{- range .Values.global.images.pullSecrets }}
