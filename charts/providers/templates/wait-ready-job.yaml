@@ -40,7 +40,7 @@ spec:
           
           # Wait for all AWS providers to be ready
           {{- range $key, $value := .Values.aws.providers }}
-          {{- if and (ne $key "registry") (ne $key "bedrock") (ne $key "cloudfront") (ne $key "secretsmanager") }}
+          {{- if and (ne $key "registry") (ne $key "bedrock") (ne $key "cloudfront") (ne $key "secretsmanager") (ne $key "pullSecrets") }}
           echo "Waiting for provider {{ include "providers.fullname" $ }}-aws-{{ $key }} to be ready..."
           kubectl wait --for=condition=Healthy provider.pkg.crossplane.io/{{ include "providers.fullname" $ }}-aws-{{ $key }} --timeout=300s
           if [ $? -ne 0 ]; then

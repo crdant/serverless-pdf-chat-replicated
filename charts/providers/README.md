@@ -35,7 +35,7 @@ The following table lists the configurable parameters of the chart and their def
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `global.images.registry` | Global registry for all images (overrides individual registry settings) | `""` |
-| `global.imagePullSecrets` | Global image pull secrets to use for all deployments | `[]` |
+| `global.images.pullSecrets` | Global list of image pull secret names for all images | `[]` |
 | `commonLabels` | Common labels to add to all resources | `{}` |
 | `commonAnnotations` | Common annotations to add to all resources | `{}` |
 | `serviceAccount.create` | Whether to create a ServiceAccount | `true` |
@@ -89,19 +89,22 @@ To configure image pull secrets for all providers:
 
 ```yaml
 global:
-  imagePullSecrets:
-  - name: global-registry-secret
+  images:
+    pullSecrets:
+    - global-registry-secret
 ```
 
 To configure image pull secrets for specific provider types:
 
 ```yaml
 global:
-  imagePullSecrets:
-  - name: global-registry-secret
+  images:
+    pullSecrets:
+    - global-registry-secret
 aws:
-  imagePullSecrets:
-  - name: aws-registry-secret
+  providers:
+    pullSecrets:
+    - aws-registry-secret
 kubernetes:
   imagePullSecrets:
   - name: k8s-registry-secret
