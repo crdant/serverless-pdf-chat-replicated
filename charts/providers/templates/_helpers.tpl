@@ -115,8 +115,8 @@ global.images.pullSecrets takes precedence, then provider-specific pull secrets
 {{- $pullSecrets := list -}}
 {{- if and .root.Values.global.images .root.Values.global.images.pullSecrets -}}
   {{- $pullSecrets = .root.Values.global.images.pullSecrets -}}
-{{- else if and (eq .scope "aws") .root.Values.aws.imagePullSecrets -}}
-  {{- $pullSecrets = .root.Values.aws.imagePullSecrets -}}
+{{- else if and (eq .scope "aws") .root.Values.aws.providers.pullSecrets -}}
+  {{- $pullSecrets = .root.Values.aws.providers.pullSecrets -}}
 {{- else if and (eq .scope "kubernetes") .root.Values.kubernetes.imagePullSecrets -}}
   {{- $pullSecrets = .root.Values.kubernetes.imagePullSecrets -}}
 {{- end -}}

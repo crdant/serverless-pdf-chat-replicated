@@ -82,6 +82,8 @@ aws:
     # Registry for all providers - can be overridden by global.images.registry
     # Can be overridden by global.images.registry
     registry: "xpkg.upbound.io/upbound"
+    # Pull secrets for AWS providers
+    pullSecrets: []
     family:
       package: "provider-family-aws"
       version: "v1.21.1"
