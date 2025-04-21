@@ -12,3 +12,24 @@ spec:
 
   helmUpgradeFlags:
     - --wait
+
+  values: 
+    global:
+      images:
+        pullSecrets:
+          - '{{repl ImagePullSecretName}}'
+
+  optionalValues:
+    - when: '{{repl HasLocalRegistry}}'
+      recursiveMerge: true
+      values: 
+        global:
+          images: 
+            registry: '{{repl LocalRegistryHost}}'
+
+    - when: '{{repl not HasLocalRegistry}}'
+      recursiveMerge: true
+      values: 
+        global:
+          images: 
+            registry: 'images.shortrib.io/proxy/{{repl LicenseFieldValue "appSlug"}}/429114214526.dkr.ecr.us-west-2.amazonaws.com'
