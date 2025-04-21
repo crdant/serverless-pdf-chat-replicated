@@ -15,7 +15,12 @@ spec:
  
   # values are used in the customer environment, as a pre-render step
   # these values will be supplied to helm template
-  values: {}
+  values: 
+    global:
+      images:
+        pullSecrets:
+          - name: {{repl ImagePullSecretName}}
+
   optionalValues:
     - when: '{{repl HasLocalRegistry}}'
       recursiveMerge: true
