@@ -6,6 +6,7 @@ global:
   environment: "dev"
   images:
     registry: ""
+    pullSecrets: []  # Global list of image pull secret names
 
 images:
   repository: "serverless-pdf-chat"  # Repository name in ECR
