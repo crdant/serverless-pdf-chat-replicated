@@ -19,7 +19,7 @@ spec:
     global:
       images:
         pullSecrets:
-          - name: {{repl ImagePullSecretName}}
+          - {{repl ImagePullSecretName}}
 
   optionalValues:
     - when: '{{repl HasLocalRegistry}}'
