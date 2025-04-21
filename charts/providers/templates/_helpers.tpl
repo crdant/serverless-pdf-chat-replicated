@@ -106,3 +106,30 @@ Get the registry for Kubernetes provider
 {{- define "providers.kubernetesRegistry" -}}
 {{- .Values.global.images.registry | default .Values.kubernetes.provider.registry -}}
 {{- end }}
+
+{{/*
+Get image pull secrets with proper precedence
+For AWS providers: global -> aws -> provider-specific
+For Kubernetes provider: global -> kubernetes
+For jobs: global -> jobs
+*/}}
+{{- define "providers.imagePullSecrets" -}}
+{{- $pullSecrets := list -}}
+{{- if .scope -}}
+  {{- if eq .scope "aws" -}}
+    {{- $pullSecrets = concat .root.Values.global.imagePullSecrets .root.Values.aws.imagePullSecrets -}}
+  {{- else if eq .scope "kubernetes" -}}
+    {{- $pullSecrets = concat .root.Values.global.imagePullSecrets .root.Values.kubernetes.imagePullSecrets -}}
+  {{- else if eq .scope "jobs" -}}
+    {{- $pullSecrets = concat .root.Values.global.imagePullSecrets .root.Values.jobs.imagePullSecrets -}}
+  {{- end -}}
+{{- else -}}
+  {{- $pullSecrets = .root.Values.global.imagePullSecrets -}}
+{{- end -}}
+{{- if $pullSecrets -}}
+imagePullSecrets:
+{{- range $pullSecrets }}
+- name: {{ .name }}
+{{- end }}
+{{- end -}}
+{{- end -}}

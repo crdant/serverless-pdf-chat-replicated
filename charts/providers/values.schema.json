@@ -13,6 +13,19 @@
               "description": "Global registry configuration. When set, overrides individual registry settings unless specifically overridden at the component level"
             }
           }
+        },
+        "imagePullSecrets": {
+          "type": "array",
+          "description": "Global image pull secrets to use for all deployments",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the image pull secret"
+              }
+            }
+          }
         }
       }
     },
@@ -55,6 +68,19 @@
     "jobs": {
       "type": "object",
       "properties": {
+        "imagePullSecrets": {
+          "type": "array",
+          "description": "Image pull secrets for jobs",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the image pull secret"
+              }
+            }
+          }
+        },
         "waitReadyJob": {
           "type": "object",
           "properties": {
@@ -146,6 +172,19 @@
     "aws": {
       "type": "object",
       "properties": {
+        "imagePullSecrets": {
+          "type": "array",
+          "description": "Image pull secrets for AWS providers",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the image pull secret"
+              }
+            }
+          }
+        },
         "deploymentRuntimeConfig": {
           "type": "object",
           "properties": {
@@ -341,6 +380,19 @@
     "kubernetes": {
       "type": "object",
       "properties": {
+        "imagePullSecrets": {
+          "type": "array",
+          "description": "Image pull secrets for Kubernetes provider",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the image pull secret"
+              }
+            }
+          }
+        },
         "provider": {
           "type": "object",
           "properties": {

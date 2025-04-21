@@ -6,6 +6,9 @@ global:
     # Global registry configuration. When set, overrides individual registry settings
     # unless specifically overridden at the component level
     registry: ""
+  # Global image pull secrets to use for all deployments
+  imagePullSecrets: []
+  # - name: regcred
 
 nameOverride: ""
 fullnameOverride: ""
@@ -33,6 +36,9 @@ serviceAccount:
 
 # Job configurations
 jobs:
+  # Image pull secrets for jobs
+  imagePullSecrets: []
+  # - name: regcred
   waitReadyJob:
     image:
       # Can be overridden by global.images.registry
@@ -53,6 +59,10 @@ jobs:
       runAsGroup: 1001
 
 aws:
+  # Image pull secrets for AWS providers
+  imagePullSecrets: []
+  # - name: regcred
+  
   # Deployment runtime configuration
   deploymentRuntimeConfig:
     # Resource limits for provider controllers
@@ -99,6 +109,10 @@ aws:
       version: "v1.21.1"
 
 kubernetes:
+  # Image pull secrets for Kubernetes provider
+  imagePullSecrets: []
+  # - name: regcred
+  
   provider:
     version: "v0.17.2"
     # Can be overridden by global.images.registry

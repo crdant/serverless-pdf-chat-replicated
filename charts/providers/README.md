@@ -35,10 +35,12 @@ The following table lists the configurable parameters of the chart and their def
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `global.images.registry` | Global registry for all images (overrides individual registry settings) | `""` |
+| `global.imagePullSecrets` | Global image pull secrets to use for all deployments | `[]` |
 | `commonLabels` | Common labels to add to all resources | `{}` |
 | `commonAnnotations` | Common annotations to add to all resources | `{}` |
 | `serviceAccount.create` | Whether to create a ServiceAccount | `true` |
 | `serviceAccount.name` | Name of the ServiceAccount to use (if not created) | `""` |
+| `aws.imagePullSecrets` | Image pull secrets for AWS providers | `[]` |
 | `aws.deploymentRuntimeConfig.resources.limits.cpu` | CPU limit for provider controllers | `500m` |
 | `aws.deploymentRuntimeConfig.resources.limits.memory` | Memory limit for provider controllers | `512Mi` |
 | `aws.deploymentRuntimeConfig.resources.requests.cpu` | CPU request for provider controllers | `100m` |
@@ -46,8 +48,10 @@ The following table lists the configurable parameters of the chart and their def
 | `aws.providers.registry` | Registry for all providers (overridden by global registry if set) | `xpkg.upbound.io/upbound` |
 | `aws.providers.<provider>.package` | Package name for the provider | Varies by provider |
 | `aws.providers.<provider>.version` | Version of the provider | `v1.21.1` |
+| `kubernetes.imagePullSecrets` | Image pull secrets for Kubernetes provider | `[]` |
 | `kubernetes.provider.version` | Version of the Kubernetes provider | `v0.17.2` |
 | `kubernetes.provider.registry` | Registry for the Kubernetes provider (overridden by global registry if set) | `xpkg.upbound.io/upbound` |
+| `jobs.imagePullSecrets` | Image pull secrets for jobs | `[]` |
 | `jobs.waitReadyJob.image.registry` | Registry for wait-ready job image (overridden by global registry if set) | `docker.io` |
 | `jobs.waitReadyJob.image.repository` | Repository for wait-ready job image | `bitnami/kubectl` |
 | `jobs.waitReadyJob.image.tag` | Tag for wait-ready job image | `latest` |
@@ -60,7 +64,7 @@ The following table lists the configurable parameters of the chart and their def
 | `jobs.waitReadyJob.securityContext.runAsUser` | User ID to run wait-ready job | `1001` |
 | `jobs.waitReadyJob.securityContext.runAsGroup` | Group ID to run wait-ready job | `1001` |
 
-### Registry Configuration Examples
+### Registry and Pull Secrets Configuration Examples
 
 To use a custom registry for all images:
 
@@ -79,6 +83,31 @@ global:
 aws:
   providers:
     registry: specific.registry.example.com
+```
+
+To configure image pull secrets for all providers:
+
+```yaml
+global:
+  imagePullSecrets:
+  - name: global-registry-secret
+```
+
+To configure image pull secrets for specific provider types:
+
+```yaml
+global:
+  imagePullSecrets:
+  - name: global-registry-secret
+aws:
+  imagePullSecrets:
+  - name: aws-registry-secret
+kubernetes:
+  imagePullSecrets:
+  - name: k8s-registry-secret
+jobs:
+  imagePullSecrets:
+  - name: jobs-registry-secret
 ```
 
 ## License
