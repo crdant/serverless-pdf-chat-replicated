@@ -22,7 +22,6 @@ spec:
             runAsNonRoot: {{ .Values.aws.deploymentRuntimeConfig.securityContext.runAsNonRoot }}
             runAsUser: {{ .Values.aws.deploymentRuntimeConfig.securityContext.runAsUser }}
             runAsGroup: {{ .Values.aws.deploymentRuntimeConfig.securityContext.runAsGroup }}
-          {{- include "providers.packagePullSecrets" (dict "root" . "scope" "aws") | nindent 10 }}
           containers:
             - name: package-runtime
               resources:
