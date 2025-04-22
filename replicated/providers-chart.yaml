@@ -6,7 +6,7 @@ spec:
   # chart identifies a matching chart from a .tgz
   chart:
     name: providers
-    chartVersion: 0.12.3
+    chartVersion: 0.12.4
   namespace: serverless-pdf-chat
   weight: -30
 
@@ -32,4 +32,4 @@ spec:
       values: 
         global:
           images: 
-            registry: 'images.shortrib.io/proxy/{{repl LicenseFieldValue "appSlug"}}/429114214526.dkr.ecr.us-west-2.amazonaws.com'
+            registry: 'images.shortrib.io/proxy/{{repl LicenseFieldValue "appSlug"}}/xpkg.upbound.io'

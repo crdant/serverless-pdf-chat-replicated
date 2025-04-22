@@ -84,7 +84,7 @@ Get the provider package URL
 {{- else -}}
   {{- $registry = .Values.aws.providers.registry -}}
 {{- end -}}
-{{- printf "%s/%s:%s" $registry $provider.package $provider.version -}}
+{{- printf "%s/upbound/%s:%s" $registry $provider.package $provider.version -}}
 {{- end }}
 
 {{/*
