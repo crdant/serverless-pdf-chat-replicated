@@ -77,14 +77,24 @@ Get the runtime config name
 Get the provider package URL
 */}}
 {{- define "providers.packageUrl" -}}
-{{- $provider := index .Values.aws.providers .providerName -}}
-{{- $registry := "" -}}
-{{- if and .Values.global .Values.global.images -}}
-  {{- $registry = .Values.global.images.registry | default .Values.aws.providers.registry -}}
+{{- if eq .scope "kubernetes" -}}
+  {{- $registry := "" -}}
+  {{- if and .Values.global .Values.global.images -}}
+    {{- $registry = .Values.global.images.registry | default .Values.kubernetes.provider.registry -}}
+  {{- else -}}
+    {{- $registry = .Values.kubernetes.provider.registry -}}
+  {{- end -}}
+  {{- printf "%s/upbound/provider-kubernetes:%s" $registry .Values.kubernetes.provider.version -}}
 {{- else -}}
-  {{- $registry = .Values.aws.providers.registry -}}
+  {{- $provider := index .Values.aws.providers .providerName -}}
+  {{- $registry := "" -}}
+  {{- if and .Values.global .Values.global.images -}}
+    {{- $registry = .Values.global.images.registry | default .Values.aws.providers.registry -}}
+  {{- else -}}
+    {{- $registry = .Values.aws.providers.registry -}}
+  {{- end -}}
+  {{- printf "%s/upbound/%s:%s" $registry $provider.package $provider.version -}}
 {{- end -}}
-{{- printf "%s/upbound/%s:%s" $registry $provider.package $provider.version -}}
 {{- end }}
 
 {{/*

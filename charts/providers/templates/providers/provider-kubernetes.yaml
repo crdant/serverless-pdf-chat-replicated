@@ -7,7 +7,7 @@ metadata:
   annotations:
     {{- include "providers.annotations" . | nindent 4 }}
 spec:
-  package: "{{ include "providers.kubernetesRegistry" . }}/provider-kubernetes:{{ .Values.kubernetes.provider.version }}"
+  package: {{ include "providers.packageUrl" (dict "Values" .Values "scope" "kubernetes") }}
   packagePullPolicy: IfNotPresent
   revisionActivationPolicy: Automatic
   revisionHistoryLimit: 1
