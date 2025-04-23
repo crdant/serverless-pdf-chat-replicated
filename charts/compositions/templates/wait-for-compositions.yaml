@@ -27,6 +27,7 @@ spec:
         runAsUser: {{ .runAsUser }}
         runAsGroup: {{ .runAsGroup }}
       {{- end }}
+      {{- include "compositions.imagePullSecrets" . | nindent 6 }}
       containers:
       - name: kubectl
         image: {{ include "compositions.jobRegistry" . }}/{{ .Values.jobs.waitForCompositionsJob.image.repository }}:{{ .Values.jobs.waitForCompositionsJob.image.tag | default "latest" }}

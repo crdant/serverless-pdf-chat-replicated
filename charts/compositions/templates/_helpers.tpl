@@ -107,6 +107,24 @@ Get the credentials secret key
 {{- end }}
 
 {{/*
+Get image pull secrets for jobs
+*/}}
+{{- define "compositions.imagePullSecrets" -}}
+{{- $pullSecrets := list }}
+{{- if .Values.global.images.pullSecrets }}
+{{- $pullSecrets = .Values.global.images.pullSecrets }}
+{{- else if .Values.jobs.waitForCompositionsJob.image.pullSecrets }}
+{{- $pullSecrets = .Values.jobs.waitForCompositionsJob.image.pullSecrets }}
+{{- end }}
+{{- if $pullSecrets }}
+imagePullSecrets:
+{{- range $pullSecrets }}
+  - name: {{ . }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
 Get the runtime config name
 */}}
 {{- define "compositions.runtimeConfigName" -}}

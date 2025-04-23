@@ -2,6 +2,8 @@
 global:
   images:
     registry: ""
+    pullSecrets: []
+    # - my-global-registry-secret
 
 # AWS configuration
 aws:
@@ -44,6 +46,8 @@ jobs:
       repository: "bitnami/kubectl"
       tag: "latest"
       pullPolicy: "IfNotPresent"
+      pullSecrets: []
+      # - my-job-specific-registry-secret
     resources:
       limits:
         cpu: 200m

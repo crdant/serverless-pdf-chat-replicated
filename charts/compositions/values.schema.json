@@ -2,6 +2,27 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
+    "global": {
+      "type": "object",
+      "properties": {
+        "images": {
+          "type": "object",
+          "properties": {
+            "registry": {
+              "type": "string",
+              "description": "Global registry for all images"
+            },
+            "pullSecrets": {
+              "type": "array",
+              "description": "Global image pull secrets to use for all jobs",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
     "nameOverride": {
       "type": "string",
       "description": "Override the name of the chart"
@@ -95,6 +116,13 @@
                   "description": "Image pull policy for the wait-for-compositions job",
                   "default": "IfNotPresent",
                   "enum": ["Always", "IfNotPresent", "Never"]
+                },
+                "pullSecrets": {
+                  "type": "array",
+                  "description": "Image pull secrets for the wait-for-compositions job",
+                  "items": {
+                    "type": "string"
+                  }
                 }
               }
             },
