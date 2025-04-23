@@ -30,11 +30,12 @@ spec:
     - when: '{{repl not HasLocalRegistry}}'
       recursiveMerge: true
       values: 
-        global:
-          images: 
-            registry: 'images.shortrib.io/proxy/{{repl LicenseFieldValue "appSlug"}}'
-        providers:
-          registry: 'images.shortrib.io/proxy/{{repl LicenseFieldValue "appSlug"}}/xpkg.upbound.io'
+        aws:
+          providers:
+            registry: 'images.shortrib.io/proxy/{{repl LicenseFieldValue "appSlug"}}/xpkg.upbound.io'
+        kubernetes:
+          provider:
+            registry: 'images.shortrib.io/proxy/{{repl LicenseFieldValue "appSlug"}}/xpkg.upbound.io'
         jobs:
           image:
             registry: 'images.shortrib.io/proxy/{{repl LicenseFieldValue "appSlug"}}/index.docker.io'

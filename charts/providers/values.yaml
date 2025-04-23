@@ -81,7 +81,7 @@ aws:
   providers:
     # Registry for all providers - can be overridden by global.images.registry
     # Can be overridden by global.images.registry
-    registry: "xpkg.upbound.io/upbound"
+    registry: "xpkg.upbound.io"
     # Pull secrets for AWS providers
     pullSecrets: []
     family:
@@ -117,4 +117,4 @@ kubernetes:
   provider:
     version: "v0.17.2"
     # Can be overridden by global.images.registry
-    registry: "xpkg.upbound.io/upbound"
+    registry: "xpkg.upbound.io"
