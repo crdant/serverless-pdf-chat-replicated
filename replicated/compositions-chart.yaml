@@ -6,7 +6,7 @@ spec:
   # chart identifies a matching chart from a .tgz
   chart:
     name: compositions
-    chartVersion: 0.3.1
+    chartVersion: 0.3.2
   namespace: serverless-pdf-chat
   weight: -10
 
@@ -16,7 +16,24 @@ spec:
   # values are used in the customer environment, as a pre-render step
   # these values will be supplied to helm template
   values: 
-    providers:
-      aws:
-        waitJob:
-          serviceAccountName: kotsadm
+    global:
+      images:
+        pullSecrets:
+          - '{{repl ImagePullSecretName}}'
+
+  optionalValues:
+    - when: '{{repl HasLocalRegistry}}'
+      recursiveMerge: true
+      values: 
+        global:
+          images: 
+            registry: '{{repl LocalRegistryHost}}'
+
+    - when: '{{repl not HasLocalRegistry}}'
+      recursiveMerge: true
+      values: 
+        jobs:
+          waitForCompositionsJob:
+            image:
+              # Can be overridden by global.images.registry
+              registry: 'images.shortrib.io/proxy/{{repl LicenseFieldValue "appSlug"}}/index.docker.io'
