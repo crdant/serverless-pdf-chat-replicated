@@ -86,28 +86,28 @@ aws:
     pullSecrets: []
     family:
       package: "provider-family-aws"
-      version: "v1.21.1"
+      version: "v1"
     iam:
       package: "provider-aws-iam"
-      version: "v1.21.1"
+      version: "v1"
     s3:
       package: "provider-aws-s3"
-      version: "v1.21.1"
+      version: "v1"
     dynamodb:
       package: "provider-aws-dynamodb"
-      version: "v1.21.1"
+      version: "v1"
     lambda:
       package: "provider-aws-lambda"
-      version: "v1.21.1"
+      version: "v1"
     sqs:
       package: "provider-aws-sqs"
-      version: "v1.21.1"
+      version: "v1"
     apigatewayv2:
       package: "provider-aws-apigatewayv2"
-      version: "v1.21.1"
+      version: "v1"
     cognitoidp:
       package: "provider-aws-cognitoidp"
-      version: "v1.21.1"
+      version: "v1"
 
 kubernetes:
   # Image pull secrets for Kubernetes provider
@@ -115,6 +115,6 @@ kubernetes:
   # - name: regcred
   
   provider:
-    version: "v0.17.2"
+    version: "v0"
     # Can be overridden by global.images.registry
     registry: "xpkg.upbound.io"

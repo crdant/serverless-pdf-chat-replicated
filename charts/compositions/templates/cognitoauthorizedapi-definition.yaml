@@ -4,10 +4,7 @@ metadata:
   name: cognitoauthorizedapis.serverlesspdfchat.shortrib.io
   labels:
     {{- include "compositions.labels" . | nindent 4 }}
-  annotations:
-    "helm.sh/hook": post-install,post-upgrade
-    "helm.sh/hook-weight": "5"  # Run after wait-ready-job (weight 0)
-    {{- include "compositions.annotations" . | nindent 4 }}
+  annotations: {{- include "compositions.annotations" . | nindent 4 }}
 spec:
   group: serverlesspdfchat.shortrib.io
   names:
@@ -39,7 +36,6 @@ spec:
                 configMapNamespace:
                   type: string
                   description: "Namespace for the generated ConfigMap (defaults to the composite's namespace if not specified)"
-                  default: "pdf-chat"
                 nameSuffix:
                   type: string
                   description: "Optional suffix to append to resource names"

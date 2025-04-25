@@ -88,6 +88,10 @@ spec:
         - type: ToCompositeFieldPath
           fromFieldPath: "status.atProvider.id"
           toFieldPath: "status.apiId"
+      readinessChecks:
+        - type: NonEmpty
+          fieldPath: status.atProvider.id
+
 
     # User Pool
     - name: userpool
@@ -159,6 +163,9 @@ spec:
         - type: ToCompositeFieldPath
           fromFieldPath: "status.atProvider.endpoint"
           toFieldPath: "status.userPoolEndpoint"
+      readinessChecks:
+        - type: NonEmpty
+          fieldPath: status.atProvider.id
 
     # User Pool Client
     - name: userpoolclient
@@ -369,19 +376,19 @@ spec:
               fmt: "%s/dev/"
           toFieldPath: "spec.forProvider.manifest.data.apiEndpoint"
           policy:
-            fromFieldPath: Required
+            fromFieldPath: Optional
         # Patch the User Pool ID
         - type: FromCompositeFieldPath
           fromFieldPath: "status.userPoolId"
           toFieldPath: "spec.forProvider.manifest.data.userPoolId"
           policy:
-            fromFieldPath: Required
+            fromFieldPath: Optional
         # Patch the User Pool Client ID
         - type: FromCompositeFieldPath
           fromFieldPath: "status.userPoolClientId"
           toFieldPath: "spec.forProvider.manifest.data.userPoolClientId"
           policy:
-            fromFieldPath: Required
+            fromFieldPath: Optional
         # Patch the provider config
         - type: FromCompositeFieldPath
           fromFieldPath: "spec.providerConfigRef.name"
@@ -399,8 +406,5 @@ spec:
         - type: ToCompositeFieldPath
           fromFieldPath: "spec.forProvider.manifest.metadata.name"
           toFieldPath: "status.configMapName"
-      readinessChecks:
-        - type: MatchCondition
-          matchCondition:
-            type: Ready
-            status: "True"
+      # Remove readiness check to avoid circular dependency
+      # Allow ConfigMap to be created and then updated when AWS resources are ready
