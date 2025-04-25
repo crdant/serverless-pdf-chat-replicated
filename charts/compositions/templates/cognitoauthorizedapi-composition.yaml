@@ -215,7 +215,6 @@ spec:
           fromFieldPath: "status.atProvider.id"
           toFieldPath: "status.userPoolClientId"
       readinessChecks:
-        - type: None
         - type: NonEmpty
           fieldPath: status.atProvider.id
 
