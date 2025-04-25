@@ -5,10 +5,7 @@ metadata:
   labels:
     {{- include "compositions.labels" . | nindent 4 }}
     provider: aws
-  annotations:
-    "helm.sh/hook": post-install,post-upgrade
-    "helm.sh/hook-weight": "10"  # Run after XRD (weight 5)
-    {{- include "compositions.annotations" . | nindent 4 }}
+  annotations: {{- include "compositions.annotations" . | nindent 4 }}
 spec:
   compositeTypeRef:
     apiVersion: serverlesspdfchat.shortrib.io/v1alpha1
