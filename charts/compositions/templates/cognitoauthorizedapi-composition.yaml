@@ -80,13 +80,23 @@ spec:
           policy:
             mergeOptions:
               keepMapValues: true
-        # Propagate claim labels to ensure integrations can find the API
-        - type: FromCompositeFieldPath
-          fromFieldPath: "spec.claimRef.name"
-          toFieldPath: "metadata.labels.app\\.kubernetes\\.io/instance"
-        - type: FromCompositeFieldPath
-          fromFieldPath: "spec.claimRef.name"
-          toFieldPath: "metadata.labels.app\\.kubernetes\\.io/name"
+        # Add explicit labels for integration selectors to find the API
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "metadata.name"
+            strategy: string
+            string:
+              fmt: "%s"
+          toFieldPath: "metadata.labels['app.kubernetes.io/instance']"
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "metadata.name"
+            strategy: string
+            string:
+              fmt: "%s"
+          toFieldPath: "metadata.labels['app.kubernetes.io/name']"
         # Store API endpoint in status
         - type: ToCompositeFieldPath
           fromFieldPath: "status.atProvider.apiEndpoint"
