@@ -302,6 +302,23 @@ spec:
           toFieldPath: "metadata.labels.authorizer"
           policy:
             fromFieldPath: Optional
+        # Add explicit labels for route selectors to find the authorizer
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "metadata.name"
+            strategy: string
+            string:
+              fmt: "%s"
+          toFieldPath: "metadata.labels['app.kubernetes.io/instance']"
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: "metadata.name"
+            strategy: string
+            string:
+              fmt: "%s"
+          toFieldPath: "metadata.labels['app.kubernetes.io/name']"
         # Reference the API ID
         - type: FromCompositeFieldPath
           fromFieldPath: "status.apiId"
