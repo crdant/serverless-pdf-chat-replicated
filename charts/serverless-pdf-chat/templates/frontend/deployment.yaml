@@ -65,6 +65,14 @@ spec:
       volumes:
         - name: app-build
           emptyDir: {}
+        {{- if and .Values.tls (eq .Values.frontend.service.type "NodePort") }}
+        - name: tls-certs
+          secret:
+            secretName: {{ include "serverless-pdf-chat.fullname" . }}-tls
+        - name: nginx-conf
+          configMap:
+            name: {{ include "serverless-pdf-chat.fullname" . }}-nginx-conf
+        {{- end }}
       initContainers:
         - name: {{ .Chart.Name }}-builder
           image: {{ include "serverless-pdf-chat.frontendBuilderImage" . }}
@@ -123,6 +131,15 @@ spec:
           volumeMounts:
             - name: app-build
               mountPath: /usr/share/nginx/html
+            {{- if and .Values.tls (eq .Values.frontend.service.type "NodePort") }}
+            - name: tls-certs
+              mountPath: /etc/nginx/ssl
+              readOnly: true
+            - name: nginx-conf
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+              readOnly: true
+            {{- end }}
       {{- with .Values.frontend.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

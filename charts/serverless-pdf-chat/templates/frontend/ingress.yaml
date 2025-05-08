@@ -18,12 +18,20 @@ spec:
   {{- end }}
   {{- if .Values.frontend.ingress.tls }}
   tls:
+    {{- if .Values.tls }}
+    - hosts:
+        {{- range (index .Values.frontend.ingress.tls 0).hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ include "serverless-pdf-chat.fullname" $ }}-tls
+    {{- else }}
     {{- range .Values.frontend.ingress.tls }}
     - hosts:
         {{- range .hosts }}
         - {{ . | quote }}
         {{- end }}
       secretName: {{ .secretName }}
+    {{- end }}
     {{- end }}
   {{- end }}
   rules:

@@ -5,9 +5,96 @@ metadata:
   name: serverless-pdf-chat
 spec:
   groups:
+    - name: access
+      title: Application Access
+      description: |
+        You can customize how you will expose Serverless PDF Chat to the internet.
+
+        Common configurations include:
+
+        - **ClusterIP** Using a Cluster IP and configuring your existing ingress controller to route traffic to Serverless PDF Chat
+        - **NodePort** Using a NodePort and configuring an existing load balancer to route traffic to Serverless PDF Chat
+        - **LoadBalancer** Using a LoadBalancer service and letting Kubernetes provision a load balancer for you
+
+        If you're running in a supported cloud provider and want Kubernetes to provision a Load Balancer, use LoadBalancer.
+      items:
+        - name: domain
+          title: Ingress Hostname
+          help_text: >
+            The domain name at which you'll access Serverless PDF Chat. Don't include
+            the `https://` or any path elements.
+          type: text
+          required: true
+          validation:
+            regex:
+              pattern: "^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+              message: Please enter a valid hostname
+
+        - name: service_type
+          title: Service Type
+          type: select_one
+          items:
+            - name: cluster_ip
+              title: ClusterIP
+            - name: node_port
+              title: NodePort
+            - name: load_balancer
+              title: LoadBalancer
+          default: cluster_ip
+        - name: node_port_port
+          title: Node Port
+          help_text: >
+              (Optional) - The port to use for the NodePort service type. Leave this blank to have Kubernetes choose a port for you.
+          type: text
+          default: "443"
+          when: repl{{ ConfigOptionEquals "service_type" "node_port" }}
+
+    - name: tls
+      title: Certificates
+      description: |
+        You can secure the Serverless PDF Chat application with certificates from a trusted certificate authority
+        or we can generate them for you. We recommend that you upload your own certificates for production installations.
+      items:
+        - name: certificate_source
+          type: select_one
+          title: Certificate Source
+          default: generate_internal
+          items:
+            - name: generate_internal
+              title: Generate
+            - name: upload_existing
+              title: Upload
+        - name: tls_cert
+          title: Certificate
+          type: file
+          when: '{{repl ConfigOptionEquals "certificate_source" "upload_existing"}}'
+        - name: tls_key
+          title: Private Key
+          type: file
+          when: '{{repl ConfigOptionEquals "certificate_source" "upload_existing"}}'
+        - name: tls_ca
+          title: Signing Authority
+          type: file
+          when: '{{repl ConfigOptionEquals "certificate_source" "upload_existing"}}'
+        - name: generated_tls
+          title: Generated TLS
+          type: textarea
+          hidden: true
+          default: |-
+            repl{{ $ca := genCA (ConfigOption "domain") 365 }}
+            repl{{ $tls := dict "ca" $ca }}
+            repl{{ $cert := genSignedCert (ConfigOption "domain") (list ) (list (ConfigOption "domain")) 365 $ca }}
+            repl{{ $_ := set $tls "cert" $cert }}
+            repl{{ toJson $tls }}
+          when: '{{repl ConfigOptionEquals "certificate_source" "generate_internal"}}'
+
     - name: aws
       title: AWS Configuration
       description: |
+        This section can be used to configure the AWS resources required by Serverless PDF Chat. The application
+        will create new resources in your AWS account.
+
+        Be sure the AWS credentials you provide have the necessary permissions to create resources in your AWS account.
       items:
         - name: aws_account_id
           title: AWS Account ID

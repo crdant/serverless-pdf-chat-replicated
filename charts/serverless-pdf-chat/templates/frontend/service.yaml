@@ -13,10 +13,23 @@ metadata:
 spec:
   type: {{ .Values.frontend.service.type }}
   ports:
+    {{- if and (eq .Values.frontend.service.type "NodePort") .Values.tls }}
+    - port: 443
+      targetPort: 443
+      protocol: TCP
+      name: https
+      {{- if .Values.frontend.service.nodePort }}
+      nodePort: {{ .Values.frontend.service.nodePort | int }}
+      {{- end }}
+    {{- else }}
     - port: {{ .Values.frontend.service.port }}
       targetPort: http
       protocol: TCP
       name: http
+      {{- if and (eq .Values.frontend.service.type "NodePort") .Values.frontend.service.nodePort }}
+      nodePort: {{ .Values.frontend.service.nodePort | int }}
+      {{- end }}
+    {{- end }}
   selector:
     {{- include "serverless-pdf-chat.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: frontend

@@ -6,7 +6,7 @@ spec:
   # chart identifies a matching chart from a .tgz
   chart:
     name: serverless-pdf-chat
-    chartVersion: 0.13.35
+    chartVersion: 0.14.1
   namespace: serverless-pdf-chat
   weight: 0 
 
@@ -20,12 +20,24 @@ spec:
       accountId: '{{repl ConfigOption "aws_account_id" }}'
       region: '{{repl ConfigOption "aws_region" }}'
 
+    frontend:
+      ingress:
+        hosts:
+          - host: '{{repl ConfigOption "domain" }}'
+            paths:
+              - path: "/"
+                pathType: "Prefix"
+        tls:
+          - hosts:
+              - '{{repl ConfigOption "domain" }}'
+
     global:
       images:
         pullSecrets:
           - '{{repl ImagePullSecretName}}'
 
   optionalValues:
+    # Registry configuration
     - when: '{{repl HasLocalRegistry}}'
       recursiveMerge: true
       values: 
@@ -39,3 +51,49 @@ spec:
         global:
           images: 
             registry: 'images.shortrib.io/proxy/{{repl LicenseFieldValue "appSlug"}}/429114214526.dkr.ecr.us-west-2.amazonaws.com'
+
+    # TLS certificate configuration
+    - when: '{{repl ConfigOptionEquals "certificate_source" "upload_existing" }}'
+      recursiveMerge: true
+      values:
+        tls:
+          cert: | 
+            '{{repl ConfigOptionData "tls_cert" | nindent 12 }}'
+          key: | 
+            '{{repl ConfigOptionData "tls_key" | nindent 12 }}'
+          ca: | 
+            '{{repl ConfigOptionData "tls_ca" | nindent 12 }}'
+
+    - when: '{{repl ConfigOptionEquals "certificate_source" "generate_internal" }}'
+      recursiveMerge: true
+      values:
+        tls:
+          cert: | 
+            '{{repl fromJson (ConfigOption "generated_tls") | dig "cert" "Cert" "" | nindent 12 }}'
+          key: | 
+            '{{repl fromJson (ConfigOption "generated_tls") | dig "cert" "Key" "" | nindent 12 }}'
+          ca: | 
+            '{{repl fromJson (ConfigOption "generated_tls") | dig "ca" "Cert" "" | nindent 12 }}'
+            
+    # Service type configuration
+    - when: '{{repl ConfigOptionEquals "service_type" "cluster_ip" }}'
+      recursiveMerge: true
+      values:
+        frontend:
+          service:
+            type: ClusterIP
+
+    - when: '{{repl ConfigOptionEquals "service_type" "node_port" }}'
+      recursiveMerge: true
+      values:
+        frontend:
+          service:
+            type: NodePort
+            nodePort: '{{repl ConfigOption "node_port_port" }}'
+
+    - when: '{{repl ConfigOptionEquals "service_type" "load_balancer" }}'
+      recursiveMerge: true
+      values:
+        frontend:
+          service:
+            type: LoadBalancer

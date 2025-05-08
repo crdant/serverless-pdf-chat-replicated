@@ -811,6 +811,10 @@
             "annotations": {
               "type": "object",
               "description": "Service annotations"
+            },
+            "nodePort": {
+              "type": ["integer", "string", "null"],
+              "description": "Node port when service type is NodePort"
             }
           }
         },
@@ -893,6 +897,25 @@
       "additionalProperties": {
         "type": "string"
       }
+    },
+    "tls": {
+      "type": "object",
+      "description": "TLS certificate configuration",
+      "properties": {
+        "cert": {
+          "type": "string",
+          "description": "TLS certificate in PEM format"
+        },
+        "key": {
+          "type": "string",
+          "description": "TLS private key in PEM format"
+        },
+        "ca": {
+          "type": "string",
+          "description": "CA certificate in PEM format (optional)"
+        }
+      },
+      "required": ["cert", "key"]
     }
   }
 }

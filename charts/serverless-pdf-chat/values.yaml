@@ -62,6 +62,7 @@ frontend:
     type: "ClusterIP"
     port: 80
     annotations: {}
+    # nodePort: 443 # Only used when type is NodePort
   ingress:
     enabled: true
     className: "nginx"
@@ -75,6 +76,12 @@ frontend:
       - secretName: "pdf-chat-tls"
         hosts:
           - "pdf-chat.example.com"
+
+# TLS certificate settings
+tls:
+  cert: "" # TLS certificate (PEM format)
+  key: ""  # TLS private key (PEM format)
+  ca: ""   # CA certificate (PEM format, optional)
 
 aws:
   region: "us-west-2"
