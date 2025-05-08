@@ -18,7 +18,7 @@ spec:
     functionName: {{ include "serverless-pdf-chat.fullname" . }}-{{ $functionName }}
     principal: "s3.amazonaws.com"
     sourceArn: {{ include "serverless-pdf-chat.arn" (dict "service" "s3" "resource" (include "serverless-pdf-chat.bucketName" .)) }}
-    statementId: "AllowS3Invoke"
+    statementId: "{{ include "serverless-pdf-chat.fullname" . }}-AllowS3Invoke"
     tags:
       Name: {{ include "serverless-pdf-chat.fullname" . }}-{{ $functionName }}-s3-permission
       {{- include "serverless-pdf-chat.tags" . | nindent 6 }}
