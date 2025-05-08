@@ -6,7 +6,7 @@ spec:
   # chart identifies a matching chart from a .tgz
   chart:
     name: serverless-pdf-chat
-    chartVersion: 0.13.32
+    chartVersion: 0.13.33
   namespace: serverless-pdf-chat
   weight: 0 
 

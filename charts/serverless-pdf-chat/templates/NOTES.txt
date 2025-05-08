@@ -92,14 +92,14 @@ To check the status of the API Gateway:
   kubectl describe api.apigatewayv2.aws.upbound.io {{ include "serverless-pdf-chat.fullname" . }}-api
 
 To check the status of the Cognito resources:
-  kubectl describe cognitoauthorizedapi {{ include "serverless-pdf-chat.fullname" . }}
+  kubectl describe cognitoauthorizedapiclaim -n {{ .Release.Namespace }} {{ include "serverless-pdf-chat.fullname" . }}
 
 TROUBLESHOOTING:
 --------------
 If you encounter issues:
 
-1. Check the status of the CognitoAuthorizedAPI resource:
-   kubectl describe cognitoauthorizedapi {{ include "serverless-pdf-chat.fullname" . }}
+1. Check the status of the CognitoAuthorizedAPIClaim resource:
+   kubectl describe cognitoauthorizedapiclaim -n {{ .Release.Namespace }} {{ include "serverless-pdf-chat.fullname" . }}
 
 2. Verify the ConfigMap has been populated:
    kubectl get configmap -n {{ .Release.Namespace }} {{ include "serverless-pdf-chat.fullname" . }}-frontend-config -o yaml
