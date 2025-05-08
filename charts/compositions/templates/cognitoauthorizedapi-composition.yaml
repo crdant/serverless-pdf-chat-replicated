@@ -347,21 +347,12 @@ spec:
           toFieldPath: "spec.forProvider.manifest.metadata.name"
           policy:
             fromFieldPath: Optional
-        # First try to use the composite's namespace for the ConfigMap
+        # Use the claim's namespace for the ConfigMap
         - type: FromCompositeFieldPath
-          fromFieldPath: "metadata.namespace"
+          fromFieldPath: "spec.claimRef.namespace"
           toFieldPath: "spec.forProvider.manifest.metadata.namespace"
           policy:
-            fromFieldPath: Optional
-            # Use configMapNamespace as fallback if namespace is not set
-            mergeOptions:
-              keepMapValues: false
-        # Fall back to configMapNamespace if composite namespace is not available
-        - type: FromCompositeFieldPath
-          fromFieldPath: "spec.configMapNamespace"
-          toFieldPath: "spec.forProvider.manifest.metadata.namespace"
-          policy:
-            fromFieldPath: Optional
+            fromFieldPath: Required
         # Patch the region
         - type: FromCompositeFieldPath
           fromFieldPath: "spec.region"

@@ -6,7 +6,7 @@ spec:
   # chart identifies a matching chart from a .tgz
   chart:
     name: compositions
-    chartVersion: 0.3.10
+    chartVersion: 0.3.11
   namespace: serverless-pdf-chat
   weight: -10
 
