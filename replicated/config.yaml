@@ -102,78 +102,45 @@ spec:
           help_text: >
             Select the Amazon Bedrock model to use for generating text responses.
             
-            For this chat application, we recommend using models built for chat interactions,
-            which can better understand conversation context and maintain coherence.
-          type: select_one
+            We've pre-selected high-quality models that work well for chat applications.
+            Different models have different strengths, capabilities, and pricing.
+          type: dropdown
           default: meta.llama3-1-405b-instruct-v1:0
           items:
-            # Anthropic models - All support chat capabilities
+            # Anthropic models
             - name: anthropic.claude-3-5-sonnet-20241022-v2:0
-              title: Anthropic Claude 3.5 Sonnet (Oct 2024) - Recommended
+              title: Anthropic Claude 3.5 Sonnet - Balanced performance
             - name: anthropic.claude-3-5-haiku-20241022-v1:0
-              title: Anthropic Claude 3.5 Haiku (Oct 2024) - Fast
-            - name: anthropic.claude-3-sonnet-20240229-v1:0
-              title: Anthropic Claude 3 Sonnet (Feb 2024)
-            - name: anthropic.claude-3-haiku-20240307-v1:0
-              title: Anthropic Claude 3 Haiku (Mar 2024)
+              title: Anthropic Claude 3.5 Haiku - Fast responses
             - name: anthropic.claude-3-opus-20240229-v1:0
-              title: Anthropic Claude 3 Opus (Feb 2024) - Highest Quality
-            - name: anthropic.claude-v2:1
-              title: Anthropic Claude 2.1
-            - name: anthropic.claude-v2
-              title: Anthropic Claude 2
-            - name: anthropic.claude-instant-v1
-              title: Anthropic Claude Instant
+              title: Anthropic Claude 3 Opus - Highest quality reasoning
               
-            # Meta models - All support chat capabilities  
+            # Meta models
             - name: meta.llama3-1-405b-instruct-v1:0
-              title: Meta Llama 3.1 405B Instruct - Recommended
-            - name: meta.llama3-1-70b-instruct-v1:0
-              title: Meta Llama 3.1 70B Instruct
-            - name: meta.llama3-70b-instruct-v1:0
-              title: Meta Llama 3 70B Instruct
-            - name: meta.llama3-8b-instruct-v1:0
-              title: Meta Llama 3 8B Instruct
+              title: Meta Llama 3.1 405B - High performance
               
-            # Mistral models - All support chat capabilities
+            # Mistral models
             - name: mistral.mistral-large-2407-v1:0
-              title: Mistral Large (Jul 2024) - Recommended
-            - name: mistral.mistral-large-2402-v1:0
-              title: Mistral Large (Feb 2024)
-            - name: mistral.mixtral-8x7b-instruct-v0:1
-              title: Mistral Mixtral 8x7B Instruct
-            - name: mistral.mistral-7b-instruct-v0:2
-              title: Mistral 7B Instruct
+              title: Mistral Large - Excellent reasoning
               
-            # Cohere models - All support chat capabilities
+            # Cohere models
             - name: cohere.command-r-plus-v1:0
-              title: Cohere Command R+ - Recommended
-            - name: cohere.command-r-v1:0
-              title: Cohere Command R
-            - name: cohere.command-text-v14
-              title: Cohere Command Text
-            - name: cohere.command-light-text-v14
-              title: Cohere Command Light Text
+              title: Cohere Command R+ - Strong context handling
 
         - name: embedding_model_id
           title: Embedding Model
           help_text: >
             Select the Amazon Bedrock model to use for generating document embeddings.
-          type: select_one
+            These models convert text into vector representations for semantic search.
+          type: dropdown
           default: amazon.titan-embed-text-v2:0
           items:
-            - name: amazon.titan-embed-g1-text-02
-              title: Amazon Titan Embed G1 Text
-            - name: amazon.titan-embed-text-v1
-              title: Amazon Titan Embed Text v1
             - name: amazon.titan-embed-text-v2:0
-              title: Amazon Titan Embed Text v2
-            - name: amazon.titan-embed-image-v1
-              title: Amazon Titan Embed Image
+              title: Amazon Titan Embed Text v2 - Recommended
             - name: cohere.embed-english-v3
-              title: Cohere Embed English
+              title: Cohere Embed English - High quality for English
             - name: cohere.embed-multilingual-v3
-              title: Cohere Embed Multilingual
+              title: Cohere Embed Multilingual - Supports multiple languages
               
     - name: aws
       title: AWS Configuration
