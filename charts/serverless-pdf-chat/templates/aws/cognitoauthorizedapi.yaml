@@ -10,6 +10,8 @@ spec:
   compositionRef:
     name: cognitoauthorizedapis.serverlesspdfchat.shortrib.io
   resourceRef:
+    apiVersion: serverlesspdfchat.shortrib.io/v1alpha1
+    kind: CognitoAuthorizedAPI
     name: {{ include "serverless-pdf-chat.fullname" . }}
   region: {{ .Values.aws.region }}
   providerConfigRef:
