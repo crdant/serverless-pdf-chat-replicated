@@ -6,7 +6,7 @@ spec:
   # chart identifies a matching chart from a .tgz
   chart:
     name: serverless-pdf-chat
-    chartVersion: 0.14.1
+    chartVersion: 0.15.0
   namespace: serverless-pdf-chat
   weight: 0 
 
@@ -19,6 +19,12 @@ spec:
     aws:
       accountId: '{{repl ConfigOption "aws_account_id" }}'
       region: '{{repl ConfigOption "aws_region" }}'
+      
+    application:
+      config:
+        region: '{{repl ConfigOption "aws_region" }}'
+        modelId: '{{repl ConfigOption "model_id" }}'
+        embeddingModelId: '{{repl ConfigOption "embedding_model_id" }}'
 
     frontend:
       ingress:
