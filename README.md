@@ -7,6 +7,17 @@ This project is a Kubernetes-native implementation of the [AWS Serverless PDF Ch
   <img src="preview-2.png" width="49%" />
 </p>
 
+## Why This Project Exists
+
+This project demonstrates how software vendors with cloud-dependent applications can ship to customer environments today without waiting to refactor their applications to be cloud-agnostic:
+
+- **Immediate Delivery**: Vendors can package applications with their cloud dependencies for customer-managed Kubernetes environments
+- **Bridge to Multi-Cloud**: Start with the cloud you already use while preparing for a more portable future
+- **Real-World Example**: Uses AWS's own showcase application to demonstrate how even heavily cloud-dependent workloads can be packaged
+- **Complete Solution**: Combines containerized frontend components with Crossplane-managed cloud resources
+
+By using Crossplane to provision and manage AWS resources through Kubernetes, this approach allows vendors to ship software to customers on the same cloud platform immediately while maintaining a path toward future cloud portability through composite resources.
+
 ## Architecture Overview
 
 ![Serverless PDF Chat architecture](architecture.png "Serverless PDF Chat architecture")
