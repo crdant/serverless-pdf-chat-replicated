@@ -19,6 +19,25 @@ This project demonstrates how software vendors with cloud-dependent applications
 
 By using Crossplane to provision and manage AWS resources through Kubernetes, this approach allows vendors to ship software to customers on the same cloud platform immediately while maintaining a path toward future cloud portability through composite resources.
 
+### The Replicated Advantage
+
+This project showcases the end-to-end vendor-to-customer delivery process that Replicated enables for cloud-dependent applications:
+
+- **Complete Distribution Pipeline**: Package, license, distribute, and update applications through a vendor portal
+- **Software Licensing & Entitlements**: Manage customer access, feature entitlements, and subscription tiers
+- **Customer-Specific Configuration**: Define configuration options customers can customize during installation
+- **Secure Airgap Support**: Support customers with strict security requirements who operate in disconnected environments
+- **Automated Updates**: Deliver application updates with versioning and release channels
+- **Day-2 Operations**: Support troubleshooting with built-in support bundles and preflight checks
+- **Installation Flexibility**: Support both connected and airgap installations with the same package
+
+For customers, Replicated dramatically simplifies the installation and management experience:
+
+- **Simplified Installation**: Install complex, cloud-dependent applications through a user-friendly installer
+- **Reduced Prerequisites**: No existing Kubernetes cluster required
+- **Consistent Updates**: Receive vendor updates through a controlled, tested process
+- **Self-Hosted Control**: Maintain data sovereignty and security by running in your own environment
+
 ### Origin Story
 
 This project was inspired by a conversation with a software vendor who identified a critical bootstrapping problem: they wanted to use Crossplane to create cloud resources including a Kubernetes cluster, but they needed a Kubernetes cluster to run Crossplane in the first place.
@@ -176,13 +195,24 @@ make charts
 
 ### Packaging with Replicated
 
+This project is designed for distribution through Replicated, providing vendors with a complete software delivery platform and customers with a simple installation experience.
+
 ```bash
-# Lint the release
+# Lint the release files
 make lint
 
-# Create a release
+# Create a release in the Replicated vendor portal
 make release
 ```
+
+The Replicated CLI takes the packaged Helm charts and Docker images and creates a release that customers can install through the Embedded Cluster or into an existing Kubernetes cluster, with support for:
+
+- Customer-specific configurations
+- License management
+- Airgap installations
+- Automated updates
+- Support bundle generation
+- Admin console for application management
 
 ## Customization
 
