@@ -1,6 +1,8 @@
-# Serverless PDF Chat with Crossplane and Kubernetes
+# Serverless PDF Chat with Crossplane and Replicated
 
-This project is a Kubernetes-native implementation of the [AWS Serverless PDF Chat](https://github.com/aws-samples/serverless-pdf-chat) application, using Crossplane to manage cloud resources and Helm charts for deployment. It enables natural language interactions with PDF documents by combining the power of LLMs for text generation with vector search for document context retrieval.
+This project demonstrates how software vendors can deliver cloud-dependent applications to customer environments using the [Replicated Platform](https://www.replicated.com/) and [Crossplane](https://crossplane.io/). It reimagines the [AWS Serverless PDF Chat](https://github.com/aws-samples/serverless-pdf-chat) application as a distributable product that customers can easily install and operate in their own environments.
+
+The application enables natural language interactions with PDF documents by combining LLMs for text generation with vector search for document context retrieval - all while showcasing how Replicated solves the end-to-end delivery challenges for complex, cloud-dependent applications.
 
 <p float="left">
   <img src="preview-1.png" width="49%" />
@@ -9,42 +11,33 @@ This project is a Kubernetes-native implementation of the [AWS Serverless PDF Ch
 
 ## Why This Project Exists
 
-This project demonstrates how software vendors with cloud-dependent applications can ship to customer environments today without waiting to refactor their applications to be cloud-agnostic:
+Many software vendors who could benefit from shipping their products to customer environments are constrained by cloud dependencies. The Replicated Platform solves this challenge by enabling vendors to:
 
-- **Immediate Delivery**: Vendors can package applications with their cloud dependencies for customer-managed Kubernetes environments
+- **Ship Today, Not Tomorrow**: Deliver cloud-dependent applications to customers immediately without refactoring
 - **Bridge to Multi-Cloud**: Start with the cloud you already use while preparing for a more portable future
-- **Real-World Example**: Uses AWS's own showcase application to demonstrate how even heavily cloud-dependent workloads can be packaged
-- **Complete Solution**: Combines containerized frontend components with Crossplane-managed cloud resources
-- **Preferred Deployment**: Designed for deployment via the Replicated Embedded Cluster, providing a turnkey solution for customers
+- **Simplify Customer Operations**: Provide a turnkey experience that dramatically reduces installation and management complexity
+- **Support Any Environment**: Deploy to customer infrastructure whether connected, air-gapped, or highly regulated
+- **Maintain Cloud Capabilities**: Preserve the power of cloud services while running in customer environments
 
-By using Crossplane to provision and manage AWS resources through Kubernetes, this approach allows vendors to ship software to customers on the same cloud platform immediately while maintaining a path toward future cloud portability through composite resources.
+This project uses an AWS showcase application to demonstrate how even heavily cloud-dependent workloads with numerous serverless components can be packaged and delivered as a complete product using the Replicated Platform.
 
-### The Replicated Advantage
+### How the Replicated Platform Makes This Possible
 
-This project showcases the end-to-end vendor-to-customer delivery process that Replicated enables for cloud-dependent applications:
+The Replicated Platform provides a complete solution for delivering this application to customers. Vendor teams can focus on delivering value while Replicated handles the software distribution process with: release management, customer licensing, license management, release channels for controlling update availability, and detailed customer analytics and installation metrics.
 
-- **Complete Distribution Pipeline**: Package, license, distribute, and update applications through a vendor portal
-- **Software Licensing & Entitlements**: Manage customer access, feature entitlements, and subscription tiers
-- **Customer-Specific Configuration**: Define configuration options customers can customize during installation
-- **Secure Airgap Support**: Support customers with strict security requirements who operate in disconnected environments
-- **Automated Updates**: Deliver application updates with versioning and release channels
-- **Day-2 Operations**: Support troubleshooting with built-in support bundles and preflight checks
-- **Installation Flexibility**: Support both connected and airgap installations with the same package
-
-For customers, Replicated dramatically simplifies the installation and management experience:
-
-- **Simplified Installation**: Install complex, cloud-dependent applications through a user-friendly installer
-- **Reduced Prerequisites**: No existing Kubernetes cluster required
-- **Consistent Updates**: Receive vendor updates through a controlled, tested process
-- **Self-Hosted Control**: Maintain data sovereignty and security by running in your own environment
+The Replicated Embedded Cluster solves a very specific problem in this use case. It solves the "chicken and egg" problem by providing a lightweight, customer-managed Kubernetes environment that runs directly on VMs or bare metal. This cluster provides the bootstrap environment needed to run Crossplane without requiring a pre-existing Kubernetes cluster. It's also a consistent, vendor-controlled foundation for deploying cloud-dependent applications.
 
 ### Origin Story
 
 This project was inspired by a conversation with a software vendor who identified a critical bootstrapping problem: they wanted to use Crossplane to create cloud resources including a Kubernetes cluster, but they needed a Kubernetes cluster to run Crossplane in the first place.
 
-This circular dependency highlighted a perfect use case for the Replicated Embedded Cluster, which can serve as the bootstrap cluster for Crossplane. The Embedded Cluster provides the initial Kubernetes environment needed to run Crossplane, which can then provision additional cloud resources and even additional clusters if needed.
+This circular dependency highlighted why a complete platform approach is necessary. The Replicated Platform solves this challenge through:
 
-This approach solves the "chicken and egg" problem for vendors who want to use Crossplane's powerful resource provisioning capabilities but need a reliable, customer-friendly way to deploy that initial Kubernetes environment.
+1. The **Embedded Cluster** provides the initial Kubernetes environment to run Crossplane
+2. **Crossplane** then provisions and manages the needed cloud resources
+3. The **KOTS Admin Console** gives customers visibility and control
+
+Together, these components create a seamless experience that resolves the "chicken and egg" problem while providing the governance, security, and usability features that both vendors and enterprise customers require.
 
 ## Architecture Overview
 
@@ -193,9 +186,9 @@ helm template charts/serverless-pdf-chat
 make charts
 ```
 
-### Packaging with Replicated
+### Creating Releases with the Replicated Platform
 
-This project is designed for distribution through Replicated, providing vendors with a complete software delivery platform and customers with a simple installation experience.
+The Replicated Platform streamlines the entire release process from development to customer deployment:
 
 ```bash
 # Lint the release files
@@ -205,14 +198,22 @@ make lint
 make release
 ```
 
-The Replicated CLI takes the packaged Helm charts and Docker images and creates a release that customers can install through the Embedded Cluster or into an existing Kubernetes cluster, with support for:
+When you create a release:
 
-- Customer-specific configurations
-- License management
-- Airgap installations
-- Automated updates
-- Support bundle generation
-- Admin console for application management
+1. The Replicated CLI packages your Helm charts and references to Docker images
+2. The release is published to your Replicated vendor portal
+3. Customers can install through various methods including:
+   - The Embedded Cluster installer for simple VM deployment
+   - Existing Kubernetes clusters with the KOTS plugin
+   - Air-gapped environments with offline packages
+
+Each release automatically includes Replicated Platform features:
+- Installation preflight checks
+- Custom branding
+- Role-based access control
+- Application status monitoring
+- Built-in troubleshooting tools
+- Update notifications and controls
 
 ## Customization
 
