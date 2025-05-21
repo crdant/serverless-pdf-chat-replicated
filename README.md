@@ -15,8 +15,17 @@ This project demonstrates how software vendors with cloud-dependent applications
 - **Bridge to Multi-Cloud**: Start with the cloud you already use while preparing for a more portable future
 - **Real-World Example**: Uses AWS's own showcase application to demonstrate how even heavily cloud-dependent workloads can be packaged
 - **Complete Solution**: Combines containerized frontend components with Crossplane-managed cloud resources
+- **Preferred Deployment**: Designed for deployment via the Replicated Embedded Cluster, providing a turnkey solution for customers
 
 By using Crossplane to provision and manage AWS resources through Kubernetes, this approach allows vendors to ship software to customers on the same cloud platform immediately while maintaining a path toward future cloud portability through composite resources.
+
+### Origin Story
+
+This project was inspired by a conversation with a software vendor who identified a critical bootstrapping problem: they wanted to use Crossplane to create cloud resources including a Kubernetes cluster, but they needed a Kubernetes cluster to run Crossplane in the first place.
+
+This circular dependency highlighted a perfect use case for the Replicated Embedded Cluster, which can serve as the bootstrap cluster for Crossplane. The Embedded Cluster provides the initial Kubernetes environment needed to run Crossplane, which can then provision additional cloud resources and even additional clusters if needed.
+
+This approach solves the "chicken and egg" problem for vendors who want to use Crossplane's powerful resource provisioning capabilities but need a reliable, customer-friendly way to deploy that initial Kubernetes environment.
 
 ## Architecture Overview
 
@@ -52,6 +61,14 @@ The application is deployed using a set of Helm charts:
 
 ## Prerequisites
 
+### Preferred Deployment Method
+
+- [Replicated Embedded Cluster](https://docs.replicated.com/vendor/embedded-cluster-overview) for turnkey customer deployment
+- [Replicated CLI](https://github.com/replicatedhq/replicated) (for packaging releases)
+- AWS account with [Amazon Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html)
+
+### Alternative Deployment
+
 - Kubernetes cluster (1.22+)
 - [Crossplane](https://crossplane.io/) installed on your cluster
 - [Helm](https://helm.sh/) (v3+)
@@ -59,7 +76,6 @@ The application is deployed using a set of Helm charts:
 - AWS account with [Amazon Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html)
 - Docker (for building images)
 - AWS CLI (configured with appropriate credentials)
-- [Replicated CLI](https://github.com/replicatedhq/replicated) (for packaging releases)
 
 ## Installation
 
