@@ -5,7 +5,7 @@ RUN python -c "import sys; print('Python search path:')" && \
     python -c "import sys; [print(p) for p in sys.path]"
 
 # Install git, swig, and other build dependencies
-RUN yum install -y git swig gcc-c++ make && \
+RUN yum install -y git swig gcc gcc-c++ make && \
     # Install packages directly to Lambda task root to ensure they're in the Python path
     pip install aws-lambda-powertools boto3 -t ${LAMBDA_TASK_ROOT} && \
     # Install pre-built faiss-cpu wheel for Python 3.11
@@ -16,7 +16,10 @@ RUN yum install -y git swig gcc-c++ make && \
     git clone https://github.com/aws-samples/serverless-pdf-chat.git /tmp/repo && \
     cp -r /tmp/repo/backend/src/generate_embeddings/* ${LAMBDA_TASK_ROOT}/ && \
     # Install any additional requirements
-    if [ -f "${LAMBDA_TASK_ROOT}/requirements.txt" ]; then pip install -r ${LAMBDA_TASK_ROOT}/requirements.txt -t ${LAMBDA_TASK_ROOT}; fi && \
+    if [ -f "${LAMBDA_TASK_ROOT}/requirements.txt" ]; then \
+      echo "numpy==1.24.3" >> ${LAMBDA_TASK_ROOT}/requirements.txt \
+      pip install -r ${LAMBDA_TASK_ROOT}/requirements.txt -t ${LAMBDA_TASK_ROOT}; \
+    fi && \
     # Clean up
     yum remove -y git gcc-c++ make && yum clean all && \
     rm -rf /tmp/repo

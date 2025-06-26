@@ -1,4 +1,4 @@
-PROJECTDIR := $(shell pwd)
+PROJECTDIR := .
 
 # Set default parallelism
 MAKEFLAGS += -j$(shell nproc)
@@ -44,6 +44,14 @@ MAJOR_VERSION := $(shell echo $(DOCKER_TAG) | cut -d. -f1)
 MINOR_VERSION := $(shell echo $(DOCKER_TAG) | cut -d. -f1,2)
 DOCKERDIR := $(PROJECTDIR)/docker
 DOCKER_IMAGES := $(shell find $(DOCKERDIR) -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
+
+# Disable attestations globally
+export BUILDX_NO_DEFAULT_ATTESTATIONS=1
+export BUILDKIT_NO_CLIENT_TOKEN=1
+export DOCKER_BUILDKIT_ATTESTATIONS=false
+
+# Force Docker manifest format (not OCI)
+export BUILDKIT_OUTPUT_OCI_MEDIATYPES=false
 
 # Group all .PHONY targets
 .PHONY: charts manifests images ecr-login clean lint release 
@@ -108,6 +116,7 @@ image-build-$1: create-ecr-repo-$1
 			-f $(DOCKERDIR)/$1/Dockerfile $(DOCKERDIR)/$1, \
 		$(DOCKER_CMD) build \
 			--platform linux/arm64 \
+      --progress plain \
 			--label org.opencontainers.image.source="$(GIT_HTTPS_URL)" \
 			--label org.opencontainers.image.revision="$(GIT_REVISION)" \
 			--label org.opencontainers.image.version="$(DOCKER_TAG)" \
