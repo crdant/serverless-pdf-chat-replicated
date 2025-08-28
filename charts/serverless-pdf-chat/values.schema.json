@@ -5,11 +5,14 @@
   "properties": {
     "global": {
       "type": "object",
+      "required": ["namePrefix"],
       "properties": {
         "namePrefix": {
           "type": "string",
-          "description": "Prefix for all resource names",
-          "default": "pdf-chat"
+          "description": "Unique prefix for all AWS resource names. Must be unique across all deployments in the AWS account.",
+          "minLength": 3,
+          "maxLength": 10,
+          "pattern": "^[a-z0-9-]+$"
         },
         "environment": {
           "type": "string",
